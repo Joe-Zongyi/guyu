@@ -40,30 +40,31 @@ npm install /path/to/guyu-plant-agent-0.1.0.tgz
 ## 3. 初始化 PlantAgent
 
 ```ts
-import { PlantAgent, FakeVisionProvider } from "@guyu/plant-agent";
+import {
+  PlantAgent,
+  createVisionProviderFromEnv,
+} from "@guyu/plant-agent";
 
-// 默认即用 FakeVisionProvider，后端联调阶段可直接用
-const agent = new PlantAgent();
-
-// 想替换 vision provider 时：
-const agent2 = new PlantAgent({
-  visionProvider: new MyClaudeVisionProvider(/* ... */),
+// 默认不配 provider 时仍会回退到 fake
+const agent = new PlantAgent({
+  visionProvider: createVisionProviderFromEnv(process.env),
 });
 ```
 
-可选注入：
+如果你需要自己解析图片来源（例如只有 `file_id`，需要换成签名 URL 或 base64），可以额外注入 `resolveImage`：
 
 ```ts
-new PlantAgent({
-  visionProvider,
-  analyzeProfileDeps: {
-    // 默认随机 draft id，后端想自己控制时传入
-    generateDraftId: () => crypto.randomUUID(),
-    thresholds: { identifiedMin: 0.75, ambiguousMin: 0.4 },
-  },
-  assessStateDeps: {
-    thresholds: { confidentMin: 0.6, uncertainMin: 0.4 },
-  },
+const agent2 = new PlantAgent({
+  visionProvider: createVisionProviderFromEnv(process.env, {
+    resolveImage: async (image) => {
+      const signedUrl = await getSignedImageUrl(image.file_id);
+      return {
+        kind: "url",
+        url: signedUrl,
+        mimeType: image.content_type ?? "image/jpeg",
+      };
+    },
+  }),
 });
 ```
 
@@ -182,44 +183,50 @@ const res = await agent.assessState({
 
 ## 6. 替换为真实 vision-model
 
-`FakeVisionProvider` 仅用于联调。生产环境请实现下面的接口（`src/providers/types.ts`）：
+生产环境推荐直接使用库内置的 provider 工厂，而不是在业务层手写 SDK 装配：
 
 ```ts
-import type {
-  VisionProvider,
-  VisionIdentifyRequest,
-  VisionIdentifyOutcome,
-  VisionAssessRequest,
-  VisionAssessOutcome,
-  VisionProviderMetadata,
+import {
+  createVisionProviderFromEnv,
+  createVisionProvider,
 } from "@guyu/plant-agent";
 
-export class ClaudeVisionProvider implements VisionProvider {
-  metadata(): VisionProviderMetadata {
-    return {
-      model: "claude-opus-4-7",
-      identify_prompt_version: "profile-v2",
-      assess_prompt_version: "state-v2",
-    };
-  }
+const fromEnv = createVisionProviderFromEnv(process.env);
 
-  async identifyPlant(req: VisionIdentifyRequest): Promise<VisionIdentifyOutcome> {
-    // 1. 调用 Claude 多模态接口
-    // 2. 把模型输出解析成 candidates: [{ taxonomy_hint, confidence }]
-    // 3. 处理图片质量 / no_plant / multiple_plants 情况
-    // 4. 抛 makeProviderError("PROVIDER_TIMEOUT", ...) 或 ("PROVIDER_UNAVAILABLE", ...) 即可
-  }
-
-  async assessPlantState(req: VisionAssessRequest): Promise<VisionAssessOutcome> {
-    // 返回 { signals, overall_confidence, image_quality, detected_plant }
-    // 注意：signals 只允许 StateSignal 白名单值，agent 内部还会再做一次过滤
-  }
-}
+const explicit = createVisionProvider({
+  provider: "openai-compatible",
+  apiKey: process.env.PLANT_AGENT_OPENAI_COMPATIBLE_API_KEY!,
+  baseURL: process.env.PLANT_AGENT_OPENAI_COMPATIBLE_BASE_URL!,
+  model: "gpt-4.1",
+  timeoutMs: 15000,
+});
 ```
 
-`taxonomy_hint` 可以是任意字符串，agent 内部会用 `resolveTaxonomy()` 在闭集 catalog 中匹配（支持 taxonomy_id / scientific_name / common_name / aliases）。
+支持的 provider：
 
-> 强烈建议：把 prompt 模板和模型版本同时放到 `metadata()` 里，所有响应里的 `provider_metadata` 都会原样冒泡，便于审计。
+- `fake`
+- `claude`
+- `gemini`
+- `openai`
+- `openai-compatible`
+
+环境变量约定：
+
+- `PLANT_AGENT_VISION_PROVIDER`
+- `PLANT_AGENT_VISION_TIMEOUT_MS`
+- `ANTHROPIC_API_KEY` / `ANTHROPIC_BASE_URL`
+- `GOOGLE_API_KEY`
+- `OPENAI_API_KEY` / `OPENAI_BASE_URL`
+- `PLANT_AGENT_OPENAI_COMPATIBLE_API_KEY`
+- `PLANT_AGENT_OPENAI_COMPATIBLE_BASE_URL`
+- `PLANT_AGENT_CLAUDE_MODEL`
+- `PLANT_AGENT_GEMINI_MODEL`
+- `PLANT_AGENT_OPENAI_MODEL`
+- `PLANT_AGENT_OPENAI_COMPATIBLE_MODEL`
+
+注意：真实 provider 需要可访问图片内容。输入里如果没有 `image.url`，你必须通过 `resolveImage` 把 `file_id` 解析成 URL 或 base64 图片数据；仅有 `file_id` 不足以调用多模态 API。
+
+当 `PLANT_AGENT_VISION_PROVIDER` 缺失或非法时，工厂会默认回退到 `fake` provider，方便本地联调和测试。
 
 ## 7. CLI 联调
 

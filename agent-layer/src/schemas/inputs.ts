@@ -63,3 +63,12 @@ export const AssessStateInputSchema = z.object({
   request_id: z.string().min(1),
 });
 export type AssessStateInput = z.infer<typeof AssessStateInputSchema>;
+
+export const GeneratePixelArtInputSchema = z.object({
+  image: FileRefSchema,
+  style_references: z.array(FileRefSchema).default([]),
+  prompt: z.string().min(1).optional(),
+  variants: z.number().int().min(1).max(4).default(1),
+  request_id: z.string().min(1),
+});
+export type GeneratePixelArtInput = z.infer<typeof GeneratePixelArtInputSchema>;

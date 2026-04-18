@@ -1,16 +1,31 @@
-# Plant profile service contract
+# Plant Profile Service Contract
 
-Maps to PlantAgent capability **`analyze_profile`** and suggested HTTP endpoint:
+## 1. 目标
 
-- `POST /v1/plants/profile:analyze` → `analyze_profile`
+Plant Profile Service 负责在用户首次上传植物图片时，输出结构化植物档案草稿 `PlantProfileDraft`，供后端展示和用户确认。
 
-Authoritative behavior: [agent-layer/docs/agent-handoff.md](../../agent-layer/docs/agent-handoff.md) §3.1.
+这是唯一允许定义植物物种事实的模块。
 
-## Purpose
+## 2. 职责边界
 
-First-time image analysis; produces `PlantProfileDraft` for UI and backend confirmation before promoting to `PlantProfile`.
+负责：
 
-## Request body
+- 图片质量门禁
+- 通过 `vision-model adapter` 调用通用多模态模型
+- 闭集植物识别
+- taxonomy 映射
+- 候选项与低置信度处理
+- 基础养护基线生成
+- 风险标签生成
+
+不负责：
+
+- 正式入库
+- 每日建议
+- 病虫害诊断
+- 每日状态分析
+
+## 3. 输入
 
 ```json
 {
@@ -26,9 +41,9 @@ First-time image analysis; produces `PlantProfileDraft` for UI and backend confi
 }
 ```
 
-## Success response (example)
+## 4. 输出
 
-`status` may be `needs_confirmation` when a draft is ready.
+成功返回：
 
 ```json
 {
@@ -67,7 +82,7 @@ First-time image analysis; produces `PlantProfileDraft` for UI and backend confi
 }
 ```
 
-## Failure response (example)
+失败或降级返回：
 
 ```json
 {
@@ -78,8 +93,43 @@ First-time image analysis; produces `PlantProfileDraft` for UI and backend confi
 }
 ```
 
-## Constraints (summary)
+## 5. recognition_status 规则
 
-- `recognition_status`: `identified` | `ambiguous` | `unknown` only.
-- Do not promote draft to formal `PlantProfile` until user confirms.
-- Persist `provider_metadata` and `profile_version` for audit and upgrades.
+- `identified`：可稳定映射到闭集 taxonomy
+- `ambiguous`：识别范围收敛到少数候选，但不应自动确认
+- `unknown`：无法稳定命中闭集，不得伪造名称
+
+## 6. 稳定性策略
+
+- 首版只支持 20 到 50 个常见家养绿植
+- 统一使用 taxonomy catalog v1
+- 低置信度必须降级，不能强行输出高置信结果
+- 所有识别结果保留 `provider_metadata` 和 `prompt_version`
+- 建档草稿必须先给用户确认，再由后端转为正式 `PlantProfile`
+
+## 7. 错误码
+
+- `IMAGE_TOO_BLURRY`
+- `NO_PLANT_DETECTED`
+- `MULTIPLE_PLANTS_DETECTED`
+- `LOW_CONFIDENCE_MATCH`
+- `PROVIDER_TIMEOUT`
+- `PROVIDER_UNAVAILABLE`
+
+## 8. 建议接口
+
+### `POST /v1/plants/profile:analyze`
+
+请求：首次识别植物并生成 `PlantProfileDraft`
+
+### `POST /v1/plants/profile:confirm`
+
+请求：用户确认草稿，正式创建 `PlantProfile`
+
+## 9. 验收标准
+
+- 用户未确认前不得直接建档
+- 闭集外植物不得被高置信命中
+- `ambiguous` / `unknown` 路径可用
+- 结果结构稳定，可直接被 Team D 和前端消费
+- contract tests 能覆盖成功、模糊、未知、失败四条主路径

@@ -5,6 +5,7 @@ import { AnalyzeProfileDto } from './dto/analyze-profile.dto.js';
 import { ConfirmProfileDto } from './dto/confirm-profile.dto.js';
 import { DailyAdviceDto } from './dto/daily-advice.dto.js';
 import { AssessStateDto } from './dto/assess-state.dto.js';
+import { GeneratePixelArtDto } from './dto/generate-pixel-art.dto.js';
 
 @ApiTags('plants')
 @Controller('v1/plants')
@@ -51,6 +52,14 @@ export class PlantsController {
   @ApiResponse({ status: 200, description: 'Plant state assessment' })
   async assessState(@Body() dto: AssessStateDto) {
     return this.agentService.assessState(dto);
+  }
+
+  @Post('pixel-art:generate')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Generate pixel-art rendering of plant image' })
+  @ApiResponse({ status: 200, description: 'Generated pixel-art images' })
+  async generatePixelArt(@Body() dto: GeneratePixelArtDto) {
+    return this.agentService.generatePixelArt(dto);
   }
 
   @Get(':plantId')

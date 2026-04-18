@@ -3,21 +3,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { AgentService } from './agent.service.js';
 import { VisionProviderService } from './vision-provider.service.js';
+import { ImageGenerationProviderService } from './image-generation-provider.service.js';
 
 describe('AgentService', () => {
   let service: AgentService;
   let visionProviderService: VisionProviderService;
 
   beforeEach(async () => {
+    // Ensure fake providers are selected regardless of local .env state.
+    process.env['PLANT_AGENT_VISION_PROVIDER'] = 'fake';
+    process.env['PLANT_AGENT_IMAGE_GENERATION_PROVIDER'] = 'fake';
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AgentService,
         VisionProviderService,
+        ImageGenerationProviderService,
         {
           provide: ConfigService,
           useValue: {
             get: jest.fn((key: string) => {
-              if (key === 'AGENT_VISION_PROVIDER') return 'fake';
+              if (key === 'PLANT_AGENT_VISION_PROVIDER') return 'fake';
+              if (key === 'PLANT_AGENT_IMAGE_GENERATION_PROVIDER') return 'fake';
               return null;
             }),
           },

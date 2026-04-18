@@ -8,8 +8,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js"
     }
   },
   "bin": {
@@ -25,17 +24,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "cli": "tsx src/cli.ts",
-    "verify": "npm run build && npm run test",
-    "run:analyze-profile": "node dist/cli.js analyze-profile --input examples/analyze-profile.json",
-    "run:daily-advice": "node dist/cli.js daily-advice --input examples/daily-advice.json",
-    "run:assess-state": "node dist/cli.js assess-state --input examples/assess-state.json",
-    "run:examples": "npm run run:analyze-profile && npm run run:daily-advice && npm run run:assess-state",
-    "run:through": "npm run build && npm run test && npm run run:examples"
+    "manual-console": "tsx src/http/devServer.ts",
+    "smoke:bobdong": "tsx scripts/bobdong-smoke.ts openai",
+    "smoke:bobdong:gemini": "tsx scripts/bobdong-smoke.ts gemini"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
+    "@google/genai": "^1.50.1",
+    "dotenv": "^17.4.2",
+    "openai": "^6.34.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
