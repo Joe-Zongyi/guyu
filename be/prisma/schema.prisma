@@ -1,0 +1,124 @@
+// Prisma schema for Guyu Backend
+// SQLite for development, PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Plant {
+  id            String   @id @default(uuid())
+  user_id       String
+  plant_id      String   @unique // Public-facing ID for API
+
+  // Profile data (normalized JSON for flexibility)
+  taxonomy_id   String
+  common_name   String
+  scientific_name String?
+  variety       String?
+
+  // Growing context
+  location      String?  // indoor, outdoor, balcony
+  pot_size      String?  // small, medium, large
+  light_level   String?  // low, medium, bright_direct, bright_indirect
+  pot_type      String?  // ceramic, plastic, terracotta
+
+  // User preferences
+  watering_reminder  Boolean @default(true)
+  fertilizing_reminder Boolean @default(true)
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  // Relations
+  care_events   CareEvent[]
+  assessments  PlantStateAssessment[]
+  advice_snapshots DailyAdviceSnapshot[]
+}
+
+model CareEvent {
+  id          String   @id @default(uuid())
+  plant_id    String
+  plant       Plant    @relation(fields: [plant_id], references: [id], onDelete: Cascade)
+
+  // Event details
+  event_type  String   // watered, fertilized, repotted, pruned, rotated, moved
+  date        DateTime @default(now())
+
+  // Optional details (JSON for flexibility)
+  details     String?  // JSON string: { amount: '500ml', fertilizer_type: 'liquid' }
+
+  // Metadata
+  source      String?  // user, auto, ai_recommendation
+  request_id  String?
+
+  created_at  DateTime @default(now())
+}
+
+model PlantStateAssessment {
+  id            String   @id @default(uuid())
+  plant_id      String
+  plant         Plant    @relation(fields: [plant_id], references: [id], onDelete: Cascade)
+
+  // Assessment result
+  overall_state String   // healthy, stable, warning, critical
+  signals       String   // JSON array: ["leaf_yellowing", "pest_detected"]
+  confidence    Float
+
+  suggestions   String?  // JSON array of strings
+  escalation_flag Boolean @default(false)
+
+  // Context
+  image_url    String?
+  request_id   String?
+
+  assessed_at  DateTime @default(now())
+  created_at   DateTime @default(now())
+}
+
+model DailyAdviceSnapshot {
+  id          String   @id @default(uuid())
+  plant_id    String
+  plant       Plant    @relation(fields: [plant_id], references: [id], onDelete: Cascade)
+
+  // Advice content
+  advice_date DateTime
+  actions     String   // JSON array: [{ type: 'water', description: '...', priority: 'high' }]
+  warnings    String?  // JSON array
+  mood        String?  // cheerful, neutral, urgent
+
+  // Context snapshot
+  weather_snapshot String? // JSON: { temperature: 22, humidity: 65 }
+
+  request_id  String?
+
+  created_at  DateTime @default(now())
+
+  @@unique([plant_id, advice_date])
+}
+
+model File {
+  id          String   @id @default(uuid())
+  file_id     String   @unique // Public-facing ID
+
+  // File info
+  filename    String
+  original_name String
+  content_type String
+  size        Int
+
+  // Storage
+  storage_path String?  // Local path or S3 key
+  url          String
+
+  // Metadata
+  uploaded_by String?
+  plant_id    String?   // Optional association
+  request_id  String?
+
+  created_at  DateTime @default(now())
+}
