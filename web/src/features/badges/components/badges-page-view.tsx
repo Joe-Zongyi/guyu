@@ -1,93 +1,92 @@
-import { inProgressBadges, lockedBadges, unlockedBadges } from "../data/badges";
+"use client";
+
+import { useMemo, useState } from "react";
+
+import { gardenPlants, inProgressBadges, lockedBadges, unlockedBadges } from "../data/badges";
 import { BadgeCard } from "./badge-card";
+import { GardenCard } from "./garden-card";
+
+type ShowcaseTabKey = "badges" | "garden";
+
+const SHOWCASE_TABS: Array<{
+  key: ShowcaseTabKey;
+  label: string;
+}> = [
+  { key: "badges", label: "养成徽章" },
+  { key: "garden", label: "我的花园" },
+];
 
 export function BadgesPageView() {
-  return (
-    <main className="min-h-screen px-4 py-6 text-slate-800">
-      <div className="mx-auto flex w-full max-w-sm flex-col gap-4 rounded-[32px] border border-[#d8e2cf] bg-[#fbfaf5] p-4 shadow-[0_20px_60px_rgba(86,104,66,0.12)]">
-        <section className="rounded-[28px] bg-[linear-gradient(180deg,#f6fbf0_0%,#e9f3dd_100%)] p-5">
-          <p className="text-sm text-[#6f7d61]">Badge Library</p>
-          <h1 className="mt-2 text-[30px] font-semibold tracking-tight text-[#324234]">
-            养成徽章库
-          </h1>
-          <p className="mt-2 text-sm leading-6 text-[#66735b]">
-            这里收集你和植物一起解锁的生活成就。每一次浇水、记录、晒太阳和陪伴，都能成为一个有趣的徽章。
-          </p>
+  const [activeTab, setActiveTab] = useState<ShowcaseTabKey>("badges");
 
-          <div className="mt-5 grid grid-cols-3 gap-3">
-            <StatCard label="已解锁" value="03" />
-            <StatCard label="养成中" value="02" />
-            <StatCard label="待解锁" value="03" />
+  const activeSection = useMemo(() => {
+    if (activeTab === "badges") {
+      return {
+        type: "badges" as const,
+        items: [...unlockedBadges, ...inProgressBadges, ...lockedBadges],
+      };
+    }
+
+    return {
+      type: "garden" as const,
+      items: gardenPlants,
+    };
+  }, [activeTab]);
+
+  return (
+    <main className="min-h-screen bg-[linear-gradient(180deg,#edf4e4_0%,#f8f6ef_100%)] px-4 py-6 text-slate-800">
+      <div className="mx-auto w-full max-w-sm">
+        <section className="overflow-hidden rounded-[32px] border border-[#d7e2cf] bg-[linear-gradient(180deg,#f6fbf0_0%,#eef4e4_56%,#fffdf8_100%)] shadow-[0_20px_60px_rgba(86,104,66,0.12)]">
+          <div className="p-5 pb-4">
+            <p className="text-sm font-medium tracking-[0.08em] text-[#6f7d61]">Achievement Garden</p>
+            <h1 className="mt-2 font-serif text-[31px] leading-tight tracking-tight text-[#324234]">
+              成就花园
+            </h1>
+
+            <div className="mt-5 rounded-[22px] bg-white/70 p-2 shadow-[0_10px_20px_rgba(86,104,66,0.08)]">
+              <div className="grid grid-cols-2 gap-2">
+                {SHOWCASE_TABS.map((tab) => {
+                  const isActive = activeTab === tab.key;
+
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`rounded-[18px] px-3 py-3 text-center transition ${
+                        isActive
+                          ? "bg-[#6f8f58] text-white shadow-[0_10px_20px_rgba(86,104,66,0.18)]"
+                          : "bg-transparent text-[#5f7058] hover:bg-[#f1f5eb]"
+                      }`}
+                    >
+                      <p className="text-sm font-semibold tracking-[0.08em]">{tab.label}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-[#e4eadb] bg-[#fffdf8] px-3 pb-3 pt-3">
+            <div className="grid grid-cols-3 gap-2">
+              {activeSection.type === "badges"
+                ? activeSection.items.map((badge) => (
+                    <BadgeCard
+                      key={badge.name}
+                      badge={badge}
+                      lockedStyle={!badge.unlocked && !badge.progress}
+                    />
+                  ))
+                : activeSection.items.map((plant) => (
+                    <GardenCard
+                      key={`${plant.name}-${plant.days}`}
+                      plant={plant}
+                    />
+                  ))}
+            </div>
           </div>
         </section>
-
-        <BadgeSection
-          label="Unlocked"
-          title="已解锁徽章"
-          chip="正在陪伴中"
-          chipClassName="bg-[#edf3e4] text-[#68805b]"
-          badges={unlockedBadges}
-        />
-        <BadgeSection
-          label="In Progress"
-          title="养成中的徽章"
-          chip="再坚持一下"
-          chipClassName="bg-[#f3f1e5] text-[#8d7a49]"
-          badges={inProgressBadges}
-        />
-        <BadgeSection
-          label="Locked"
-          title="未解锁徽章"
-          chip="未来目标"
-          chipClassName="bg-[#efefea] text-[#7b8272]"
-          badges={lockedBadges}
-          lockedStyle
-        />
       </div>
     </main>
-  );
-}
-
-function BadgeSection({
-  label,
-  title,
-  chip,
-  chipClassName,
-  badges,
-  lockedStyle = false,
-}: {
-  label: string;
-  title: string;
-  chip: string;
-  chipClassName: string;
-  badges: { name: string }[];
-  lockedStyle?: boolean;
-}) {
-  const list = badges as Parameters<typeof BadgeCard>[0]["badge"][];
-
-  return (
-    <section className="rounded-[26px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-[#6f7d61]">{label}</p>
-          <h2 className="mt-1 text-xl font-semibold text-[#415440]">{title}</h2>
-        </div>
-        <div className={`rounded-full px-3 py-1 text-xs font-medium ${chipClassName}`}>{chip}</div>
-      </div>
-      <div className="mt-4 grid gap-3">
-        {list.map((badge) => (
-          <BadgeCard key={badge.name} badge={badge} lockedStyle={lockedStyle} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[20px] bg-white/75 p-3">
-      <p className="text-[11px] text-[#748067]">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-[#486042]">{value}</p>
-    </div>
   );
 }
