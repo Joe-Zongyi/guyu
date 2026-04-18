@@ -28,20 +28,35 @@ export function ThreeDGrowthPage() {
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  function logStep(message: string, payload?: unknown) {
+    if (payload === undefined) {
+      console.log(`[3D Growth] ${message}`);
+      return;
+    }
+    console.log(`[3D Growth] ${message}`, payload);
+  }
+
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       try {
+        logStep("开始读取 3D 重建快照");
         const next = await fetchThreeDGrowthSnapshot();
         if (cancelled) {
           return;
         }
+        logStep("读取 3D 重建快照成功", {
+          captures: next.captures.length,
+          models: next.models.length,
+          activeModelId: next.activeModelId ?? null,
+        });
         setSnapshot(next);
         setActiveModelId((current) => current ?? next.activeModelId ?? next.models[0]?.id ?? null);
         setError("");
       } catch (nextError) {
         if (!cancelled) {
+          logStep("读取 3D 重建快照失败", nextError);
           setError(nextError instanceof Error ? nextError.message : "读取失败");
         }
       } finally {
@@ -71,6 +86,18 @@ export function ThreeDGrowthPage() {
     }
     return snapshot.models.find((item) => item.id === activeModelId) ?? snapshot.models[0] ?? null;
   }, [activeModelId, snapshot]);
+
+  useEffect(() => {
+    if (!activeModel) {
+      return;
+    }
+    console.log("[3D Growth] 当前模型状态更新", {
+      modelId: activeModel.id,
+      status: activeModel.status,
+      progress: activeModel.progress,
+      summary: activeModel.summary,
+    });
+  }, [activeModel]);
 
   const activeIndex = useMemo(() => {
     if (!activeModel) {
@@ -133,41 +160,70 @@ export function ThreeDGrowthPage() {
   );
 
   async function refreshSnapshot() {
+    logStep("刷新建模快照");
     const next = await fetchThreeDGrowthSnapshot();
+    logStep("刷新建模快照完成", {
+      captures: next.captures.length,
+      models: next.models.length,
+      activeModelId: next.activeModelId ?? null,
+    });
     setSnapshot(next);
     setActiveModelId((current) => current ?? next.activeModelId ?? next.models[0]?.id ?? null);
   }
 
   async function handleQuickCapture(nextFile: File | null) {
     if (!snapshot || !nextFile) {
+      logStep("拍照建模触发失败：缺少快照或图片文件", {
+        hasSnapshot: Boolean(snapshot),
+        hasFile: Boolean(nextFile),
+      });
       setError("请先选择一张植物图片");
       return;
     }
 
     try {
+      logStep("开始拍照建模", {
+        fileName: nextFile.name,
+        fileSize: nextFile.size,
+        fileType: nextFile.type,
+        plantId: snapshot.plantId,
+      });
       setBusy(true);
       setError("");
-      await createCapture({
+      const captureResult = await createCapture({
         plantId: snapshot.plantId,
         title: "新的建模记录",
         angle: "front",
         note: "",
         file: nextFile,
       });
+      logStep("图片上传成功，已创建补拍记录", captureResult.capture);
       const latest = await fetchThreeDGrowthSnapshot();
+      logStep("上传后重新读取快照", {
+        captures: latest.captures.length,
+        models: latest.models.length,
+      });
       setSnapshot(latest);
       const sourceCaptureIds = latest.captures.slice(0, 4).map((item) => item.id);
       if (sourceCaptureIds.length > 0) {
+        logStep("开始发起建模任务", {
+          plantId: latest.plantId,
+          sourceCaptureIds,
+        });
         const result = await createModelGeneration({
           plantId: latest.plantId,
           sourceCaptureIds,
         });
+        logStep("建模任务已创建", result);
         await refreshSnapshot();
         setActiveModelId(result.modelId);
+        logStep("当前激活模型已切换", { modelId: result.modelId });
       }
     } catch (nextError) {
+      logStep("拍照建模流程失败", nextError);
       setError(nextError instanceof Error ? nextError.message : "建模失败");
     } finally {
+      logStep("拍照建模流程结束");
       setBusy(false);
     }
   }
@@ -179,6 +235,11 @@ export function ThreeDGrowthPage() {
   function handleTimelineChange(nextIndex: number) {
     const nextModel = models[nextIndex];
     if (nextModel) {
+      logStep("时间线切换模型", {
+        index: nextIndex,
+        modelId: nextModel.id,
+        milestone: nextModel.milestone,
+      });
       setActiveModelId(nextModel.id);
     }
   }
@@ -442,13 +503,70 @@ function ModelGrowthStage({
     );
   }
 
+  if (model.status === "processing") {
+    return (
+      <div className="flex min-h-[284px] flex-col justify-center rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_26%),linear-gradient(180deg,#759465_0%,#69855f_100%)] p-6 text-white">
+        <div className="mx-auto w-full max-w-[300px]">
+          <div className="rounded-[24px] border border-white/14 bg-white/10 p-5 backdrop-blur">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/62">
+              Hunyuan 3D
+            </p>
+            <p className="mt-3 font-serif text-[30px] leading-none">模型生成中</p>
+            <p className="mt-3 text-sm leading-6 text-white/72">{model.summary}</p>
+
+            <div className="mt-6">
+              <div className="flex items-center justify-between text-xs font-semibold text-white/68">
+                <span>当前进度</span>
+                <span>{model.progress}%</span>
+              </div>
+              <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-white/14">
+                <div
+                  className="h-full rounded-full bg-[linear-gradient(90deg,#eef7d9_0%,#d6ed9d_55%,#f3d28c_100%)] transition-all duration-500"
+                  style={{ width: `${Math.max(8, model.progress)}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-3 gap-2 text-center text-[11px] font-semibold text-white/72">
+              <div className="rounded-[16px] bg-black/10 px-3 py-3">上传图片</div>
+              <div className="rounded-[16px] bg-white/18 px-3 py-3 text-white">云端生成</div>
+              <div className="rounded-[16px] bg-black/10 px-3 py-3">模型回传</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (model.status === "failed") {
+    return (
+      <div className="flex min-h-[284px] flex-col items-center justify-center rounded-[22px] bg-[#edf4e1]/20 px-6 text-center">
+        <p className="font-serif text-2xl text-white">建模失败</p>
+        <p className="mt-3 text-sm leading-6 text-white/72">
+          {model.errorMessage || model.summary || "本次 3D 生成没有成功完成。"}
+        </p>
+      </div>
+    );
+  }
+
+  if (!model.modelUrl) {
+    return (
+      <div className="flex min-h-[284px] flex-col items-center justify-center rounded-[22px] bg-[#edf4e1]/20 px-6 text-center">
+        <p className="font-serif text-2xl text-white">模型已完成</p>
+        <p className="mt-3 text-sm leading-6 text-white/72">
+          当前任务已经结束，但还没有拿到可展示的 3D 模型文件。
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-[284px] overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.2),transparent_24%),linear-gradient(180deg,#759465_0%,#69855f_100%)] p-4">
       <div className="absolute inset-x-[14%] top-[18%] h-40 rounded-full bg-[#d5e8ad]/14 blur-[2px]" />
       <div className="absolute inset-x-[25%] bottom-8 h-5 rounded-full bg-[#193024]/28 blur-xl" />
 
       <div className="relative mx-auto mt-2 h-[238px] w-full max-w-[320px]">
-        <ModelStageViewer modelPath={model.modelUrl || "/models/plant.glb"} />
+        <ModelStageViewer modelPath={model.modelUrl} />
       </div>
     </div>
   );

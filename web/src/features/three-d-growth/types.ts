@@ -13,11 +13,16 @@ export type GeneratedModel = {
   plantId: string;
   status: "draft" | "processing" | "ready" | "failed";
   sourceCaptureIds: string[];
+  jobId?: string;
+  queryAction?: string;
+  region?: string;
   modelUrl?: string;
   previewUrl?: string;
+  downloadUrl?: string;
   milestone: string;
   summary: string;
   progress: number;
+  errorMessage?: string;
   createdAt: string;
   updatedAt: string;
 };
