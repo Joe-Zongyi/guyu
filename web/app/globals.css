@@ -49,6 +49,15 @@ a {
   animation: guyu-rain 1.6s linear infinite;
 }
 
+.guyu-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.guyu-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes guyu-float {
   0%,
   100% {

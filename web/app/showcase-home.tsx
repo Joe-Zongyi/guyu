@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 type ThemeKey = "sunny" | "rainy";
 
 type ThemeData = {
@@ -91,41 +89,63 @@ const rhythmBars = [
 ] as const;
 
 export function MobilePlantHome() {
-  const [themeKey, setThemeKey] = useState<ThemeKey>("sunny");
+  const themeKey: ThemeKey = "sunny";
   const theme = THEMES[themeKey];
 
   return (
-    <main className="min-h-screen overflow-hidden px-4 py-6 text-[#f7fbef] sm:px-6">
-      <div className="mx-auto flex w-full max-w-[440px] flex-col gap-4">
-        <header className="flex items-center justify-between rounded-full border border-[#d7e4d0]/50 bg-white/55 px-2 py-2 shadow-[0_18px_40px_rgba(22,39,30,0.12)] backdrop-blur">
-          <div className="px-3">
-            <p className="font-serif text-sm text-[#35533f]">Guyu mobile concept</p>
-            <p className="text-xs text-[#67806f]">将 design 稿落成可切换天气主题的首页</p>
-          </div>
-          <div className="inline-flex rounded-full bg-[#eef3e5] p-1 text-xs font-semibold text-[#2d4636]">
-            {(["sunny", "rainy"] as ThemeKey[]).map((key) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setThemeKey(key)}
-                className={`rounded-full px-4 py-2 transition ${
-                  themeKey === key
-                    ? "bg-[#2f5c42] text-white shadow-[0_8px_18px_rgba(24,44,32,0.26)]"
-                    : "text-[#547060] hover:text-[#24352b]"
-                }`}
-              >
-                {THEMES[key].weather}
-              </button>
-            ))}
-          </div>
-        </header>
+    <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_24%),linear-gradient(180deg,#e9f1e3_0%,#dfe9d9_34%,#eef3e9_100%)] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-[-6%] top-[8%] h-72 w-72 rounded-full bg-[#f3df91]/18 blur-3xl" />
+        <div className="absolute right-[-8%] top-[22%] h-96 w-96 rounded-full bg-[#b9d8be]/26 blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[16%] h-80 w-80 rounded-full bg-[#d7e7bf]/20 blur-3xl" />
+      </div>
 
-        <section
-          className={`relative overflow-hidden rounded-[34px] border ${theme.borderClassName} p-5 shadow-[0_30px_90px_rgba(5,14,10,0.28)] transition-all duration-500 ${theme.shellClassName}`}
-        >
-          <WeatherBackdrop theme={theme} />
+      <div className="relative mx-auto grid max-w-[1240px] items-center gap-8 lg:grid-cols-[0.95fr_520px]">
+        <section className="hidden text-[#274033] lg:block">
+          <div className="max-w-[520px]">
+            <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[#617763]">
+              Guyu Mobile Showcase
+            </p>
+            <h1 className="mt-4 font-serif text-[64px] leading-[0.95] text-[#21382b]">
+              把首页放进一台
+              <br />
+              适合展示的手机里
+            </h1>
+            <p className="mt-5 max-w-[460px] text-base leading-7 text-[#59705e]">
+              现在这个首页会以真机陈列稿的形式展示：外层是机身、玻璃高光和投影，内层仍然保持可交互的移动端界面，更适合 demo、汇报和评审现场直接展示。
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <div className="rounded-full border border-white/50 bg-white/60 px-4 py-2 text-sm shadow-[0_12px_24px_rgba(48,70,52,0.08)] backdrop-blur">
+                430px 级手机画布
+              </div>
+              <div className="rounded-full border border-white/50 bg-white/60 px-4 py-2 text-sm shadow-[0_12px_24px_rgba(48,70,52,0.08)] backdrop-blur">
+                Sunny / Rainy 主题切换
+              </div>
+              <div className="rounded-full border border-white/50 bg-white/60 px-4 py-2 text-sm shadow-[0_12px_24px_rgba(48,70,52,0.08)] backdrop-blur">
+                Hackathon 展示优先
+              </div>
+            </div>
+          </div>
+        </section>
 
-          <div className="relative z-10 flex flex-col gap-4">
+        <section className="mx-auto w-full max-w-[520px]">
+          <div className="relative mx-auto mb-[-7vh] w-full max-w-[437px]">
+            <div className="absolute inset-x-10 bottom-[4vh] h-12 rounded-full bg-[#1f2e21]/25 blur-2xl" />
+
+            <div className="origin-top relative scale-y-90 rounded-[52px] bg-[linear-gradient(180deg,#191c1a_0%,#232724_52%,#171917_100%)] p-[10px] shadow-[0_42px_120px_rgba(18,28,20,0.35)]">
+              <div className="absolute inset-[1px] rounded-[51px] border border-white/6" />
+
+              <div className="relative overflow-hidden rounded-[44px] border border-black/40 bg-[#0d120f]">
+                <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-16 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0))]" />
+
+                <div className="guyu-no-scrollbar relative max-h-[860px] overflow-y-auto overscroll-contain rounded-[44px]">
+                  <div className="flex flex-col gap-4 pb-4 pt-3">
+                    <section
+                      className={`relative overflow-hidden rounded-[34px] border ${theme.borderClassName} p-5 shadow-[0_30px_90px_rgba(5,14,10,0.28)] transition-all duration-500 ${theme.shellClassName}`}
+                    >
+                      <WeatherBackdrop theme={theme} />
+
+                      <div className="relative z-10 flex flex-col gap-4">
             <div className="flex items-center justify-between text-[13px] font-semibold tracking-[0.04em] text-white/85">
               <span>{theme.dateLabel}</span>
               <span
@@ -320,9 +340,19 @@ export function MobilePlantHome() {
                 ))}
               </div>
             </article>
-          </div>
+                      </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(8,15,11,0.12)_100%)]" />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(8,15,11,0.12)_100%)]" />
+                      </section>
+                    </div>
+                  </div>
+
+                <div className="pointer-events-none absolute inset-x-0 bottom-3 z-30 flex justify-center">
+                  <div className="h-1.5 w-28 rounded-full bg-white/70" />
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </main>
