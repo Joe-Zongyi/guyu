@@ -27,6 +27,21 @@ export default function Home() {
             进入徽章库
           </Link>
         </section>
+
+        <section className="rounded-[26px] bg-[#eef2ff] p-4">
+          <p className="text-sm text-[#5e6786]">AI 调试入口</p>
+          <h2 className="mt-1 text-xl font-semibold text-[#2c3553]">像素植物调试台</h2>
+          <p className="mt-2 text-sm leading-6 text-[#5d6780]">
+            上传目标植物图和风格参考图，自定义提示词，直接查看 OpenRouter
+            图像模型返回结果。
+          </p>
+          <Link
+            href="/debug-pixel"
+            className="mt-4 inline-flex rounded-full bg-[#314674] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#27385d]"
+          >
+            打开调试台
+          </Link>
+        </section>
       </div>
     </main>
   );
