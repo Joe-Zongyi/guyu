@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { MobilePlantHome } from "./showcase-home";
 
 export default function Home() {
-  redirect("/growth-3d");
+  return <MobilePlantHome />;
 }

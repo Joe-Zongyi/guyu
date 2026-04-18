@@ -12,7 +12,7 @@ export function ModelStageViewer({
 }) {
   return (
     <div className="h-full w-full">
-      <Canvas camera={{ position: [0, 3.6, 4.4], fov: 20 }}>
+      <Canvas camera={{ position: [0, 3.2, 4.8], fov: 20 }}>
         <ambientLight intensity={1.3} />
         <directionalLight position={[2, 3, 2]} intensity={1.8} />
         <directionalLight position={[-2, -1, -2]} intensity={0.45} />
@@ -23,9 +23,9 @@ export function ModelStageViewer({
         <OrbitControls
           enablePan={false}
           enableZoom={false}
-          minPolarAngle={1.18}
-          maxPolarAngle={1.32}
-          target={[0, -0.22, 0]}
+          minPolarAngle={0.98}
+          maxPolarAngle={1.12}
+          target={[0, -0.36, 0]}
         />
       </Canvas>
     </div>
@@ -42,7 +42,7 @@ function PlantModel({ modelPath }: { modelPath: string }) {
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
     const targetSpan = 1.9;
     const scale = targetSpan / maxDim;
-    const raisedY = size.y * scale * 0.02;
+    const raisedY = size.y * scale * -0.08;
 
     return {
       clone,
