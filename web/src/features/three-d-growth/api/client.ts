@@ -1,0 +1,52 @@
+import type { CaptureRecord, ThreeDGrowthModuleState } from "../types";
+
+export async function fetchThreeDGrowthSnapshot() {
+  const response = await fetch("/api/three-d-growth", {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error("读取 3D 模块数据失败");
+  }
+  return (await response.json()) as ThreeDGrowthModuleState;
+}
+
+export async function createCapture(input: {
+  plantId: string;
+  title: string;
+  angle: CaptureRecord["angle"];
+  note?: string;
+  file: File;
+}) {
+  const formData = new FormData();
+  formData.set("plantId", input.plantId);
+  formData.set("title", input.title);
+  formData.set("angle", input.angle);
+  formData.set("note", input.note ?? "");
+  formData.set("image", input.file);
+
+  const response = await fetch("/api/three-d-growth/captures", {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error("上传植物记录失败");
+  }
+  return (await response.json()) as { capture: CaptureRecord };
+}
+
+export async function createModelGeneration(input: {
+  plantId: string;
+  sourceCaptureIds: string[];
+}) {
+  const response = await fetch("/api/three-d-growth/models", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) {
+    throw new Error("发起 3D 生成失败");
+  }
+  return (await response.json()) as { modelId: string };
+}
