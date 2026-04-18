@@ -2,7 +2,6 @@
 sucaiku/
 ui-ux-pro-max-skill-main/
 
-*.pen
 .specstory/
 .kilocode/
 .vscode/

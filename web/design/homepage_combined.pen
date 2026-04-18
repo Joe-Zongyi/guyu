@@ -1,0 +1,4208 @@
+{
+  "version": "2.11",
+  "children": [
+    {
+      "type": "frame",
+      "id": "bi8Au",
+      "x": 0,
+      "y": 0,
+      "name": "Plant Care Mobile Home / Rainy",
+      "clip": true,
+      "width": 430,
+      "height": 1618,
+      "fill": "#213A34",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": [
+        24,
+        20,
+        32,
+        20
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "NJqUP",
+          "name": "Content Stack",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "LDinL",
+              "name": "Top Bar",
+              "width": "fill_container",
+              "height": 28,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "cnxE1",
+                  "name": "Top Bar Left",
+                  "fill": "#DFE7E3",
+                  "content": "4月18日 Saturday",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "BYYs6",
+                  "name": "Top Bar Right",
+                  "fill": "#B6C7C1",
+                  "content": "Rainy",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wPdFK",
+              "name": "Plant Hero Card",
+              "width": "fill_container",
+              "height": 380,
+              "fill": "#2B4B44",
+              "cornerRadius": 30,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231966",
+                "offset": {
+                  "x": 0,
+                  "y": 12
+                },
+                "blur": 32
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "zWS4k",
+                  "name": "Hero Title",
+                  "fill": "#FFFFFF",
+                  "content": "龟背竹 Monstera",
+                  "fontFamily": "Inter",
+                  "fontSize": 28,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "u6K7j",
+                  "name": "Hero Subtitle",
+                  "fill": "#CFE0D2",
+                  "content": "春季养护进行中",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "HmqY7",
+                  "name": "Pixel Plant Art",
+                  "width": "fill_container",
+                  "height": 178,
+                  "fill": "#FFFFFF00",
+                  "stroke": {
+                    "thickness": 0,
+                    "fill": "#FFFFFF00"
+                  },
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "Grj4i",
+                      "x": 136,
+                      "y": 62,
+                      "name": "Stem",
+                      "fill": "#84CC6C",
+                      "width": 22,
+                      "height": 72
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "E3pXV",
+                      "x": 112,
+                      "y": 48,
+                      "name": "Leaf 1",
+                      "fill": "#B7F07D",
+                      "width": 24,
+                      "height": 24
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "nZoYb",
+                      "x": 136,
+                      "y": 34,
+                      "name": "Leaf 2",
+                      "fill": "#9EE06D",
+                      "width": 28,
+                      "height": 28
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "P0El8",
+                      "x": 164,
+                      "y": 50,
+                      "name": "Leaf 3",
+                      "fill": "#B7F07D",
+                      "width": 24,
+                      "height": 24
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "DOriZ",
+                      "x": 100,
+                      "y": 82,
+                      "name": "Leaf 4",
+                      "fill": "#9EE06D",
+                      "width": 28,
+                      "height": 28
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "jM8dZ",
+                      "x": 148,
+                      "y": 82,
+                      "name": "Leaf 5",
+                      "fill": "#B7F07D",
+                      "width": 34,
+                      "height": 34
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 3,
+                      "id": "x9uMS",
+                      "x": 122,
+                      "y": 132,
+                      "name": "Pot Top",
+                      "fill": "#A86E49",
+                      "width": 52,
+                      "height": 10
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "GAId8",
+                      "x": 128,
+                      "y": 142,
+                      "name": "Pot Body",
+                      "fill": "#8B5A3B",
+                      "width": 40,
+                      "height": 24
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "K16zQ",
+                  "name": "Hero Primary Button",
+                  "width": 132,
+                  "height": 42,
+                  "fill": "#E6F6E6",
+                  "cornerRadius": 999,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "YOq0y",
+                      "name": "Hero Button Text",
+                      "fill": "#204735",
+                      "content": "立即打卡",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eHvHa",
+              "name": "Status Row",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Be5JK",
+                  "name": "Plant Status Card",
+                  "width": 189,
+                  "height": 236,
+                  "fill": "#35544F",
+                  "cornerRadius": 22,
+                  "stroke": {
+                    "thickness": 0,
+                    "fill": "#FFFFFF00"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0B231933",
+                    "offset": {
+                      "x": 0,
+                      "y": 6
+                    },
+                    "blur": 18
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "9I95E",
+                      "name": "Status Label",
+                      "fill": "#D7E1DD",
+                      "content": "Plant Status",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "pwHSR",
+                      "name": "Status Main Label",
+                      "fill": "#DDE6E2",
+                      "content": "总体状态",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "seOwv",
+                      "name": "Status Main Value",
+                      "fill": "#FFFFFF",
+                      "content": "平稳",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AxVaX",
+                      "name": "Status Semantic Row",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "1xPNi",
+                          "name": "Growth Stage Block",
+                          "width": "fill_container",
+                          "height": 36,
+                          "fill": "#B5C7B21A",
+                          "cornerRadius": 16,
+                          "gap": 10,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 999,
+                              "id": "D5zkf",
+                              "name": "Growth Stage Bar",
+                              "fill": "#B5C7B2",
+                              "width": 22,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "q2i89",
+                              "name": "Growth Stage Label",
+                              "fill": "#DDE6E2",
+                              "content": "生长阶段",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "LyiBY",
+                              "name": "Growth Stage Main",
+                              "fill": "#FFFFFF",
+                              "content": "缓慢",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "whZyl",
+                          "name": "Leaf State Block",
+                          "width": "fill_container",
+                          "height": 36,
+                          "fill": "#CFDDD21A",
+                          "cornerRadius": 16,
+                          "gap": 10,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 999,
+                              "id": "v6UU9",
+                              "name": "Leaf State Bar",
+                              "fill": "#CFDDD2",
+                              "width": 22,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "vRJtu",
+                              "name": "Leaf State Label",
+                              "fill": "#DDE6E2",
+                              "content": "叶片状态",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ckP5L",
+                              "name": "Leaf State Main",
+                              "fill": "#FFFFFF",
+                              "content": "稳定",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "BKSWs",
+                          "name": "Env Status Strip",
+                          "width": "fill_container",
+                          "height": 36,
+                          "fill": "#95AEA11A",
+                          "cornerRadius": 16,
+                          "gap": 10,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "qYCUD",
+                              "name": "Env Status Title",
+                              "fill": "#DDE6E2",
+                              "content": "环境感受",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 999,
+                              "id": "Ttwyf",
+                              "name": "Env Accent Bar",
+                              "fill": "#9DB8B2",
+                              "width": 22,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "RJAgC",
+                              "name": "Env Status Text",
+                              "fill": "#FFFFFF",
+                              "content": "湿冷",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6zCqR",
+                  "name": "Today Care Card",
+                  "width": 189,
+                  "height": 214,
+                  "fill": "#40605B",
+                  "cornerRadius": 22,
+                  "stroke": {
+                    "thickness": 0,
+                    "fill": "#FFFFFF00"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0B231933",
+                    "offset": {
+                      "x": 0,
+                      "y": 6
+                    },
+                    "blur": 18
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lS6TN",
+                      "name": "Care Label",
+                      "fill": "#DCE6E2",
+                      "content": "Today Care",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "E0cMq",
+                      "name": "Primary Care Block",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 18,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "t0uCs",
+                          "name": "Primary Care Key",
+                          "fill": "#DCE6E2",
+                          "content": "补光",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "hQhd8",
+                          "name": "Primary Care Main",
+                          "fill": "#FFFFFF",
+                          "content": "靠窗",
+                          "fontFamily": "Inter",
+                          "fontSize": 24,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "w9oF0",
+                      "name": "Care Reminder 1",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 12,
+                      "gap": 10,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "Yei8P",
+                          "name": "Reminder Accent 1",
+                          "fill": "#CFDDD2",
+                          "width": 22,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "fXmTm",
+                          "name": "Reminder Text 1",
+                          "fill": "#F4FBF5",
+                          "textGrowth": "fixed-width",
+                          "width": 90,
+                          "content": "补水  两天后",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ieXhx",
+                      "name": "Care Reminder 2",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 12,
+                      "gap": 10,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "RYAI8",
+                          "name": "Reminder Accent 2",
+                          "fill": "#B7C5C0",
+                          "width": 22,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "HKEzu",
+                          "name": "Reminder Text 2",
+                          "fill": "#F4FBF5",
+                          "textGrowth": "fixed-width",
+                          "width": 90,
+                          "content": "暴晒  避免",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "6sA1U",
+              "name": "Life Rhythm Card",
+              "width": "fill_container",
+              "height": 300,
+              "fill": "#3A5955",
+              "cornerRadius": 24,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231933",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 22
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HnJrW",
+                  "name": "Rhythm Top Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "2wr9P",
+                      "name": "Rhythm Label",
+                      "fill": "#D7E1DD",
+                      "content": "Life Rhythm",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "66xpX",
+                      "name": "Rhythm Summary Chip",
+                      "height": 28,
+                      "fill": "#FFFFFF10",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "padding": [
+                        0,
+                        10
+                      ],
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "NAW48",
+                          "name": "Rhythm Chip Text",
+                          "fill": "#F3FBF4",
+                          "content": "这周很稳",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ye0t5",
+                  "name": "Rhythm Main Row",
+                  "width": "fill_container",
+                  "height": 126,
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "oMXVi",
+                      "name": "Rhythm Ring Panel",
+                      "width": 126,
+                      "height": 126,
+                      "fill": "#FFFFFF0B",
+                      "cornerRadius": 20,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "7sY9n",
+                          "x": 21,
+                          "y": 10,
+                          "name": "Rhythm Ring Background",
+                          "innerRadius": 0.76,
+                          "fill": "#FFFFFF14",
+                          "width": 84,
+                          "height": 84
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "FD52L",
+                          "x": 21,
+                          "y": 10,
+                          "name": "Rhythm Ring Foreground",
+                          "innerRadius": 0.76,
+                          "startAngle": -90,
+                          "sweepAngle": 286,
+                          "fill": "#D8E8C8",
+                          "width": 84,
+                          "height": 84
+                        },
+                        {
+                          "type": "text",
+                          "id": "9kPsh",
+                          "x": 41,
+                          "y": 33,
+                          "name": "Ring Text",
+                          "fill": "#F3FBF4",
+                          "content": "节律\n稳定",
+                          "lineHeight": 1.35,
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DAHh5",
+                          "x": 26,
+                          "y": 102,
+                          "name": "Ring Hint",
+                          "fill": "#C6D2CD",
+                          "content": "本周养护感受",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Q39PD",
+                      "name": "Rhythm Curve Panel",
+                      "width": 216,
+                      "height": 126,
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ap2L8",
+                          "name": "Rhythm Curve Wrap",
+                          "width": "fill_container",
+                          "height": 68,
+                          "fill": "#FFFFFF0B",
+                          "cornerRadius": 18,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "path",
+                              "id": "DFDrR",
+                              "x": 8,
+                              "y": 10,
+                              "name": "Rhythm Curve",
+                              "geometry": "M4 36c20-18 36-20 54-8 18 12 34 14 54-4 16-14 36-10 52 4 14 12 24 14 30-10",
+                              "fill": "#FFFFFF00",
+                              "width": 198,
+                              "height": 48,
+                              "stroke": {
+                                "thickness": 3,
+                                "fill": "#D8E8C8"
+                              }
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "DjdWb",
+                              "x": 22,
+                              "y": 28,
+                              "name": "Curve Dot 1",
+                              "fill": "#EAF2E4",
+                              "width": 8,
+                              "height": 8
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "MJdjC",
+                              "x": 72,
+                              "y": 36,
+                              "name": "Curve Dot 2",
+                              "fill": "#C8D8C1",
+                              "width": 8,
+                              "height": 8
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "3bC3G",
+                              "x": 122,
+                              "y": 18,
+                              "name": "Curve Dot 3",
+                              "fill": "#EAF2E4",
+                              "width": 8,
+                              "height": 8
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "t6zer",
+                              "x": 174,
+                              "y": 34,
+                              "name": "Curve Dot 4",
+                              "fill": "#C8D8C1",
+                              "width": 8,
+                              "height": 8
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jgjHP",
+                          "name": "Rhythm Info Row",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "DTvaa",
+                              "name": "Companion Day Chip",
+                              "width": 104,
+                              "height": 40,
+                              "fill": "#FFFFFF0D",
+                              "cornerRadius": 14,
+                              "layout": "vertical",
+                              "padding": [
+                                0,
+                                12
+                              ],
+                              "justifyContent": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "l6IZ0",
+                                  "name": "Day Chip Text",
+                                  "fill": "#F3FBF4",
+                                  "content": "陪伴第 128 天",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "nXL3Z",
+                              "name": "Last Water Chip",
+                              "width": 104,
+                              "height": 40,
+                              "fill": "#FFFFFF0D",
+                              "cornerRadius": 14,
+                              "layout": "vertical",
+                              "padding": [
+                                0,
+                                12
+                              ],
+                              "justifyContent": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Jv2aM",
+                                  "name": "Water Chip Text",
+                                  "fill": "#F3FBF4",
+                                  "content": "上次浇水 前天",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qqAOp",
+                  "name": "Rhythm Bar Wrap",
+                  "width": "fill_container",
+                  "height": 56,
+                  "fill": "#FFFFFF0B",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TGEQx",
+                      "name": "Bar Label",
+                      "fill": "#D7E1DD",
+                      "content": "今天顺手通风更偏早晨",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "4Imx3",
+                      "name": "Bar Row",
+                      "width": "fill_container",
+                      "height": 14,
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "7Xe3a",
+                          "name": "Morning Bar",
+                          "fill": "#D8E8C8",
+                          "width": 98,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "v8YmY",
+                          "name": "Noon Bar",
+                          "opacity": 0.52,
+                          "fill": "#9BAE9A",
+                          "width": 92,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "X6uZT",
+                          "name": "Evening Bar",
+                          "opacity": 0.36,
+                          "fill": "#72867F",
+                          "width": 94,
+                          "height": 14
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "1W2T1",
+                  "name": "Rhythm Summary",
+                  "fill": "#D7E1DD",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "你最近更常在早晨照顾它，生活和养护节奏正在同步。",
+                  "lineHeight": 1.45,
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NLuTH",
+              "name": "Video Recommendation Card",
+              "width": "fill_container",
+              "height": 168,
+              "fill": "#324F49",
+              "cornerRadius": 24,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231944",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 24
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Hl2Vb",
+                  "name": "Video Label",
+                  "fill": "#D8E8DA",
+                  "content": "Video Recommendation",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "V1NsA",
+                  "name": "Video Content Row",
+                  "width": "fill_container",
+                  "height": 86,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 18,
+                      "id": "Rb1ed",
+                      "name": "Video Thumbnail",
+                      "fill": "#DCEFD955",
+                      "width": 88,
+                      "height": 72
+                    },
+                    {
+                      "type": "frame",
+                      "id": "5UBQ7",
+                      "name": "Video Text Wrap",
+                      "width": 170,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "oxFX2",
+                          "name": "Video Title",
+                          "fill": "#FFFFFF",
+                          "content": "龟背竹浇水节奏",
+                          "fontFamily": "Inter",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "91ZMd",
+                          "name": "Video Meta",
+                          "fill": "#D4E2D5",
+                          "content": "6 min · 新手友好",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "W7xkW",
+                      "name": "Video Watch Button",
+                      "width": 76,
+                      "height": 34,
+                      "fill": "#E6F6E6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IJOJg",
+                          "name": "Video Button Text",
+                          "fill": "#204735",
+                          "content": "观看",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fb80P",
+              "name": "Similar Blogger Card",
+              "width": "fill_container",
+              "height": 196,
+              "fill": "#334F4A",
+              "cornerRadius": 24,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231933",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 20
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "12nkL",
+                  "name": "Blogger Label",
+                  "fill": "#D7E1DD",
+                  "content": "Similar Creators",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "GVduF",
+                  "name": "Creator Row 1",
+                  "width": "fill_container",
+                  "height": 56,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "iXdl6",
+                      "name": "Creator Avatar 1",
+                      "fill": "#A9BAB4",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "0MK79",
+                      "name": "Creator Text 1",
+                      "width": 186,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "V5QOv",
+                          "name": "Creator Name 1",
+                          "fill": "#FFFFFF",
+                          "content": "雨天阳台观察",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Y54h9",
+                          "name": "Creator Meta 1",
+                          "fill": "#D6E0DC",
+                          "content": "潮湿养护 · 阴天补光",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uOvNK",
+                      "name": "Creator Button 1",
+                      "width": 62,
+                      "height": 32,
+                      "fill": "#E6F6E6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vBXjd",
+                          "name": "Creator Button Text 1",
+                          "fill": "#204735",
+                          "content": "查看",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4po7u",
+                  "name": "Creator Row 2",
+                  "width": "fill_container",
+                  "height": 56,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "2wE56",
+                      "name": "Creator Avatar 2",
+                      "fill": "#9DAEA8",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TDUMe",
+                      "name": "Creator Text 2",
+                      "width": 186,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "9c0u9",
+                          "name": "Creator Name 2",
+                          "fill": "#FFFFFF",
+                          "content": "慢生长备忘录",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "IMOu5",
+                          "name": "Creator Meta 2",
+                          "fill": "#D6E0DC",
+                          "content": "雨季节奏 · 室内通风",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XEwih",
+                      "name": "Creator Button 2",
+                      "width": 62,
+                      "height": 32,
+                      "fill": "#E6F6E6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ky9M2",
+                          "name": "Creator Button Text 2",
+                          "fill": "#204735",
+                          "content": "查看",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SOA7p",
+          "layoutPosition": "absolute",
+          "x": 228,
+          "y": 24,
+          "name": "Rainy Weather Background",
+          "width": 192,
+          "height": 188,
+          "fill": "#FFFFFF00",
+          "layout": "none",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "fghf1",
+              "x": 72,
+              "y": 30,
+              "name": "Cloud Back",
+              "fill": "#A7B7B055",
+              "width": 96,
+              "height": 56
+            },
+            {
+              "type": "ellipse",
+              "id": "uBMOI",
+              "x": 40,
+              "y": 46,
+              "name": "Cloud Left",
+              "fill": "#C0CCC766",
+              "width": 74,
+              "height": 46
+            },
+            {
+              "type": "ellipse",
+              "id": "P9Gac",
+              "x": 118,
+              "y": 44,
+              "name": "Cloud Right",
+              "fill": "#B2C0BA66",
+              "width": 60,
+              "height": 42
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "lhMIV",
+              "x": 54,
+              "y": 68,
+              "name": "Cloud Base",
+              "fill": "#B9C5C066",
+              "width": 112,
+              "height": 28
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "CSWOS",
+              "x": 78,
+              "y": 102,
+              "name": "Rain Drop 1",
+              "rotation": 14,
+              "fill": "#CFE0DA55",
+              "width": 6,
+              "height": 26
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "3ZwYt",
+              "x": 104,
+              "y": 108,
+              "name": "Rain Drop 2",
+              "rotation": 14,
+              "fill": "#CFE0DA66",
+              "width": 6,
+              "height": 26
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "zzHkT",
+              "x": 130,
+              "y": 102,
+              "name": "Rain Drop 3",
+              "rotation": 14,
+              "fill": "#CFE0DA55",
+              "width": 6,
+              "height": 26
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "9OZT1",
+              "x": 156,
+              "y": 110,
+              "name": "Rain Drop 4",
+              "rotation": 14,
+              "fill": "#CFE0DA44",
+              "width": 6,
+              "height": 22
+            }
+          ]
+        },
+        {
+          "type": "ellipse",
+          "id": "Aozhq",
+          "layoutPosition": "absolute",
+          "x": 254,
+          "y": 102,
+          "name": "Gloom Glow",
+          "fill": "#DDE7E110",
+          "width": 150,
+          "height": 150
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "dSJmx",
+      "x": 478,
+      "y": 0,
+      "name": "Plant Care Mobile Home / Sunny",
+      "clip": true,
+      "width": 430,
+      "height": 1618,
+      "fill": "#2E6A45",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": [
+        24,
+        20,
+        32,
+        20
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "el4tc",
+          "name": "Content Stack",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "GmAGG",
+              "name": "Top Bar",
+              "width": "fill_container",
+              "height": 28,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mRhED",
+                  "name": "Top Bar Left",
+                  "fill": "#F5F8E8",
+                  "content": "4月18日 Saturday",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "4HWAP",
+                  "name": "Top Bar Right",
+                  "fill": "#F9EDB2",
+                  "content": "Sunny",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GOry4",
+              "name": "Plant Hero Card",
+              "width": "fill_container",
+              "height": 380,
+              "fill": "#3D7A52",
+              "cornerRadius": 30,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231966",
+                "offset": {
+                  "x": 0,
+                  "y": 12
+                },
+                "blur": 32
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "9BMys",
+                  "name": "Hero Title",
+                  "fill": "#FFFFFF",
+                  "content": "龟背竹 Monstera",
+                  "fontFamily": "Inter",
+                  "fontSize": 28,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "ArFRd",
+                  "name": "Hero Subtitle",
+                  "fill": "#CFE0D2",
+                  "content": "春季养护进行中",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "eNC0Q",
+                  "name": "Pixel Plant Art",
+                  "width": "fill_container",
+                  "height": 178,
+                  "fill": "#FFFFFF00",
+                  "stroke": {
+                    "thickness": 0,
+                    "fill": "#FFFFFF00"
+                  },
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "o7xCh",
+                      "x": 136,
+                      "y": 62,
+                      "name": "Stem",
+                      "fill": "#84CC6C",
+                      "width": 22,
+                      "height": 72
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "cwoMN",
+                      "x": 112,
+                      "y": 48,
+                      "name": "Leaf 1",
+                      "fill": "#B7F07D",
+                      "width": 24,
+                      "height": 24
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "7LPMP",
+                      "x": 136,
+                      "y": 34,
+                      "name": "Leaf 2",
+                      "fill": "#9EE06D",
+                      "width": 28,
+                      "height": 28
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "4BfEu",
+                      "x": 164,
+                      "y": 50,
+                      "name": "Leaf 3",
+                      "fill": "#B7F07D",
+                      "width": 24,
+                      "height": 24
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "bvQbU",
+                      "x": 100,
+                      "y": 82,
+                      "name": "Leaf 4",
+                      "fill": "#9EE06D",
+                      "width": 28,
+                      "height": 28
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "WddO9",
+                      "x": 148,
+                      "y": 82,
+                      "name": "Leaf 5",
+                      "fill": "#B7F07D",
+                      "width": 34,
+                      "height": 34
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 3,
+                      "id": "eleAr",
+                      "x": 122,
+                      "y": 132,
+                      "name": "Pot Top",
+                      "fill": "#A86E49",
+                      "width": 52,
+                      "height": 10
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "dDGE8",
+                      "x": 128,
+                      "y": 142,
+                      "name": "Pot Body",
+                      "fill": "#8B5A3B",
+                      "width": 40,
+                      "height": 24
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HPGe5",
+                  "name": "Hero Primary Button",
+                  "width": 132,
+                  "height": 42,
+                  "fill": "#E6F6E6",
+                  "cornerRadius": 999,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VREXW",
+                      "name": "Hero Button Text",
+                      "fill": "#204735",
+                      "content": "立即打卡",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dIv2Y",
+              "name": "Status Row",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "x7yiU",
+                  "name": "Plant Status Card",
+                  "width": 189,
+                  "height": 236,
+                  "fill": "#5A8E6B",
+                  "cornerRadius": 22,
+                  "stroke": {
+                    "thickness": 0,
+                    "fill": "#FFFFFF00"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0B231933",
+                    "offset": {
+                      "x": 0,
+                      "y": 6
+                    },
+                    "blur": 18
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "j2V7K",
+                      "name": "Status Label",
+                      "fill": "#DCEBDD",
+                      "content": "Plant Status",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FEGN1",
+                      "name": "Status Main Label",
+                      "fill": "#EAF4E7",
+                      "content": "总体状态",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "1jLB9",
+                      "name": "Status Main Value",
+                      "fill": "#FFFFFF",
+                      "content": "舒展",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "esBzi",
+                      "name": "Status Semantic Row",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "lM3ob",
+                          "name": "Growth Stage Block",
+                          "width": "fill_container",
+                          "height": 36,
+                          "fill": "#DFF0B81A",
+                          "cornerRadius": 16,
+                          "gap": 10,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 999,
+                              "id": "NemPe",
+                              "name": "Growth Stage Bar",
+                              "fill": "#DDF1A5",
+                              "width": 22,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "kuPq4",
+                              "name": "Growth Stage Label",
+                              "fill": "#EAF4E7",
+                              "content": "生长阶段",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Te94X",
+                              "name": "Growth Stage Main",
+                              "fill": "#FFFFFF",
+                              "content": "萌发",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9pTvt",
+                          "name": "Leaf State Block",
+                          "width": "fill_container",
+                          "height": 36,
+                          "fill": "#F4F7D71A",
+                          "cornerRadius": 16,
+                          "gap": 10,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 999,
+                              "id": "YbiCF",
+                              "name": "Leaf State Bar",
+                              "fill": "#F4F7D7",
+                              "width": 22,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "1TcKr",
+                              "name": "Leaf State Label",
+                              "fill": "#EAF4E7",
+                              "content": "叶片状态",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "pOxBR",
+                              "name": "Leaf State Main",
+                              "fill": "#FFFFFF",
+                              "content": "稳定",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hVpsE",
+                          "name": "Env Status Strip",
+                          "width": "fill_container",
+                          "height": 36,
+                          "fill": "#BFE3A81A",
+                          "cornerRadius": 16,
+                          "gap": 10,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "SyYO3",
+                              "name": "Env Status Title",
+                              "fill": "#EAF4E7",
+                              "content": "环境感受",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 999,
+                              "id": "C8ZMy",
+                              "name": "Env Accent Bar",
+                              "fill": "#BFE3A8",
+                              "width": 22,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "CvigD",
+                              "name": "Env Status Text",
+                              "fill": "#FFFFFF",
+                              "content": "舒适",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vc3S0",
+                  "name": "Today Care Card",
+                  "width": 189,
+                  "height": 214,
+                  "fill": "#6B9A74",
+                  "cornerRadius": 22,
+                  "stroke": {
+                    "thickness": 0,
+                    "fill": "#FFFFFF00"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0B231933",
+                    "offset": {
+                      "x": 0,
+                      "y": 6
+                    },
+                    "blur": 18
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VZpdk",
+                      "name": "Care Label",
+                      "fill": "#EAF3E7",
+                      "content": "Today Care",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "03shh",
+                      "name": "Primary Care Block",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 18,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "A49fj",
+                          "name": "Primary Care Key",
+                          "fill": "#EAF3E7",
+                          "content": "补光",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GlOvB",
+                          "name": "Primary Care Main",
+                          "fill": "#FFFFFF",
+                          "content": "上午",
+                          "fontFamily": "Inter",
+                          "fontSize": 24,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sM2Be",
+                      "name": "Care Reminder 1",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 12,
+                      "gap": 10,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "YGkio",
+                          "name": "Reminder Accent 1",
+                          "fill": "#F0F7CE",
+                          "width": 22,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "vUGCJ",
+                          "name": "Reminder Text 1",
+                          "fill": "#F4FBF5",
+                          "textGrowth": "fixed-width",
+                          "width": 90,
+                          "content": "补水  两天后",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "I8s83",
+                      "name": "Care Reminder 2",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 12,
+                      "gap": 10,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "UecPe",
+                          "name": "Reminder Accent 2",
+                          "fill": "#FFDFA7",
+                          "width": 22,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "nkvZ4",
+                          "name": "Reminder Text 2",
+                          "fill": "#F4FBF5",
+                          "textGrowth": "fixed-width",
+                          "width": 90,
+                          "content": "暴晒  避免",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nQJHP",
+              "name": "Life Rhythm Card",
+              "width": "fill_container",
+              "height": 300,
+              "fill": "#5A8D69",
+              "cornerRadius": 24,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231933",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 22
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "j1XDc",
+                  "name": "Rhythm Top Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Bzf8g",
+                      "name": "Rhythm Label",
+                      "fill": "#E3EEE4",
+                      "content": "Life Rhythm",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sTKHi",
+                      "name": "Rhythm Summary Chip",
+                      "height": 28,
+                      "fill": "#FFFFFF14",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "padding": [
+                        0,
+                        10
+                      ],
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "cXeTK",
+                          "name": "Rhythm Chip Text",
+                          "fill": "#F7FBF7",
+                          "content": "这周很稳",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "IyhDG",
+                  "name": "Rhythm Main Row",
+                  "width": "fill_container",
+                  "height": 126,
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "SKTxg",
+                      "name": "Rhythm Ring Panel",
+                      "width": 126,
+                      "height": 126,
+                      "fill": "#FFFFFF0D",
+                      "cornerRadius": 20,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "Aq2U2",
+                          "x": 21,
+                          "y": 10,
+                          "name": "Rhythm Ring Background",
+                          "innerRadius": 0.76,
+                          "fill": "#FFFFFF18",
+                          "width": 84,
+                          "height": 84
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "L6tx9",
+                          "x": 21,
+                          "y": 10,
+                          "name": "Rhythm Ring Foreground",
+                          "innerRadius": 0.76,
+                          "startAngle": -90,
+                          "sweepAngle": 286,
+                          "fill": "#E7F5B6",
+                          "width": 84,
+                          "height": 84
+                        },
+                        {
+                          "type": "text",
+                          "id": "heEfe",
+                          "x": 41,
+                          "y": 33,
+                          "name": "Ring Text",
+                          "fill": "#F6FBF6",
+                          "content": "节律\n稳定",
+                          "lineHeight": 1.35,
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "TK3S4",
+                          "x": 26,
+                          "y": 102,
+                          "name": "Ring Hint",
+                          "fill": "#D8E8DA",
+                          "content": "本周养护感受",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ALG4l",
+                      "name": "Rhythm Curve Panel",
+                      "width": 216,
+                      "height": 126,
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "RDWij",
+                          "name": "Rhythm Curve Wrap",
+                          "width": "fill_container",
+                          "height": 68,
+                          "fill": "#FFFFFF0D",
+                          "cornerRadius": 18,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "path",
+                              "id": "DHhND",
+                              "x": 8,
+                              "y": 10,
+                              "name": "Rhythm Curve",
+                              "geometry": "M4 36c20-18 36-20 54-8 18 12 34 14 54-4 16-14 36-10 52 4 14 12 24 14 30-10",
+                              "fill": "#FFFFFF00",
+                              "width": 198,
+                              "height": 48,
+                              "stroke": {
+                                "thickness": 3,
+                                "fill": "#E7F5B6"
+                              }
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "5uPAz",
+                              "x": 22,
+                              "y": 28,
+                              "name": "Curve Dot 1",
+                              "fill": "#F3FBD8",
+                              "width": 8,
+                              "height": 8
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "KMgjL",
+                              "x": 72,
+                              "y": 36,
+                              "name": "Curve Dot 2",
+                              "fill": "#DDF0AF",
+                              "width": 8,
+                              "height": 8
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "a7CWV",
+                              "x": 122,
+                              "y": 18,
+                              "name": "Curve Dot 3",
+                              "fill": "#F3FBD8",
+                              "width": 8,
+                              "height": 8
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "KXzR2",
+                              "x": 174,
+                              "y": 34,
+                              "name": "Curve Dot 4",
+                              "fill": "#DDF0AF",
+                              "width": 8,
+                              "height": 8
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "G9HxZ",
+                          "name": "Rhythm Info Row",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "gZ2tX",
+                              "name": "Companion Day Chip",
+                              "width": 104,
+                              "height": 40,
+                              "fill": "#FFFFFF10",
+                              "cornerRadius": 14,
+                              "layout": "vertical",
+                              "padding": [
+                                0,
+                                12
+                              ],
+                              "justifyContent": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "aUgnH",
+                                  "name": "Day Chip Text",
+                                  "fill": "#F3FBF4",
+                                  "content": "陪伴第 128 天",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "LQmBn",
+                              "name": "Last Water Chip",
+                              "width": 104,
+                              "height": 40,
+                              "fill": "#FFFFFF10",
+                              "cornerRadius": 14,
+                              "layout": "vertical",
+                              "padding": [
+                                0,
+                                12
+                              ],
+                              "justifyContent": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "SZSOd",
+                                  "name": "Water Chip Text",
+                                  "fill": "#F3FBF4",
+                                  "content": "上次浇水 前天",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QVoxK",
+                  "name": "Rhythm Bar Wrap",
+                  "width": "fill_container",
+                  "height": 56,
+                  "fill": "#FFFFFF0D",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "4JV7R",
+                      "name": "Bar Label",
+                      "fill": "#E3EEE4",
+                      "content": "今天顺手通风更偏早晨",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fRzyD",
+                      "name": "Bar Row",
+                      "width": "fill_container",
+                      "height": 14,
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "sGwTq",
+                          "name": "Morning Bar",
+                          "fill": "#E7F5B6",
+                          "width": 98,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "M3Uc9",
+                          "name": "Noon Bar",
+                          "opacity": 0.58,
+                          "fill": "#B6CD93",
+                          "width": 92,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "I9xLS",
+                          "name": "Evening Bar",
+                          "opacity": 0.4,
+                          "fill": "#88A171",
+                          "width": 94,
+                          "height": 14
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "jkTwl",
+                  "name": "Rhythm Summary",
+                  "fill": "#E3EEE4",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "你最近更常在早晨照顾它，生活和养护节奏正在同步。",
+                  "lineHeight": 1.45,
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jzHyb",
+              "name": "Video Recommendation Card",
+              "width": "fill_container",
+              "height": 168,
+              "fill": "#4F815E",
+              "cornerRadius": 24,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231944",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 24
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "6EeNB",
+                  "name": "Video Label",
+                  "fill": "#D8E8DA",
+                  "content": "Video Recommendation",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "1kc2x",
+                  "name": "Video Content Row",
+                  "width": "fill_container",
+                  "height": 86,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 18,
+                      "id": "nt1LM",
+                      "name": "Video Thumbnail",
+                      "fill": "#DCEFD955",
+                      "width": 88,
+                      "height": 72
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cl2e3",
+                      "name": "Video Text Wrap",
+                      "width": 170,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nBJy9",
+                          "name": "Video Title",
+                          "fill": "#FFFFFF",
+                          "content": "龟背竹浇水节奏",
+                          "fontFamily": "Inter",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "0ypAg",
+                          "name": "Video Meta",
+                          "fill": "#D4E2D5",
+                          "content": "6 min · 新手友好",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tkabb",
+                      "name": "Video Watch Button",
+                      "width": 76,
+                      "height": 34,
+                      "fill": "#E6F6E6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "cImDH",
+                          "name": "Video Button Text",
+                          "fill": "#204735",
+                          "content": "观看",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Kiciu",
+              "name": "Similar Blogger Card",
+              "width": "fill_container",
+              "height": 196,
+              "fill": "#4E805D",
+              "cornerRadius": 24,
+              "stroke": {
+                "thickness": 0,
+                "fill": "#FFFFFF00"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231933",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 20
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ZFXd4",
+                  "name": "Blogger Label",
+                  "fill": "#D8E8DA",
+                  "content": "Similar Creators",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "z1l5G",
+                  "name": "Creator Row 1",
+                  "width": "fill_container",
+                  "height": 56,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "8pCiM",
+                      "name": "Creator Avatar 1",
+                      "fill": "#D6E8C8",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BJTX5",
+                      "name": "Creator Text 1",
+                      "width": 186,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IhgT4",
+                          "name": "Creator Name 1",
+                          "fill": "#FFFFFF",
+                          "content": "自然阳台日记",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "xfjqX",
+                          "name": "Creator Meta 1",
+                          "fill": "#D6E4D7",
+                          "content": "窗台养护 · 治愈系",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wUQxn",
+                      "name": "Creator Button 1",
+                      "width": 62,
+                      "height": 32,
+                      "fill": "#E6F6E6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TateT",
+                          "name": "Creator Button Text 1",
+                          "fill": "#204735",
+                          "content": "查看",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "lkqiw",
+                  "name": "Creator Row 2",
+                  "width": "fill_container",
+                  "height": 56,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "RFqUi",
+                      "name": "Creator Avatar 2",
+                      "fill": "#CFE1D4",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7rZv6",
+                      "name": "Creator Text 2",
+                      "width": 186,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "uHMOQ",
+                          "name": "Creator Name 2",
+                          "fill": "#FFFFFF",
+                          "content": "植物散步时间",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "hUPRj",
+                          "name": "Creator Meta 2",
+                          "fill": "#D6E4D7",
+                          "content": "龟背竹日常 · 光照观察",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qNkEO",
+                      "name": "Creator Button 2",
+                      "width": 62,
+                      "height": 32,
+                      "fill": "#E6F6E6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ANXJ8",
+                          "name": "Creator Button Text 2",
+                          "fill": "#204735",
+                          "content": "查看",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HxhqE",
+          "layoutPosition": "absolute",
+          "x": 228,
+          "y": 24,
+          "name": "Sunny Weather Background",
+          "width": 196,
+          "height": 180,
+          "fill": "#FFFFFF00",
+          "layout": "none",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "OD2kp",
+              "x": 28,
+              "y": 4,
+              "name": "Sun Glow",
+              "fill": "#FFE99833",
+              "width": 160,
+              "height": 160
+            },
+            {
+              "type": "ellipse",
+              "id": "75eZ8",
+              "x": 78,
+              "y": 24,
+              "name": "Sun Disc",
+              "fill": "#FFE089",
+              "width": 88,
+              "height": 88
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "woRnE",
+              "x": 118,
+              "y": 0,
+              "name": "Sun Ray 1",
+              "fill": "#FFE9A7",
+              "width": 8,
+              "height": 26
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "7z3gF",
+              "x": 118,
+              "y": 110,
+              "name": "Sun Ray 2",
+              "fill": "#FFE9A7",
+              "width": 8,
+              "height": 26
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "0VSVT",
+              "x": 54,
+              "y": 64,
+              "name": "Sun Ray 3",
+              "fill": "#FFE9A7",
+              "width": 26,
+              "height": 8
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "O2FeR",
+              "x": 164,
+              "y": 64,
+              "name": "Sun Ray 4",
+              "fill": "#FFE9A7",
+              "width": 26,
+              "height": 8
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "9nEEt",
+              "x": 73,
+              "y": 20,
+              "name": "Sun Ray 5",
+              "rotation": -45,
+              "fill": "#FFE9A7",
+              "width": 8,
+              "height": 22
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "VanAV",
+              "x": 156,
+              "y": 95,
+              "name": "Sun Ray 6",
+              "rotation": -45,
+              "fill": "#FFE9A7",
+              "width": 8,
+              "height": 22
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "KOJkr",
+              "x": 156,
+              "y": 20,
+              "name": "Sun Ray 7",
+              "rotation": 45,
+              "fill": "#FFE9A7",
+              "width": 8,
+              "height": 22
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 999,
+              "id": "toy7z",
+              "x": 73,
+              "y": 95,
+              "name": "Sun Ray 8",
+              "rotation": 45,
+              "fill": "#FFE9A7",
+              "width": 8,
+              "height": 22
+            }
+          ]
+        },
+        {
+          "type": "ellipse",
+          "id": "guUUn",
+          "layoutPosition": "absolute",
+          "x": 258,
+          "y": 108,
+          "name": "Warm Mist",
+          "fill": "#FFF8D414",
+          "width": 138,
+          "height": 138
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "g3dPg",
+      "x": 956,
+      "y": 0,
+      "name": "Plant Growth 3D Reconstruction",
+      "clip": true,
+      "width": 430,
+      "height": 1618,
+      "fill": "#213A34",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": [
+        24,
+        20,
+        32,
+        20
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "g3dCt",
+          "name": "Content Stack",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "g3dTp",
+              "name": "Top Bar",
+              "width": "fill_container",
+              "height": 54,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g3dBk",
+                  "name": "Back Button",
+                  "width": 78,
+                  "height": 42,
+                  "fill": "#E6F1DE",
+                  "cornerRadius": 999,
+                  "layout": "horizontal",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dAr",
+                      "name": "Back Arrow",
+                      "fill": "#274033",
+                  "content": "\u2190",
+                  "fontFamily": "Segoe UI",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dBt",
+                      "name": "Back Text",
+                      "fill": "#274033",
+                  "content": "\u8fd4\u56de",
+                  "fontFamily": "Microsoft YaHei",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dHd",
+                  "name": "Header Copy",
+                  "width": 256,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "flex_end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dEy",
+                      "name": "Eyebrow",
+                      "fill": "#BFD1C4",
+                      "content": "3D Growth Reconstruction",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dTi",
+                      "name": "Title",
+                      "fill": "#F6FBF6",
+                  "content": "\u6210\u957f\u91cd\u5efa",
+                  "fontFamily": "Microsoft YaHei",
+                      "fontSize": 22,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g3dVc",
+              "name": "3D Viewer Card",
+              "width": "fill_container",
+              "height": 468,
+              "fill": "#2B4B44",
+              "cornerRadius": 30,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231966",
+                "offset": {
+                  "x": 0,
+                  "y": 12
+                },
+                "blur": 32
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g3dVt",
+                  "name": "Viewer Heading",
+                  "width": "fill_container",
+                  "height": 54,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "g3dVl",
+                      "name": "Viewer Text",
+                      "width": 224,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dLn",
+                          "name": "Viewer Label",
+                          "fill": "#DDE8E1",
+                          "content": "Model Stage",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "g3dNm",
+                          "name": "Viewer Title",
+                          "fill": "#FFFFFF",
+                      "content": "\u9f9f\u80cc\u7af9 \u00b7 \u7b2c 4 \u6b21\u5efa\u6a21",
+                      "fontFamily": "Microsoft YaHei",
+                          "fontSize": 24,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dSt",
+                      "name": "Viewer Status Chip",
+                      "width": 92,
+                      "height": 34,
+                      "fill": "#E7F5B6",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dSc",
+                          "name": "Status Text",
+                          "fill": "#29412E",
+                      "content": "\u5df2\u5b8c\u6210",
+                      "fontFamily": "Microsoft YaHei",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dVs",
+                  "name": "3D Stage",
+                  "width": "fill_container",
+                  "height": 310,
+                  "fill": "#5E8B61",
+                  "cornerRadius": 26,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#DDEDD855"
+                  },
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "g3dGl",
+                      "x": 24,
+                      "y": 28,
+                      "name": "Stage Glow",
+                      "fill": "#E7F5B626",
+                      "width": 300,
+                      "height": 220
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dSd",
+                      "x": 118,
+                      "y": 232,
+                      "name": "Model Shadow",
+                      "fill": "#18312455",
+                      "width": 132,
+                      "height": 28
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dPb",
+                      "x": 136,
+                      "y": 184,
+                      "name": "Model Base",
+                      "fill": "#DDE8CE",
+                      "width": 92,
+                      "height": 52
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dCo",
+                      "x": 158,
+                      "y": 106,
+                      "name": "Core Volume",
+                      "fill": "#CFEA92",
+                      "width": 52,
+                      "height": 74
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dLf1",
+                      "x": 120,
+                      "y": 96,
+                      "name": "Leaf Volume Left",
+                      "fill": "#BCE07C",
+                      "width": 46,
+                      "height": 58
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dLf2",
+                      "x": 200,
+                      "y": 112,
+                      "name": "Leaf Volume Right",
+                      "fill": "#D7F1A2",
+                      "width": 42,
+                      "height": 52
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dLf3",
+                      "x": 145,
+                      "y": 66,
+                      "name": "Leaf Volume Top",
+                      "fill": "#A7D869",
+                      "width": 54,
+                      "height": 46
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 18,
+                      "id": "g3dTrk",
+                      "x": 252,
+                      "y": 42,
+                      "name": "Rotation Track",
+                      "fill": "#FFFFFF22",
+                      "width": 88,
+                      "height": 226
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "g3dKn",
+                      "x": 284,
+                      "y": 92,
+                      "name": "Rotation Knob",
+                      "fill": "#F4FBEE",
+                      "width": 24,
+                      "height": 86
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dCn",
+                      "x": 20,
+                      "y": 22,
+                      "name": "Corner Note",
+                      "width": 126,
+                      "height": 44,
+                      "fill": "#FFFFFF1A",
+                      "cornerRadius": 16,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dCt1",
+                          "name": "Corner Note Text",
+                          "fill": "#F6FBF6",
+                      "content": "\u62d6\u52a8\u6a21\u578b\u67e5\u770b\u53f6\u7247\u4f53\u79ef",
+                      "fontFamily": "Microsoft YaHei",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dPr",
+                      "x": 20,
+                      "y": 252,
+                      "name": "Progress Chip",
+                      "width": 108,
+                      "height": 36,
+                      "fill": "#294D37",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dPc",
+                          "name": "Progress Text",
+                          "fill": "#F3FBF4",
+                      "content": "\u751f\u957f\u8fdb\u5ea6 78%",
+                      "fontFamily": "Microsoft YaHei",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "g3dCp",
+                  "name": "Viewer Caption",
+                  "fill": "#CFE0D2",
+              "content": "\u8fd9\u4e00\u8f6e\u91cd\u5efa\u80fd\u770b\u5230\u9876\u90e8\u65b0\u53f6\u5c55\u5f00\uff0c\u682a\u578b\u6bd4\u4e0a\u5468\u66f4\u9971\u6ee1\u3002",
+              "fontFamily": "Microsoft YaHei",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g3dTl",
+              "name": "Timeline Scrubber Card",
+              "width": "fill_container",
+              "height": 148,
+              "fill": "#35544F",
+              "cornerRadius": 24,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0B231944",
+                "offset": {
+                  "x": 0,
+                  "y": 8
+                },
+                "blur": 24
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g3dTr",
+                  "name": "Timeline Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dLb",
+                      "name": "Timeline Label",
+                      "fill": "#D7E1DD",
+                      "content": "Growth Timeline",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dTx",
+                      "name": "Timeline Hint",
+                      "fill": "#C6D6CF",
+                  "content": "\u62d6\u52a8\u67e5\u770b\u4e0d\u540c\u65f6\u95f4\u70b9",
+                  "fontFamily": "Microsoft YaHei",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dBr",
+                  "name": "Timeline Bar Wrap",
+                  "width": "fill_container",
+                  "height": 44,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "g3dBg",
+                      "x": 0,
+                      "y": 17,
+                      "name": "Timeline Base",
+                      "fill": "#1A2C28",
+                      "width": 390,
+                      "height": 10
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "g3dFi",
+                      "x": 0,
+                      "y": 17,
+                      "name": "Timeline Fill",
+                      "fill": "#E7F5B6",
+                      "width": 276,
+                      "height": 10
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dN1",
+                      "x": 48,
+                      "y": 12,
+                      "name": "Node 1",
+                      "fill": "#D7E6D8",
+                      "width": 20,
+                      "height": 20
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dN2",
+                      "x": 142,
+                      "y": 12,
+                      "name": "Node 2",
+                      "fill": "#D7E6D8",
+                      "width": 20,
+                      "height": 20
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dN3",
+                      "x": 236,
+                      "y": 10,
+                      "name": "Node 3 Active",
+                      "fill": "#F6FBF6",
+                      "width": 24,
+                      "height": 24
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dN4",
+                      "x": 332,
+                      "y": 12,
+                      "name": "Node 4",
+                      "fill": "#7E968D",
+                      "width": 20,
+                      "height": 20
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dDt",
+                  "name": "Timeline Dates",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dD1",
+                      "name": "Date 1",
+                      "fill": "#CFE0D2",
+                      "content": "03.10",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dD2",
+                      "name": "Date 2",
+                      "fill": "#CFE0D2",
+                      "content": "03.24",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dD3",
+                      "name": "Date 3",
+                      "fill": "#F3FBF4",
+                      "content": "04.18",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dD4",
+                      "name": "Date 4",
+                      "fill": "#AFC0BA",
+                      "content": "05.02",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g3dAc",
+              "name": "Add Capture Card",
+              "width": "fill_container",
+              "height": 174,
+              "fill": "#D97B66",
+              "cornerRadius": 26,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#6A2C2026",
+                "offset": {
+                  "x": 0,
+                  "y": 10
+                },
+                "blur": 26
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g3dAl",
+                  "name": "Add Label",
+                  "fill": "#FFEFE9",
+                  "content": "Capture For Next Build",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dAt",
+                  "name": "Add Title",
+                  "fill": "#FFF8F5",
+              "content": "\u62cd\u7167\u6dfb\u52a0\u65b0\u7684 3D \u8282\u70b9",
+              "fontFamily": "Microsoft YaHei",
+                  "fontSize": 26,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dAd",
+                  "name": "Add Description",
+                  "fill": "#FFE8E0",
+              "content": "\u8865\u5145\u6b63\u9762\u3001\u4fa7\u9762\u548c\u7ec6\u8282\u89c6\u89d2\uff0c\u8ba9\u4e0b\u4e00\u8f6e\u5efa\u6a21\u66f4\u5b8c\u6574\u3002",
+              "fontFamily": "Microsoft YaHei",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dAb",
+                  "name": "Add Button",
+                  "width": 122,
+                  "height": 40,
+                  "fill": "#FFF6F0",
+                  "cornerRadius": 999,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dAp",
+                      "name": "Add Button Text",
+                      "fill": "#8D4738",
+                  "content": "\u7acb\u5373\u62cd\u7167",
+                  "fontFamily": "Microsoft YaHei",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+        {
+          "type": "frame",
+          "id": "g3dEv",
+          "name": "Event Calendar Card",
+          "width": "fill_container",
+          "height": 430,
+          "fill": "#E8EEDB",
+          "cornerRadius": 28,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+                "color": "#0B231922",
+                "offset": {
+                  "x": 0,
+                  "y": 10
+                },
+                "blur": 28
+              },
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "g3dEh",
+              "name": "Event Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g3dEx",
+                  "name": "Event Header Text",
+                  "width": 238,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dEl",
+                      "name": "Event Label",
+                      "fill": "#5D725F",
+                      "content": "Care Calendar",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dEs",
+                      "name": "Event Subtitle",
+                      "fill": "#243128",
+                      "content": "\u4ece\u65e5\u5386\u91cc\u770b\u5230\u517b\u62a4\u4e0e\u5efa\u6a21",
+                      "fontFamily": "Microsoft YaHei",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dEc",
+                  "name": "Current Month Chip",
+                  "width": 82,
+                  "height": 34,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 999,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dEm",
+                      "name": "Month Text",
+                      "fill": "#465D46",
+                      "content": "2026.04",
+                      "fontFamily": "Segoe UI",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g3dLg",
+              "name": "Legend Row",
+              "width": "fill_container",
+              "height": 24,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g3dLe1",
+                  "name": "Legend Water",
+                  "height": 24,
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "g3dLw",
+                      "name": "Legend Water Dot",
+                      "fill": "#5A8E6B",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dLwt",
+                      "name": "Legend Water Text",
+                      "fill": "#607061",
+                      "content": "\u6d47\u6c34",
+                      "fontFamily": "Microsoft YaHei",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dLe2",
+                  "name": "Legend Model",
+                  "height": 24,
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "g3dLm",
+                      "name": "Legend Model Dot",
+                      "fill": "#3E7F4B",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dLmt",
+                      "name": "Legend Model Text",
+                      "fill": "#607061",
+                      "content": "3D \u5efa\u6a21",
+                      "fontFamily": "Microsoft YaHei",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dLe3",
+                  "name": "Legend Feed",
+                  "height": 24,
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "g3dLf",
+                      "name": "Legend Feed Dot",
+                      "fill": "#E7C86B",
+                      "width": 10,
+                      "height": 10
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dLft",
+                      "name": "Legend Feed Text",
+                      "fill": "#607061",
+                      "content": "\u65bd\u80a5",
+                      "fontFamily": "Microsoft YaHei",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g3dCal",
+              "name": "Calendar Grid",
+              "width": "fill_container",
+              "height": 262,
+              "fill": "#F6F7F2",
+              "cornerRadius": 22,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g3dW1",
+                  "name": "Week Mon",
+                  "x": 18,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Mon",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dW2",
+                  "name": "Week Tue",
+                  "x": 71,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Tue",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dW3",
+                  "name": "Week Wed",
+                  "x": 124,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Wed",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dW4",
+                  "name": "Week Thu",
+                  "x": 178,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Thu",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dW5",
+                  "name": "Week Fri",
+                  "x": 232,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Fri",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dW6",
+                  "name": "Week Sat",
+                  "x": 286,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Sat",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dW7",
+                  "name": "Week Sun",
+                  "x": 340,
+                  "y": 14,
+                  "fill": "#738375",
+                  "content": "Sun",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dM0",
+                  "name": "Month Label Left",
+                  "x": 18,
+                  "y": 42,
+                  "fill": "#243128",
+                  "content": "Apr",
+                  "fontFamily": "Segoe UI",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dD16",
+                  "name": "Day 16",
+                  "x": 172,
+                  "y": 74,
+                  "width": 44,
+                  "height": 40,
+                  "fill": "#EEF2EA",
+                  "cornerRadius": 14,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dD16t",
+                      "name": "Day 16 Text",
+                      "x": 14,
+                      "y": 9,
+                      "fill": "#243128",
+                      "content": "16",
+                      "fontFamily": "Segoe UI",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "g3dD16e",
+                      "name": "Day 16 Dot",
+                      "x": 18,
+                      "y": 28,
+                      "fill": "#5A8E6B",
+                      "width": 8,
+                      "height": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dD17",
+                  "name": "Day 17",
+                  "x": 226,
+                  "y": 74,
+                  "width": 44,
+                  "height": 40,
+                  "fill": "#EEF2EA",
+                  "cornerRadius": 14,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dD17t",
+                      "name": "Day 17 Text",
+                      "x": 14,
+                      "y": 9,
+                      "fill": "#243128",
+                      "content": "17",
+                      "fontFamily": "Segoe UI",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dD18",
+                  "name": "Day 18 Active",
+                  "x": 280,
+                  "y": 70,
+                  "width": 52,
+                  "height": 52,
+                  "fill": "#2D7B4A",
+                  "cornerRadius": 999,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "gap": 0,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dD18n",
+                      "name": "Day 18 Number",
+                      "fill": "#F7FBF5",
+                      "content": "18",
+                      "fontFamily": "Segoe UI",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g3dD18l",
+                      "name": "Day 18 Label",
+                      "fill": "#EAF4E6",
+                      "content": "\u5efa\u6a21",
+                      "fontFamily": "Microsoft YaHei",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dD19",
+                  "name": "Day 19",
+                  "x": 340,
+                  "y": 74,
+                  "width": 44,
+                  "height": 40,
+                  "fill": "#EEF2EA",
+                  "cornerRadius": 14,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3dD19t",
+                      "name": "Day 19 Text",
+                      "x": 14,
+                      "y": 9,
+                      "fill": "#243128",
+                      "content": "19",
+                      "fontFamily": "Segoe UI",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dRw2",
+                  "name": "Week Row 2",
+                  "x": 18,
+                  "y": 130,
+                  "width": 366,
+                  "height": 44,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "g3dD20",
+                      "name": "Day 20",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD20t",
+                          "name": "Day 20 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "20",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD21",
+                      "name": "Day 21",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD21t",
+                          "name": "Day 21 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "21",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD22",
+                      "name": "Day 22",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD22t",
+                          "name": "Day 22 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "22",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD23",
+                      "name": "Day 23",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD23t",
+                          "name": "Day 23 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "23",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD24",
+                      "name": "Day 24",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD24t",
+                          "name": "Day 24 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "24",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD25",
+                      "name": "Day 25",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD25t",
+                          "name": "Day 25 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "25",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "g3dD25e",
+                          "name": "Day 25 Dot",
+                          "x": 18,
+                          "y": 30,
+                          "fill": "#E7C86B",
+                          "width": 8,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD26",
+                      "name": "Day 26",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD26t",
+                          "name": "Day 26 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "26",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g3dRw3",
+                  "name": "Week Row 3",
+                  "x": 18,
+                  "y": 186,
+                  "width": 366,
+                  "height": 44,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "g3dD27",
+                      "name": "Day 27",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD27t",
+                          "name": "Day 27 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "27",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD28",
+                      "name": "Day 28",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD28t",
+                          "name": "Day 28 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "28",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD29",
+                      "name": "Day 29",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD29t",
+                          "name": "Day 29 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "29",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD30",
+                      "name": "Day 30",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#EEF2EA",
+                      "cornerRadius": 14,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD30t",
+                          "name": "Day 30 Text",
+                          "x": 12,
+                          "y": 10,
+                          "fill": "#243128",
+                          "content": "30",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g3dD01",
+                      "name": "Day 01 Next Month",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "#F0F2ED",
+                      "cornerRadius": 14,
+                      "opacity": 0.6,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g3dD01t",
+                          "name": "Day 01 Text",
+                          "x": 14,
+                          "y": 10,
+                          "fill": "#7B8A7D",
+                          "content": "1",
+                          "fontFamily": "Segoe UI",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g3dFn",
+              "name": "Footnote",
+              "width": "fill_container",
+              "height": 26,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g3dFt1",
+                  "name": "Footnote Left",
+                  "fill": "#70806F",
+                  "content": "18 \u65e5\u5b8c\u6210\u7b2c 4 \u6b21 3D \u91cd\u5efa",
+                  "fontFamily": "Microsoft YaHei",
+                  "fontSize": 11,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "g3dFt2",
+                  "name": "Footnote Right",
+                  "fill": "#70806F",
+                  "content": "\u6d47\u6c34 1 \u6b21 \u00b7 \u65bd\u80a5 1 \u6b21",
+                  "fontFamily": "Microsoft YaHei",
+                  "fontSize": 11,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+          ]
+        },
+        {
+          "type": "ellipse",
+          "id": "g3dBg1",
+          "layoutPosition": "absolute",
+          "x": 252,
+          "y": 96,
+          "name": "Top Glow",
+          "fill": "#E7F5B61C",
+          "width": 148,
+          "height": 148
+        },
+        {
+          "type": "ellipse",
+          "id": "g3dBg2",
+          "layoutPosition": "absolute",
+          "x": -28,
+          "y": 1040,
+          "name": "Bottom Glow",
+          "fill": "#FFFFFF12",
+          "width": 180,
+          "height": 180
+        }
+      ]
+    }
+  ]
+}

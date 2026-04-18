@@ -1,5 +1,5 @@
-import { HomeShowcasePage } from "@/src/features/home";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <HomeShowcasePage />;
+  redirect("/growth-3d");
 }
