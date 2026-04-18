@@ -1,5 +1,5 @@
-import { MobilePlantHome } from "./showcase-home";
+import { HomeShowcasePage } from "@/src/features/home";
 
 export default function Home() {
-  return <MobilePlantHome />;
+  return <HomeShowcasePage />;
 }
