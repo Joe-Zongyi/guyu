@@ -3,6 +3,7 @@ import { ErrorCodeEnum, StatusEnum } from "./enums.js";
 import { DailyAdviceSchema } from "./advice.js";
 import { PlantProfileDraftSchema } from "./profile.js";
 import { PlantStateAssessmentSchema } from "./assessment.js";
+import { PixelArtGenerationSchema } from "./imageGeneration.js";
 
 const baseEnvelope = {
   request_id: z.string(),
@@ -50,6 +51,14 @@ export const StateAssessmentResponseSchema = z.union([
 ]);
 export type StateAssessmentResponse = z.infer<
   typeof StateAssessmentResponseSchema
+>;
+
+export const PixelArtGenerationResponseSchema = z.union([
+  SuccessEnvelopeSchema(PixelArtGenerationSchema),
+  FailureEnvelopeSchema,
+]);
+export type PixelArtGenerationResponse = z.infer<
+  typeof PixelArtGenerationResponseSchema
 >;
 
 export { StatusEnum };

@@ -1,4 +1,4 @@
-import { z, type RefinementCtx } from "zod";
+import { z } from "zod";
 import { RecognitionStatusEnum, SensitivityEnum } from "./enums.js";
 
 export const CareBaselineSchema = z.object({
@@ -32,25 +32,24 @@ export const ProviderMetadataSchema = z.object({
 });
 export type ProviderMetadata = z.infer<typeof ProviderMetadataSchema>;
 
-const PlantProfileDraftFieldsSchema = z.object({
-  draft_id: z.string(),
-  source_image_id: z.string(),
-  recognition_status: RecognitionStatusEnum,
-  taxonomy_id: z.string().optional(),
-  common_name: z.string().optional(),
-  scientific_name: z.string().optional(),
-  confidence: z.number().min(0).max(1),
-  candidates: z.array(TaxonomyCandidateSchema),
-  plant_type_tags: z.array(z.string()),
-  care_baseline: CareBaselineSchema,
-  risk_flags: z.array(z.string()),
-  weather_link_fields: WeatherLinkFieldsSchema,
-  provider_metadata: ProviderMetadataSchema,
-  profile_version: z.string(),
-});
-
-export const PlantProfileDraftSchema = PlantProfileDraftFieldsSchema.superRefine(
-  (draft: z.infer<typeof PlantProfileDraftFieldsSchema>, ctx: RefinementCtx) => {
+export const PlantProfileDraftSchema = z
+  .object({
+    draft_id: z.string(),
+    source_image_id: z.string(),
+    recognition_status: RecognitionStatusEnum,
+    taxonomy_id: z.string().optional(),
+    common_name: z.string().optional(),
+    scientific_name: z.string().optional(),
+    confidence: z.number().min(0).max(1),
+    candidates: z.array(TaxonomyCandidateSchema),
+    plant_type_tags: z.array(z.string()),
+    care_baseline: CareBaselineSchema,
+    risk_flags: z.array(z.string()),
+    weather_link_fields: WeatherLinkFieldsSchema,
+    provider_metadata: ProviderMetadataSchema,
+    profile_version: z.string(),
+  })
+  .superRefine((draft, ctx) => {
     if (draft.recognition_status === "identified" && !draft.taxonomy_id) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -77,8 +76,7 @@ export const PlantProfileDraftSchema = PlantProfileDraftFieldsSchema.superRefine
         });
       }
     }
-  },
-);
+  });
 export type PlantProfileDraft = z.infer<typeof PlantProfileDraftSchema>;
 
 export const PlantProfileSchema = z.object({

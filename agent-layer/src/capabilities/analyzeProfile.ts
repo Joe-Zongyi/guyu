@@ -2,7 +2,6 @@ import {
   AnalyzeProfileInputSchema,
   type AnalyzeProfileInput,
 } from "../schemas/inputs.js";
-import type { ZodIssue } from "zod";
 import type { ProfileResponse } from "../schemas/envelopes.js";
 import type {
   PlantProfileDraft,
@@ -170,7 +169,7 @@ export async function analyzeProfile(
       status: "failed",
       error_code: "NO_PLANT_DETECTED",
       message: `invalid input: ${parsed.error.issues
-        .map((i: ZodIssue) => `${i.path.join(".")}: ${i.message}`)
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
         .join("; ")}`,
       request_id:
         (rawInput as { request_id?: string })?.request_id ?? "unknown",

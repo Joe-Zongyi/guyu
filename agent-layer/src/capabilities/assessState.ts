@@ -1,4 +1,3 @@
-import type { ZodIssue } from "zod";
 import {
   AssessStateInputSchema,
   type AssessStateInput,
@@ -68,8 +67,8 @@ function compareToPrevious(
   const prev = [...recent].sort((a, b) =>
     a.assessed_at < b.assessed_at ? 1 : -1,
   )[0]!;
-  const cur = STATE_RANK[current]!;
-  const last = STATE_RANK[prev.overall_state]!;
+  const cur = STATE_RANK[current];
+  const last = STATE_RANK[prev.overall_state];
   if (cur === last) return "same";
   if (cur < last) return "better";
   return "worse";
@@ -141,7 +140,7 @@ export async function assessState(
       status: "failed",
       error_code: "STATE_ASSESSMENT_UNCERTAIN",
       message: `invalid input: ${parsed.error.issues
-        .map((i: ZodIssue) => `${i.path.join(".")}: ${i.message}`)
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
         .join("; ")}`,
       request_id:
         (rawInput as { request_id?: string })?.request_id ?? "unknown",

@@ -7,6 +7,13 @@ ui-ux-pro-max-skill-main/
 .kilocode/
 .vscode/
 .env
+.codex/
+web/.dev.log
+web/public/runtime/
 __pycache__/
 *.pyc
 experiments/hunyuan-3d/runtime/
+node_modules/
+**/node_modules/
+
+.claude/worktrees/
