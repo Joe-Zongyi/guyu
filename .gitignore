@@ -10,5 +10,7 @@ ui-ux-pro-max-skill-main/
 __pycache__/
 *.pyc
 experiments/hunyuan-3d/runtime/
+node_modules/
+**/node_modules/
 
 .claude/worktrees/
