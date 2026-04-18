@@ -116,7 +116,7 @@ export function HomeShowcasePage() {
                 </Link>
               </section>
 
-              <section className="grid grid-cols-2 items-stretch gap-3">
+              <section className="grid min-h-[340px] grid-cols-2 items-stretch gap-3">
                 <article
                   className={`flex h-full flex-col rounded-[24px] border border-white/8 p-4 shadow-[0_16px_36px_rgba(7,18,12,0.18)] ${theme.statusClassName}`}
                 >
@@ -145,15 +145,15 @@ export function HomeShowcasePage() {
                 </article>
 
                 <article
-                  className={`h-full rounded-[24px] p-4 text-[#20321f] shadow-[0_16px_36px_rgba(6,17,11,0.18)] ${theme.careClassName}`}
+                  className={`flex h-full flex-col rounded-[24px] p-4 text-[#20321f] shadow-[0_16px_36px_rgba(6,17,11,0.18)] ${theme.careClassName}`}
                 >
                   <p className="text-[11px] uppercase tracking-[0.28em] text-[#516145]">
                     Care Habit
                   </p>
-                  <div className="mt-3 space-y-3">
+                  <div className="mt-3 flex flex-1 flex-col gap-2">
                     <HabitCard habit={theme.waterHabit} advice={theme.waterAdvice} />
                     <HabitCard habit={theme.sunlightHabit} advice={theme.sunlightAdvice} />
-                    <WateringTrendCard values={theme.wateringTrend} />
+                    <SoilMoistureCard value={theme.soilMoisture} />
                   </div>
                 </article>
               </section>
@@ -195,19 +195,17 @@ export function HomeShowcasePage() {
 function StatusItem({
   label,
   value,
-  barClassName,
   trend,
 }: {
   label: string;
   value: string;
-  barClassName: string;
+  barClassName?: string;
   trend?: "up" | "down" | "steady";
 }) {
   return (
     <div className="flex flex-1 flex-col justify-center rounded-[18px] bg-black/10 px-4 py-3">
-      <div className={`h-1.5 w-12 rounded-full ${barClassName}`} />
-      <p className="mt-2 text-[11px] text-white/60">{label}</p>
-      <div className="mt-1 flex items-center gap-1.5">
+      <p className="text-[11px] text-white/60">{label}</p>
+      <div className="mt-1.5 flex items-center gap-1.5">
         <p className="text-[19px] font-semibold leading-none text-white">{value}</p>
         {trend ? <StatusTrendBadge trend={trend} /> : null}
       </div>
@@ -223,82 +221,52 @@ function HabitCard({
   advice: string;
 }) {
   return (
-    <div className="rounded-[18px] bg-white/55 px-4 py-4 text-[#243224]">
-      <p className="whitespace-nowrap text-[26px] font-semibold leading-none">{advice}</p>
-      <p className="mt-3 text-sm font-medium tracking-[0.04em] text-[#6e7d62]">{habit}</p>
+    <div className="flex flex-1 flex-col justify-center rounded-[18px] bg-white/55 px-4 py-3 text-[#243224]">
+      <p className="whitespace-nowrap text-[22px] font-semibold leading-none">{advice}</p>
+      <p className="mt-2 text-[13px] font-medium tracking-[0.04em] text-[#6e7d62]">{habit}</p>
     </div>
   );
 }
 
-function WateringTrendCard({ values }: { values: number[] }) {
-  const width = 220;
-  const height = 52;
-  const paddingX = 10;
-  const paddingY = 10;
-  const maxValue = Math.max(...values, 1);
-  const minValue = Math.min(...values, 0);
-  const valueRange = Math.max(maxValue - minValue, 1);
-
-  const points = values
-    .map((value, index) => {
-      const x =
-        paddingX + (index * (width - paddingX * 2)) / Math.max(values.length - 1, 1);
-      const y =
-        height - paddingY - ((value - minValue) / valueRange) * (height - paddingY * 2);
-      return `${x},${y}`;
-    })
-    .join(" ");
+function SoilMoistureCard({ value }: { value: number }) {
+  const size = 52;
+  const strokeWidth = 6;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.max(0, Math.min(value, 100));
+  const dashOffset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="rounded-[18px] bg-[#294d37] px-4 py-2.5 text-white">
-      <p className="text-[11px] tracking-[0.12em] text-white/64">浇水频率</p>
-      <svg viewBox={`0 0 ${width} ${height}`} className="mt-1.5 h-[52px] w-full">
-        <path
-          d={`M ${paddingX} ${height - paddingY} H ${width - paddingX}`}
-          stroke="rgba(255,255,255,0.18)"
-          strokeWidth="1"
-          fill="none"
-        />
-        {[0.25, 0.5, 0.75].map((step) => {
-          const y = paddingY + (height - paddingY * 2) * step;
-          return (
-            <path
-              key={step}
-              d={`M ${paddingX} ${y} H ${width - paddingX}`}
-              stroke="rgba(255,255,255,0.12)"
-              strokeWidth="1"
-              strokeDasharray="3 4"
-              fill="none"
-            />
-          );
-        })}
-        <polyline
-          points={points}
-          fill="none"
-          stroke="#f7e381"
-          strokeWidth="3"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-        />
-        {values.map((value, index) => {
-          const x =
-            paddingX + (index * (width - paddingX * 2)) / Math.max(values.length - 1, 1);
-          const y =
-            height - paddingY - ((value - minValue) / valueRange) * (height - paddingY * 2);
-
-          return (
-            <circle
-              key={`${value}-${index}`}
-              cx={x}
-              cy={y}
-              r="3.5"
-              fill="#f7e381"
-              stroke="rgba(41,77,55,0.9)"
-              strokeWidth="1.5"
-            />
-          );
-        })}
-      </svg>
+    <div className="flex flex-1 items-center justify-between gap-3 rounded-[18px] bg-[#294d37] px-4 py-2.5 text-white">
+      <p className="text-[12px] font-medium tracking-[0.12em] text-white/75">土壤含水量</p>
+      <div className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center">
+        <svg
+          viewBox={`0 0 ${size} ${size}`}
+          className="h-[52px] w-[52px] -rotate-90"
+          aria-hidden="true"
+        >
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke="rgba(255,255,255,0.14)"
+            strokeWidth={strokeWidth}
+          />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke="#f7e381"
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={dashOffset}
+          />
+        </svg>
+        <span className="absolute text-[13px] font-semibold leading-none">{progress}%</span>
+      </div>
     </div>
   );
 }

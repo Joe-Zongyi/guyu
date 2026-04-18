@@ -22,7 +22,7 @@ export type ThemeData = {
   sunlightHabit: string;
   waterAdvice: string;
   sunlightAdvice: string;
-  wateringTrend: number[];
+  soilMoisture: number;
   videoTitle: string;
   videoMeta: string;
 };
