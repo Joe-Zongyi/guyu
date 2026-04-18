@@ -138,21 +138,8 @@ export function ThreeDGrowthPage() {
         highlight: model.id === activeModel?.id,
       });
     }
-    const baseDate = activeModel?.createdAt
-      ? new Date(activeModel.createdAt)
-      : captures[0]?.capturedAt
-        ? new Date(captures[0].capturedAt)
-        : new Date();
-    const careDate = new Date(baseDate);
-    careDate.setDate(careDate.getDate() + 7);
-    nextEvents.push({
-      dateKey: toDateKey(careDate),
-      day: careDate.getDate(),
-      type: "care",
-      label: "施肥提醒",
-    });
     return nextEvents;
-  }, [activeModel?.createdAt, activeModel?.id, captures, models]);
+  }, [activeModel?.id, captures, models]);
 
   const calendarDays = useMemo(
     () => buildCalendarDays(calendarMonth, calendarEvents),
@@ -397,9 +384,8 @@ export function ThreeDGrowthPage() {
               </div>
 
               <div className="mt-4 flex flex-wrap gap-4 text-[11px] font-semibold text-[#607061]">
-                <LegendDot color="bg-[#5A8E6B]" label="浇水 / 补拍" />
+                <LegendDot color="bg-[#3A7DC9]" label="浇水 / 补拍" />
                 <LegendDot color="bg-[#2D7B4A]" label="3D 建模" />
-                <LegendDot color="bg-[#E7C86B]" label="施肥提醒" />
               </div>
 
               <div className="mt-4 rounded-[22px] bg-[#f6f7f2] p-4">
@@ -415,14 +401,6 @@ export function ThreeDGrowthPage() {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between gap-3 text-[11px] font-semibold text-[#70806f]">
-                <span>
-                  {activeModel
-                    ? `${new Date(activeModel.createdAt).getDate()} 日完成第 ${activeIndex + 1} 次重建`
-                    : "等待第一轮重建"}
-                </span>
-                <span>{captures.length} 次补拍 · {models.length} 个节点</span>
-              </div>
             </section>
           </section>
         </DeviceFrame>
@@ -458,21 +436,37 @@ function CalendarDay({
     return <div className="h-12 rounded-[14px] bg-transparent opacity-35" />;
   }
 
-  if (day.highlight) {
-    return (
-      <div className="flex h-12 items-center justify-center">
-        <div className="flex h-12 w-12 flex-col items-center justify-center rounded-full bg-[#2d7b4a] text-white">
-          <span className="text-[15px] font-bold leading-none">{day.dayLabel}</span>
-          <span className="mt-1 text-[9px] font-semibold">{day.label}</span>
-        </div>
-      </div>
-    );
-  }
+  const ringClass = day.isActiveModel
+    ? "ring-2 ring-[#2D7B4A] ring-offset-1 ring-offset-[#f6f7f2]"
+    : "";
+
+  const showHalves = day.hasModel || day.hasCapture;
 
   return (
-    <div className="flex h-12 flex-col items-center justify-center rounded-[14px] bg-[#eef2ea]">
-      <span className="text-[14px] font-bold leading-none text-[#243128]">{day.dayLabel}</span>
-      {day.dotColor ? <span className={`mt-2 h-2 w-2 rounded-full ${day.dotColor}`} /> : null}
+    <div
+      className={`relative flex h-12 items-center justify-center overflow-hidden rounded-[14px] bg-[#eef2ea] ${ringClass}`}
+    >
+      {day.hasModel ? (
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-[#2D7B4A]"
+          style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}
+        />
+      ) : null}
+      {day.hasCapture ? (
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-[#3A7DC9]"
+          style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }}
+        />
+      ) : null}
+      <span
+        className={`relative z-10 text-[14px] font-bold leading-none ${
+          showHalves ? "text-white drop-shadow-[0_1px_2px_rgba(15,32,22,0.5)]" : "text-[#243128]"
+        }`}
+      >
+        {day.dayLabel}
+      </span>
     </div>
   );
 }
@@ -617,9 +611,9 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
     dateKey: string;
     inMonth: boolean;
     dayLabel: string;
-    dotColor?: string;
-    highlight?: boolean;
-    label?: string;
+    hasModel: boolean;
+    hasCapture: boolean;
+    isActiveModel: boolean;
   }> = [];
 
   for (let index = 0; index < startOffset; index += 1) {
@@ -627,6 +621,9 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
       dateKey: `empty-${index}`,
       inMonth: false,
       dayLabel: "",
+      hasModel: false,
+      hasCapture: false,
+      isActiveModel: false,
     });
   }
 
@@ -634,19 +631,18 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
     const date = new Date(year, month, day);
     const dateKey = toDateKey(date);
     const dayEvents = eventMap.get(dateKey) ?? [];
-    const highlightEvent = dayEvents.find((event) => event.highlight);
-    const primaryEvent = dayEvents[0];
+    const hasModel = dayEvents.some((event) => event.type === "model");
+    const hasCapture = dayEvents.some((event) => event.type === "capture");
+    const isActiveModel = dayEvents.some(
+      (event) => event.type === "model" && event.highlight,
+    );
     result.push({
       dateKey,
       inMonth: true,
       dayLabel: String(day),
-      highlight: Boolean(highlightEvent),
-      label: highlightEvent?.type === "model" ? "建模" : highlightEvent?.label,
-      dotColor: highlightEvent
-        ? undefined
-        : primaryEvent
-          ? colorForEvent(primaryEvent.type)
-          : undefined,
+      hasModel,
+      hasCapture,
+      isActiveModel,
     });
   }
 
@@ -655,18 +651,11 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
       dateKey: `empty-tail-${result.length}`,
       inMonth: false,
       dayLabel: "",
+      hasModel: false,
+      hasCapture: false,
+      isActiveModel: false,
     });
   }
 
   return result;
-}
-
-function colorForEvent(type: CalendarEvent["type"]) {
-  if (type === "model") {
-    return "bg-[#2D7B4A]";
-  }
-  if (type === "care") {
-    return "bg-[#E7C86B]";
-  }
-  return "bg-[#5A8E6B]";
 }

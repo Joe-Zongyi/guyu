@@ -16,8 +16,8 @@ export function DeviceFrame({
           <div className="relative overflow-hidden rounded-[44px] border border-black/40 bg-[#0d120f]">
             <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-16 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0))]" />
 
-            <div className="guyu-no-scrollbar relative max-h-[860px] overflow-y-auto overscroll-contain rounded-[44px]">
-              <div className="flex flex-col gap-4 pb-4 pt-3">{children}</div>
+            <div className="guyu-no-scrollbar relative h-[860px] overflow-y-auto overscroll-contain rounded-[44px]">
+              <div className="flex min-h-full flex-col gap-4 pb-4 pt-3">{children}</div>
             </div>
 
             <div className="pointer-events-none absolute inset-x-0 bottom-3 z-30 flex justify-center">

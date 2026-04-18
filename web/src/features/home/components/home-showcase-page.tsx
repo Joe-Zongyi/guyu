@@ -54,14 +54,7 @@ export function HomeShowcasePage() {
 
             <div className="relative z-10 flex flex-col gap-4">
               <div className="space-y-3">
-                <div className="flex items-start justify-between gap-3 text-[13px] font-semibold tracking-[0.04em] text-white/85">
-                  <div>
-                    <span>{theme.dateLabel}</span>
-                    <p className="mt-1 text-xs font-medium tracking-[0.08em] text-white/58">
-                      Demo greenhouse
-                    </p>
-                  </div>
-
+                <div className="flex justify-end text-[13px] font-semibold tracking-[0.04em] text-white/85">
                   <div className="flex items-center gap-2">
                     <span
                       className={`rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-[#173828] ${theme.accentClassName}`}
@@ -123,15 +116,15 @@ export function HomeShowcasePage() {
                 </Link>
               </section>
 
-              <section className="grid grid-cols-[1.02fr_0.92fr] gap-3">
+              <section className="grid grid-cols-2 items-stretch gap-3">
                 <article
-                  className={`rounded-[24px] border border-white/8 p-4 shadow-[0_16px_36px_rgba(7,18,12,0.18)] ${theme.statusClassName}`}
+                  className={`flex h-full flex-col rounded-[24px] border border-white/8 p-4 shadow-[0_16px_36px_rgba(7,18,12,0.18)] ${theme.statusClassName}`}
                 >
                   <p className="text-[11px] uppercase tracking-[0.28em] text-white/65">
                     Plant Status
                   </p>
 
-                  <div className="mt-4 space-y-3">
+                  <div className="mt-3 flex flex-1 flex-col gap-3">
                     <StatusItem
                       label="生长阶段"
                       value={theme.growthStage}
@@ -141,6 +134,7 @@ export function HomeShowcasePage() {
                       label="健康状态"
                       value={theme.healthStatus}
                       barClassName="bg-[#e7f1d4]"
+                      trend={theme.healthTrend}
                     />
                     <StatusItem
                       label="陪伴天数"
@@ -151,20 +145,15 @@ export function HomeShowcasePage() {
                 </article>
 
                 <article
-                  className={`rounded-[24px] p-4 text-[#20321f] shadow-[0_16px_36px_rgba(6,17,11,0.18)] ${theme.careClassName}`}
+                  className={`h-full rounded-[24px] p-4 text-[#20321f] shadow-[0_16px_36px_rgba(6,17,11,0.18)] ${theme.careClassName}`}
                 >
                   <p className="text-[11px] uppercase tracking-[0.28em] text-[#516145]">
                     Care Habit
                   </p>
                   <div className="mt-3 space-y-3">
-                    <HabitCard label="水分习性" value={theme.waterHabit} />
-                    <HabitCard label="阳光习性" value={theme.sunlightHabit} />
-                    <div className="rounded-[18px] bg-[#294d37] px-4 py-3 text-white">
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/64">
-                        上次浇水
-                      </p>
-                      <p className="mt-2 text-sm font-semibold">{theme.lastWatered}</p>
-                    </div>
+                    <HabitCard habit={theme.waterHabit} advice={theme.waterAdvice} />
+                    <HabitCard habit={theme.sunlightHabit} advice={theme.sunlightAdvice} />
+                    <WateringTrendCard values={theme.wateringTrend} />
                   </div>
                 </article>
               </section>
@@ -207,26 +196,126 @@ function StatusItem({
   label,
   value,
   barClassName,
+  trend,
 }: {
   label: string;
   value: string;
   barClassName: string;
+  trend?: "up" | "down" | "steady";
 }) {
   return (
-    <div className="rounded-[18px] bg-black/10 p-3">
-      <div className={`h-1.5 w-10 rounded-full ${barClassName}`} />
-      <p className="mt-2 text-xs text-white/60">{label}</p>
-      <p className="mt-1 text-sm font-medium text-white">{value}</p>
+    <div className="flex flex-1 flex-col justify-center rounded-[18px] bg-black/10 px-4 py-3">
+      <div className={`h-1.5 w-12 rounded-full ${barClassName}`} />
+      <p className="mt-2 text-[11px] text-white/60">{label}</p>
+      <div className="mt-1 flex items-center gap-1.5">
+        <p className="text-[19px] font-semibold leading-none text-white">{value}</p>
+        {trend ? <StatusTrendBadge trend={trend} /> : null}
+      </div>
     </div>
   );
 }
 
-function HabitCard({ label, value }: { label: string; value: string }) {
+function HabitCard({
+  habit,
+  advice,
+}: {
+  habit: string;
+  advice: string;
+}) {
   return (
-    <div className="rounded-[18px] bg-white/55 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[#6e7d62]">{label}</p>
-      <p className="mt-2 text-sm font-medium leading-6 text-[#243224]">{value}</p>
+    <div className="rounded-[18px] bg-white/55 px-4 py-4 text-[#243224]">
+      <p className="whitespace-nowrap text-[26px] font-semibold leading-none">{advice}</p>
+      <p className="mt-3 text-sm font-medium tracking-[0.04em] text-[#6e7d62]">{habit}</p>
     </div>
+  );
+}
+
+function WateringTrendCard({ values }: { values: number[] }) {
+  const width = 220;
+  const height = 52;
+  const paddingX = 10;
+  const paddingY = 10;
+  const maxValue = Math.max(...values, 1);
+  const minValue = Math.min(...values, 0);
+  const valueRange = Math.max(maxValue - minValue, 1);
+
+  const points = values
+    .map((value, index) => {
+      const x =
+        paddingX + (index * (width - paddingX * 2)) / Math.max(values.length - 1, 1);
+      const y =
+        height - paddingY - ((value - minValue) / valueRange) * (height - paddingY * 2);
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="rounded-[18px] bg-[#294d37] px-4 py-2.5 text-white">
+      <p className="text-[11px] tracking-[0.12em] text-white/64">浇水频率</p>
+      <svg viewBox={`0 0 ${width} ${height}`} className="mt-1.5 h-[52px] w-full">
+        <path
+          d={`M ${paddingX} ${height - paddingY} H ${width - paddingX}`}
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth="1"
+          fill="none"
+        />
+        {[0.25, 0.5, 0.75].map((step) => {
+          const y = paddingY + (height - paddingY * 2) * step;
+          return (
+            <path
+              key={step}
+              d={`M ${paddingX} ${y} H ${width - paddingX}`}
+              stroke="rgba(255,255,255,0.12)"
+              strokeWidth="1"
+              strokeDasharray="3 4"
+              fill="none"
+            />
+          );
+        })}
+        <polyline
+          points={points}
+          fill="none"
+          stroke="#f7e381"
+          strokeWidth="3"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+        {values.map((value, index) => {
+          const x =
+            paddingX + (index * (width - paddingX * 2)) / Math.max(values.length - 1, 1);
+          const y =
+            height - paddingY - ((value - minValue) / valueRange) * (height - paddingY * 2);
+
+          return (
+            <circle
+              key={`${value}-${index}`}
+              cx={x}
+              cy={y}
+              r="3.5"
+              fill="#f7e381"
+              stroke="rgba(41,77,55,0.9)"
+              strokeWidth="1.5"
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+function StatusTrendBadge({ trend }: { trend: "up" | "down" | "steady" }) {
+  const glyph = trend === "up" ? "↗" : trend === "down" ? "↘" : "→";
+  const tone =
+    trend === "up"
+      ? "text-[#dff3b8]"
+      : trend === "down"
+        ? "text-[#ffd6ce]"
+        : "text-white/72";
+
+  return (
+    <span className={`inline-flex items-center justify-center text-[16px] leading-none ${tone}`} aria-hidden="true">
+      {glyph}
+    </span>
   );
 }
 

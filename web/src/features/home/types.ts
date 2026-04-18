@@ -16,10 +16,13 @@ export type ThemeData = {
   heroSubtitle: string;
   growthStage: string;
   healthStatus: string;
+  healthTrend: "up" | "down" | "steady";
   companionshipDays: string;
   waterHabit: string;
   sunlightHabit: string;
-  lastWatered: string;
+  waterAdvice: string;
+  sunlightAdvice: string;
+  wateringTrend: number[];
   videoTitle: string;
   videoMeta: string;
 };

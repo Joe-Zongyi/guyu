@@ -68,7 +68,7 @@ export function BadgesPageView() {
         </section>
 
         <DeviceFrame>
-          <section className="overflow-hidden rounded-[32px] border border-[#d7e2cf] bg-[linear-gradient(180deg,#f6fbf0_0%,#eef4e4_56%,#fffdf8_100%)] shadow-[0_20px_60px_rgba(86,104,66,0.12)]">
+          <section className="flex min-h-full flex-1 flex-col overflow-hidden rounded-[32px] border border-[#d7e2cf] bg-[linear-gradient(180deg,#f6fbf0_0%,#eef4e4_56%,#fffdf8_100%)] shadow-[0_20px_60px_rgba(86,104,66,0.12)]">
             <div className="p-5 pb-4">
               <div className="flex items-center justify-between mb-4">
                 <button
@@ -109,7 +109,7 @@ export function BadgesPageView() {
             </div>
           </div>
 
-          <div className="border-t border-[#e4eadb] bg-[#fffdf8] px-3 pb-3 pt-3">
+          <div className="flex-1 border-t border-[#e4eadb] bg-[#fffdf8] px-3 pb-3 pt-3">
             <div className="grid grid-cols-3 gap-2">
               {activeSection.type === "badges"
                 ? activeSection.items.map((badge) => (
