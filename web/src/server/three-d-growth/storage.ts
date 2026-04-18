@@ -3,13 +3,21 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import type { CaptureRecord, GeneratedModel, ThreeDGrowthModuleState } from "@/src/features/three-d-growth/types";
 import { createEmptyThreeDGrowthState } from "@/src/features/three-d-growth/model";
+import {
+  downloadModelToPublic,
+  queryHunyuanJob,
+  selectResultFile,
+  submitHunyuanJob,
+} from "./hunyuan";
 
 const runtimeRoot = path.join(process.cwd(), "public", "runtime", "three-d-growth");
 const uploadsRoot = path.join(runtimeRoot, "uploads");
+const modelsRoot = path.join(runtimeRoot, "models");
 const statePath = path.join(runtimeRoot, "state.json");
 
 export async function ensureThreeDGrowthRuntime() {
   await mkdir(uploadsRoot, { recursive: true });
+  await mkdir(modelsRoot, { recursive: true });
 }
 
 export async function readThreeDGrowthState() {
@@ -17,7 +25,7 @@ export async function readThreeDGrowthState() {
   try {
     const raw = await readFile(statePath, "utf8");
     const parsed = JSON.parse(raw) as ThreeDGrowthModuleState;
-    const refreshed = refreshModelStatuses(parsed);
+    const refreshed = await refreshModelStatuses(parsed);
     await writeState(refreshed);
     return refreshed;
   } catch {
@@ -32,9 +40,7 @@ export async function writeState(state: ThreeDGrowthModuleState) {
   await writeFile(statePath, JSON.stringify(state, null, 2), "utf8");
 }
 
-export async function appendCaptureRecord(
-  input: Omit<CaptureRecord, "id">,
-) {
+export async function appendCaptureRecord(input: Omit<CaptureRecord, "id">) {
   const state = await readThreeDGrowthState();
   const nextCapture: CaptureRecord = {
     id: `capture-${randomUUID()}`,
@@ -53,18 +59,49 @@ export async function enqueueModelGeneration(input: {
   sourceCaptureIds: string[];
 }) {
   const state = await readThreeDGrowthState();
+  const sourceCaptures = input.sourceCaptureIds
+    .map((captureId) => state.captures.find((item) => item.id === captureId))
+    .filter((item): item is CaptureRecord => Boolean(item));
+
+  if (sourceCaptures.length === 0) {
+    throw new Error("没有可用于建模的图片记录");
+  }
+
+  const images = await Promise.all(
+    sourceCaptures.map(async (capture) => ({
+      name: path.basename(capture.imageUrl) || `${capture.id}.png`,
+      bytes: await readCaptureBytes(capture.imageUrl),
+      view: mapCaptureAngleToHunyuanView(capture.angle),
+    })),
+  );
+
+  console.log("[3D Growth][Server] 提交混元 3D 任务", {
+    plantId: input.plantId,
+    captureCount: images.length,
+    captureIds: sourceCaptures.map((item) => item.id),
+  });
+
+  const submission = await submitHunyuanJob({
+    images,
+    engine: "pro",
+    model: "3.1",
+    enablePbr: true,
+  });
+
   const generationIndex = state.models.length + 1;
-  const primaryCapture = state.captures.find((item) => item.id === input.sourceCaptureIds[0]);
   const now = new Date().toISOString();
   const nextModel: GeneratedModel = {
     id: `model-${randomUUID()}`,
     plantId: input.plantId,
     status: "processing",
-    sourceCaptureIds: input.sourceCaptureIds,
-    previewUrl: primaryCapture?.imageUrl,
+    sourceCaptureIds: sourceCaptures.map((item) => item.id),
+    jobId: submission.jobId,
+    queryAction: submission.queryAction,
+    region: submission.region,
+    previewUrl: sourceCaptures[0]?.imageUrl,
     milestone: `第 ${generationIndex} 次建模`,
-    summary: "系统正在根据最近记录的多张植物照片拼装新的成长模型。",
-    progress: 38,
+    summary: "已提交混元 3D 任务，正在等待云端生成结果。",
+    progress: 12,
     createdAt: now,
     updatedAt: now,
   };
@@ -74,32 +111,114 @@ export async function enqueueModelGeneration(input: {
     activeModelId: nextModel.id,
   };
   await writeState(nextState);
+
+  console.log("[3D Growth][Server] 混元任务提交成功", {
+    modelId: nextModel.id,
+    jobId: submission.jobId,
+  });
+
   return nextModel;
 }
 
-function refreshModelStatuses(state: ThreeDGrowthModuleState) {
-  const now = Date.now();
-  const nextModels = state.models.map((model) => {
-    if (model.status !== "processing") {
-      return model;
-    }
-    const elapsedSeconds = Math.floor((now - new Date(model.createdAt).getTime()) / 1000);
-    if (elapsedSeconds >= 6) {
-      return {
-        ...model,
-        status: "ready" as const,
-        progress: 100,
-        summary: "本轮模型已完成，可以和之前的节点一起对比植物的立体成长变化。",
-        updatedAt: new Date().toISOString(),
-      };
-    }
-    return {
-      ...model,
-      progress: Math.min(94, 38 + elapsedSeconds * 9),
-      summary: "系统正在整理叶片空间关系和主茎体积变化，模型即将完成。",
-      updatedAt: new Date().toISOString(),
-    };
-  });
+async function refreshModelStatuses(state: ThreeDGrowthModuleState) {
+  const nextModels = await Promise.all(
+    state.models.map(async (model) => {
+      if (
+        model.status !== "processing" ||
+        !model.jobId ||
+        !model.queryAction ||
+        !model.region
+      ) {
+        return model;
+      }
+
+      try {
+        const result = await queryHunyuanJob({
+          jobId: model.jobId,
+          queryAction: model.queryAction as "QueryHunyuanTo3DRapidJob" | "QueryHunyuanTo3DProJob",
+          region: model.region,
+        });
+
+        const remoteStatus = String(result.Status ?? "UNKNOWN");
+        const files = Array.isArray(result.ResultFile3Ds)
+          ? (result.ResultFile3Ds as Array<Record<string, unknown>>)
+          : [];
+        const selected = selectResultFile(files);
+        const previewImageUrl =
+          typeof selected?.PreviewImageUrl === "string" ? selected.PreviewImageUrl : undefined;
+        const downloadUrl = typeof selected?.Url === "string" ? selected.Url : undefined;
+
+        if (remoteStatus === "DONE") {
+          let modelUrl = model.modelUrl;
+
+          if (downloadUrl && !modelUrl) {
+            try {
+              const downloadedPath = await downloadModelToPublic({
+                downloadUrl,
+                targetDir: path.join(modelsRoot, model.id),
+                filenameHint: model.id,
+              });
+              modelUrl = toPublicUrl(downloadedPath);
+            } catch (downloadError) {
+              console.error("[3D Growth][Server] 下载混元模型失败", {
+                modelId: model.id,
+                jobId: model.jobId,
+                error: downloadError,
+              });
+            }
+          }
+
+          return {
+            ...model,
+            status: "ready" as const,
+            modelUrl,
+            previewUrl: previewImageUrl ?? model.previewUrl,
+            downloadUrl,
+            progress: 100,
+            errorMessage: undefined,
+            summary: modelUrl
+              ? "混元 3D 模型已生成完成，可以直接在时间线中查看。"
+              : "混元 3D 任务已完成，但当前没有拿到可直接展示的模型文件。",
+            updatedAt: new Date().toISOString(),
+          };
+        }
+
+        if (remoteStatus === "FAIL") {
+          return {
+            ...model,
+            status: "failed" as const,
+            progress: 100,
+            errorMessage: String(result.ErrorMessage ?? result.ErrorCode ?? "混元 3D 生成失败"),
+            summary: String(result.ErrorMessage ?? "混元 3D 任务失败"),
+            updatedAt: new Date().toISOString(),
+          };
+        }
+
+        return {
+          ...model,
+          previewUrl: previewImageUrl ?? model.previewUrl,
+          progress: remoteStatus === "RUN" ? 68 : 24,
+          summary:
+            remoteStatus === "RUN"
+              ? "混元 3D 正在生成模型，云端任务运行中。"
+              : "混元 3D 任务已提交，等待云端开始处理。",
+          updatedAt: new Date().toISOString(),
+        };
+      } catch (error) {
+        console.error("[3D Growth][Server] 查询混元任务状态失败", {
+          modelId: model.id,
+          jobId: model.jobId,
+          error,
+        });
+
+        return {
+          ...model,
+          summary: "状态同步暂时失败，稍后会自动重试。",
+          updatedAt: new Date().toISOString(),
+        };
+      }
+    }),
+  );
 
   return {
     ...state,
@@ -108,86 +227,44 @@ function refreshModelStatuses(state: ThreeDGrowthModuleState) {
 }
 
 function createSeedState(): ThreeDGrowthModuleState {
-  const base = createEmptyThreeDGrowthState();
-  const captures: CaptureRecord[] = [
-    {
-      id: "seed-capture-1",
-      plantId: base.plantId,
-      capturedAt: "2026-04-08T09:00:00.000Z",
-      imageUrl: createPlantDataUrl("#7fb26a", "#bfe37f", "#8d5c3d"),
-      angle: "front",
-      title: "第 1 周，叶片初步舒展",
-      note: "新叶刚刚打开，株型还比较紧。",
-    },
-    {
-      id: "seed-capture-2",
-      plantId: base.plantId,
-      capturedAt: "2026-04-12T09:00:00.000Z",
-      imageUrl: createPlantDataUrl("#729d61", "#cbe889", "#a06a44"),
-      angle: "left",
-      title: "第 2 周，侧面叶片更开阔",
-      note: "左侧叶片开始舒展开，整体更饱满。",
-    },
-    {
-      id: "seed-capture-3",
-      plantId: base.plantId,
-      capturedAt: "2026-04-17T09:00:00.000Z",
-      imageUrl: createPlantDataUrl("#668d58", "#d4ef90", "#93603f"),
-      angle: "detail",
-      title: "第 3 周，叶缘稳定",
-      note: "叶缘颜色更稳定，叶面纹理更清楚。",
-    },
-  ];
-
-  const models: GeneratedModel[] = [
-    {
-      id: "seed-model-2",
-      plantId: base.plantId,
-      status: "processing",
-      sourceCaptureIds: ["seed-capture-3", "seed-capture-2"],
-      previewUrl: captures[0].imageUrl,
-      milestone: "第 2 次建模",
-      summary: "正在根据最近的照片重建叶片与株型变化。",
-      progress: 56,
-      createdAt: new Date(Date.now() - 3000).toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: "seed-model-1",
-      plantId: base.plantId,
-      status: "ready",
-      sourceCaptureIds: ["seed-capture-2", "seed-capture-1"],
-      previewUrl: captures[1].imageUrl,
-      milestone: "第 1 次建模",
-      summary: "首轮植物模型已经完成，可以作为成长基线继续累计记录。",
-      progress: 100,
-      createdAt: "2026-04-12T10:00:00.000Z",
-      updatedAt: "2026-04-12T10:03:00.000Z",
-    },
-  ];
-
-  return {
-    ...base,
-    captures,
-    models,
-    activeModelId: models[0].id,
-  };
+  return createEmptyThreeDGrowthState();
 }
 
-function createPlantDataUrl(stem: string, leaf: string, pot: string) {
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260">
-      <rect width="220" height="260" rx="32" fill="#6c936a"/>
-      <rect x="102" y="72" width="20" height="96" rx="6" fill="${stem}"/>
-      <rect x="72" y="102" width="34" height="34" rx="7" fill="${leaf}"/>
-      <rect x="114" y="58" width="36" height="36" rx="7" fill="${leaf}"/>
-      <rect x="146" y="110" width="34" height="34" rx="7" fill="${leaf}"/>
-      <rect x="82" y="74" width="28" height="28" rx="7" fill="${leaf}"/>
-      <rect x="148" y="80" width="28" height="28" rx="7" fill="${leaf}"/>
-      <rect x="92" y="168" width="40" height="16" rx="5" fill="#b37a50"/>
-      <rect x="100" y="184" width="24" height="26" rx="6" fill="${pot}"/>
-    </svg>
-  `;
+async function readCaptureBytes(imageUrl: string) {
+  if (imageUrl.startsWith("data:")) {
+    return decodeDataUrl(imageUrl);
+  }
 
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  const normalized = imageUrl.startsWith("/") ? imageUrl.slice(1) : imageUrl;
+  const absolutePath = path.join(process.cwd(), "public", normalized.replace(/^runtime\//, "runtime/"));
+  return readFile(absolutePath);
+}
+
+function decodeDataUrl(value: string) {
+  const [, meta = "", body = ""] = value.match(/^data:(.*?),(.*)$/) ?? [];
+  if (!body) {
+    throw new Error("无效的 data URL");
+  }
+  if (meta.includes(";base64")) {
+    return Buffer.from(body, "base64");
+  }
+  return Buffer.from(decodeURIComponent(body), "utf8");
+}
+
+function mapCaptureAngleToHunyuanView(angle: CaptureRecord["angle"]) {
+  if (angle === "left") {
+    return "left";
+  }
+  if (angle === "right") {
+    return "right";
+  }
+  if (angle === "top") {
+    return "top";
+  }
+  return undefined;
+}
+
+function toPublicUrl(absolutePath: string) {
+  const relative = path.relative(path.join(process.cwd(), "public"), absolutePath);
+  return `/${relative.replaceAll("\\", "/")}`;
 }
