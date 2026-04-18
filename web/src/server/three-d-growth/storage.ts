@@ -1,7 +1,12 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import type { CaptureRecord, GeneratedModel, ThreeDGrowthModuleState } from "@/src/features/three-d-growth/types";
+import type {
+  CaptureRecord,
+  CareEventRecord,
+  GeneratedModel,
+  ThreeDGrowthModuleState,
+} from "@/src/features/three-d-growth/types";
 import { createEmptyThreeDGrowthState } from "@/src/features/three-d-growth/model";
 import {
   downloadModelToPublic,
@@ -14,13 +19,17 @@ const runtimeRoot = path.join(process.cwd(), "public", "runtime", "three-d-growt
 const uploadsRoot = path.join(runtimeRoot, "uploads");
 const modelsRoot = path.join(runtimeRoot, "models");
 const statePath = path.join(runtimeRoot, "state.json");
+const DEFAULT_PLANT_ID = "monstera-001";
+const DEFAULT_PLANT_NAME = "龟背竹 Monstera";
 
-// 内存缓存：减少高频读取时的文件 IO 延迟
-let stateCache: ThreeDGrowthModuleState | null = null;
+type ThreeDGrowthStore = {
+  timelines: Record<string, ThreeDGrowthModuleState>;
+};
+
+let stateCache: ThreeDGrowthStore | null = null;
 let stateCacheTime = 0;
 const CACHE_TTL_MS = 500;
 
-/** 清除状态缓存（供测试使用） */
 export function clearStateCache() {
   stateCache = null;
   stateCacheTime = 0;
@@ -31,55 +40,78 @@ export async function ensureThreeDGrowthRuntime() {
   await mkdir(modelsRoot, { recursive: true });
 }
 
-export async function readThreeDGrowthState() {
-  await ensureThreeDGrowthRuntime();
-
-  const now = Date.now();
-  if (stateCache && now - stateCacheTime < CACHE_TTL_MS) {
-    return stateCache;
-  }
-
-  try {
-    const raw = await readFile(statePath, "utf8");
-    const parsed = JSON.parse(raw) as ThreeDGrowthModuleState;
-    const refreshed = await refreshModelStatuses(parsed);
-    await writeState(refreshed);
-    return refreshed;
-  } catch {
-    const seeded = createSeedState();
-    await writeState(seeded);
-    return seeded;
-  }
-}
-
-export async function writeState(state: ThreeDGrowthModuleState) {
-  await ensureThreeDGrowthRuntime();
-  await writeFile(statePath, JSON.stringify(state, null, 2), "utf8");
-  stateCache = state;
-  stateCacheTime = Date.now();
+export async function readThreeDGrowthState(plantId?: string) {
+  const store = await readThreeDGrowthStore();
+  return getTimeline(store, plantId);
 }
 
 export async function appendCaptureRecord(input: Omit<CaptureRecord, "id">) {
-  const state = await readThreeDGrowthState();
+  const store = await readThreeDGrowthStore();
+  const timeline = getTimeline(store, input.plantId);
   const nextCapture: CaptureRecord = {
     id: `capture-${randomUUID()}`,
     ...input,
   };
-  const nextState: ThreeDGrowthModuleState = {
-    ...state,
-    captures: [nextCapture, ...state.captures],
+  const nextPlantName = nextCapture.agentAnalysis?.profile
+    ? `${nextCapture.agentAnalysis.profile.commonName} ${nextCapture.agentAnalysis.profile.scientificName}`.trim()
+    : timeline.plantName;
+
+  const nextStore: ThreeDGrowthStore = {
+    ...store,
+    timelines: {
+      ...store.timelines,
+      [input.plantId]: {
+        ...timeline,
+        plantId: input.plantId,
+        plantName: nextPlantName || timeline.plantName,
+        captures: [nextCapture, ...timeline.captures],
+      },
+    },
   };
-  await writeState(nextState);
+
+  await writeStore(nextStore);
   return nextCapture;
+}
+
+export async function appendCareEventRecord(
+  input: Omit<CareEventRecord, "id" | "label"> & { label?: string },
+) {
+  const store = await readThreeDGrowthStore();
+  const timeline = getTimeline(store, input.plantId);
+  const nextEvent: CareEventRecord = {
+    id: `care-${randomUUID()}`,
+    plantId: input.plantId,
+    eventType: input.eventType,
+    occurredAt: input.occurredAt,
+    label: input.label ?? defaultCareEventLabel(input.eventType),
+  };
+
+  const nextStore: ThreeDGrowthStore = {
+    ...store,
+    timelines: {
+      ...store.timelines,
+      [input.plantId]: {
+        ...timeline,
+        careEvents: [nextEvent, ...timeline.careEvents],
+      },
+    },
+  };
+
+  await writeStore(nextStore);
+  return {
+    event: nextEvent,
+    snapshot: nextStore.timelines[input.plantId]!,
+  };
 }
 
 export async function enqueueModelGeneration(input: {
   plantId: string;
   sourceCaptureIds: string[];
 }) {
-  const state = await readThreeDGrowthState();
+  const store = await readThreeDGrowthStore();
+  const timeline = getTimeline(store, input.plantId);
   const sourceCaptures = input.sourceCaptureIds
-    .map((captureId) => state.captures.find((item) => item.id === captureId))
+    .map((captureId) => timeline.captures.find((item) => item.id === captureId))
     .filter((item): item is CaptureRecord => Boolean(item));
 
   if (sourceCaptures.length === 0) {
@@ -107,7 +139,7 @@ export async function enqueueModelGeneration(input: {
     enablePbr: true,
   });
 
-  const generationIndex = state.models.length + 1;
+  const generationIndex = timeline.models.length + 1;
   const now = new Date().toISOString();
   const nextModel: GeneratedModel = {
     id: `model-${randomUUID()}`,
@@ -124,129 +156,276 @@ export async function enqueueModelGeneration(input: {
     createdAt: now,
     updatedAt: now,
   };
-  const nextState: ThreeDGrowthModuleState = {
-    ...state,
-    models: [nextModel, ...state.models],
-    activeModelId: nextModel.id,
+
+  const nextStore: ThreeDGrowthStore = {
+    ...store,
+    timelines: {
+      ...store.timelines,
+      [input.plantId]: {
+        ...timeline,
+        models: [nextModel, ...timeline.models],
+        activeModelId: nextModel.id,
+      },
+    },
   };
-  await writeState(nextState);
+
+  await writeStore(nextStore);
 
   console.log("[3D Growth][Server] 混元任务提交成功", {
     modelId: nextModel.id,
     jobId: submission.jobId,
+    plantId: input.plantId,
   });
 
   return nextModel;
 }
 
-async function refreshModelStatuses(state: ThreeDGrowthModuleState) {
-  const nextModels = await Promise.all(
-    state.models.map(async (model) => {
-      if (
-        model.status !== "processing" ||
-        !model.jobId ||
-        !model.queryAction ||
-        !model.region
-      ) {
-        return model;
-      }
+async function readThreeDGrowthStore() {
+  await ensureThreeDGrowthRuntime();
 
-      try {
-        const result = await queryHunyuanJob({
-          jobId: model.jobId,
-          queryAction: model.queryAction as "QueryHunyuanTo3DRapidJob" | "QueryHunyuanTo3DProJob",
-          region: model.region,
-        });
+  const now = Date.now();
+  if (stateCache && now - stateCacheTime < CACHE_TTL_MS) {
+    return stateCache;
+  }
 
-        const remoteStatus = String(result.Status ?? "UNKNOWN");
-        const files = Array.isArray(result.ResultFile3Ds)
-          ? (result.ResultFile3Ds as Array<Record<string, unknown>>)
-          : [];
-        const selected = selectResultFile(files);
-        const previewImageUrl =
-          typeof selected?.PreviewImageUrl === "string" ? selected.PreviewImageUrl : undefined;
-        const downloadUrl = typeof selected?.Url === "string" ? selected.Url : undefined;
+  try {
+    const raw = await readFile(statePath, "utf8");
+    const parsed = normalizeStore(JSON.parse(raw) as unknown);
+    const refreshed = await refreshModelStatuses(parsed);
+    await writeStore(refreshed);
+    return refreshed;
+  } catch {
+    const seeded = createEmptyStore();
+    await writeStore(seeded);
+    return seeded;
+  }
+}
 
-        if (remoteStatus === "DONE") {
-          let modelUrl = model.modelUrl;
+async function writeStore(store: ThreeDGrowthStore) {
+  await ensureThreeDGrowthRuntime();
+  await writeFile(statePath, JSON.stringify(store, null, 2), "utf8");
+  stateCache = store;
+  stateCacheTime = Date.now();
+}
 
-          if (downloadUrl && !modelUrl) {
-            try {
-              const downloadedPath = await downloadModelToPublic({
-                downloadUrl,
-                targetDir: path.join(modelsRoot, model.id),
-                filenameHint: model.id,
-              });
-              modelUrl = toPublicUrl(downloadedPath);
-            } catch (downloadError) {
-              console.error("[3D Growth][Server] 下载混元模型失败", {
-                modelId: model.id,
-                jobId: model.jobId,
-                error: downloadError,
-              });
-            }
+function createEmptyStore(): ThreeDGrowthStore {
+  return {
+    timelines: {
+      [DEFAULT_PLANT_ID]: createEmptyThreeDGrowthState(
+        DEFAULT_PLANT_ID,
+        DEFAULT_PLANT_NAME,
+      ),
+    },
+  };
+}
+
+function normalizeStore(value: unknown): ThreeDGrowthStore {
+  if (!value || typeof value !== "object") {
+    return createEmptyStore();
+  }
+
+  const maybeStore = value as {
+    timelines?: Record<string, ThreeDGrowthModuleState>;
+    plantId?: string;
+    plantName?: string;
+    captures?: CaptureRecord[];
+    models?: GeneratedModel[];
+    activeModelId?: string;
+  };
+
+  if (maybeStore.timelines && typeof maybeStore.timelines === "object") {
+    const timelines = Object.fromEntries(
+      Object.entries(maybeStore.timelines).map(([plantId, timeline]) => [
+        plantId,
+        normalizeTimeline(timeline, plantId),
+      ]),
+    );
+
+    return {
+      timelines:
+        Object.keys(timelines).length > 0 ? timelines : createEmptyStore().timelines,
+    };
+  }
+
+  const legacyPlantId =
+    typeof maybeStore.plantId === "string" ? maybeStore.plantId : DEFAULT_PLANT_ID;
+
+  return {
+    timelines: {
+      [legacyPlantId]: normalizeTimeline(maybeStore, legacyPlantId),
+    },
+  };
+}
+
+function normalizeTimeline(
+  timeline: Partial<ThreeDGrowthModuleState> | undefined,
+  plantId: string,
+): ThreeDGrowthModuleState {
+  const fallback = createEmptyThreeDGrowthState(plantId, DEFAULT_PLANT_NAME);
+  const captures = Array.isArray(timeline?.captures)
+    ? timeline.captures.filter((capture): capture is CaptureRecord => Boolean(capture?.id))
+    : [];
+  const models = Array.isArray(timeline?.models)
+    ? timeline.models.filter((model): model is GeneratedModel => Boolean(model?.id))
+    : [];
+  const careEvents = Array.isArray((timeline as { careEvents?: CareEventRecord[] })?.careEvents)
+    ? (timeline as { careEvents?: CareEventRecord[] }).careEvents!.filter(
+        (event): event is CareEventRecord =>
+          Boolean(event?.id && event?.plantId && event?.occurredAt && event?.eventType),
+      )
+    : [];
+  const activeModelId =
+    typeof timeline?.activeModelId === "string" &&
+    models.some((model) => model.id === timeline.activeModelId)
+      ? timeline.activeModelId
+      : models[0]?.id;
+
+  return {
+    plantId,
+    plantName:
+      typeof timeline?.plantName === "string" && timeline.plantName.trim()
+        ? timeline.plantName
+        : fallback.plantName,
+    captures,
+    models,
+    careEvents,
+    activeModelId,
+  };
+}
+
+function getTimeline(store: ThreeDGrowthStore, plantId?: string) {
+  const targetPlantId =
+    plantId && store.timelines[plantId]
+      ? plantId
+      : plantId || Object.keys(store.timelines)[0] || DEFAULT_PLANT_ID;
+  return (
+    store.timelines[targetPlantId] ??
+    createEmptyThreeDGrowthState(targetPlantId, DEFAULT_PLANT_NAME)
+  );
+}
+
+async function refreshModelStatuses(store: ThreeDGrowthStore) {
+  const nextTimelines = await Promise.all(
+    Object.entries(store.timelines).map(async ([plantId, timeline]) => {
+      const nextModels = await Promise.all(
+        timeline.models.map(async (model) => {
+          if (
+            model.status !== "processing" ||
+            !model.jobId ||
+            !model.queryAction ||
+            !model.region
+          ) {
+            return model;
           }
 
-          return {
-            ...model,
-            status: "ready" as const,
-            modelUrl,
-            previewUrl: previewImageUrl ?? model.previewUrl,
-            downloadUrl,
-            progress: 100,
-            errorMessage: undefined,
-            summary: modelUrl
-              ? "混元 3D 模型已生成完成，可以直接在时间线中查看。"
-              : "混元 3D 任务已完成，但当前没有拿到可直接展示的模型文件。",
-            updatedAt: new Date().toISOString(),
-          };
-        }
+          try {
+            const result = await queryHunyuanJob({
+              jobId: model.jobId,
+              queryAction: model.queryAction as
+                | "QueryHunyuanTo3DRapidJob"
+                | "QueryHunyuanTo3DProJob",
+              region: model.region,
+            });
 
-        if (remoteStatus === "FAIL") {
-          return {
-            ...model,
-            status: "failed" as const,
-            progress: 100,
-            errorMessage: String(result.ErrorMessage ?? result.ErrorCode ?? "混元 3D 生成失败"),
-            summary: String(result.ErrorMessage ?? "混元 3D 任务失败"),
-            updatedAt: new Date().toISOString(),
-          };
-        }
+            const remoteStatus = String(result.Status ?? "UNKNOWN");
+            const files = Array.isArray(result.ResultFile3Ds)
+              ? (result.ResultFile3Ds as Array<Record<string, unknown>>)
+              : [];
+            const selected = selectResultFile(files);
+            const previewImageUrl =
+              typeof selected?.PreviewImageUrl === "string"
+                ? selected.PreviewImageUrl
+                : undefined;
+            const downloadUrl =
+              typeof selected?.Url === "string" ? selected.Url : undefined;
 
-        return {
-          ...model,
-          previewUrl: previewImageUrl ?? model.previewUrl,
-          progress: remoteStatus === "RUN" ? 68 : 24,
-          summary:
-            remoteStatus === "RUN"
-              ? "混元 3D 正在生成模型，云端任务运行中。"
-              : "混元 3D 任务已提交，等待云端开始处理。",
-          updatedAt: new Date().toISOString(),
-        };
-      } catch (error) {
-        console.error("[3D Growth][Server] 查询混元任务状态失败", {
-          modelId: model.id,
-          jobId: model.jobId,
-          error,
-        });
+            if (remoteStatus === "DONE") {
+              let modelUrl = model.modelUrl;
 
-        return {
-          ...model,
-          summary: "状态同步暂时失败，稍后会自动重试。",
-          updatedAt: new Date().toISOString(),
-        };
-      }
+              if (downloadUrl && !modelUrl) {
+                try {
+                  const downloadedPath = await downloadModelToPublic({
+                    downloadUrl,
+                    targetDir: path.join(modelsRoot, model.id),
+                    filenameHint: model.id,
+                  });
+                  modelUrl = toPublicUrl(downloadedPath);
+                } catch (downloadError) {
+                  console.error("[3D Growth][Server] 下载混元模型失败", {
+                    modelId: model.id,
+                    jobId: model.jobId,
+                    error: downloadError,
+                  });
+                }
+              }
+
+              return {
+                ...model,
+                status: "ready" as const,
+                modelUrl,
+                previewUrl: previewImageUrl ?? model.previewUrl,
+                downloadUrl,
+                progress: 100,
+                errorMessage: undefined,
+                summary: modelUrl
+                  ? "混元 3D 模型已生成完成，可以直接在时间线中查看。"
+                  : "混元 3D 任务已完成，但当前没有拿到可直接展示的模型文件。",
+                updatedAt: new Date().toISOString(),
+              };
+            }
+
+            if (remoteStatus === "FAIL") {
+              return {
+                ...model,
+                status: "failed" as const,
+                progress: 100,
+                errorMessage: String(
+                  result.ErrorMessage ?? result.ErrorCode ?? "混元 3D 生成失败",
+                ),
+                summary: String(result.ErrorMessage ?? "混元 3D 任务失败"),
+                updatedAt: new Date().toISOString(),
+              };
+            }
+
+            return {
+              ...model,
+              previewUrl: previewImageUrl ?? model.previewUrl,
+              progress: remoteStatus === "RUN" ? 68 : 24,
+              summary:
+                remoteStatus === "RUN"
+                  ? "混元 3D 正在生成模型，云端任务运行中。"
+                  : "混元 3D 任务已提交，等待云端开始处理。",
+              updatedAt: new Date().toISOString(),
+            };
+          } catch (error) {
+            console.error("[3D Growth][Server] 查询混元任务状态失败", {
+              modelId: model.id,
+              jobId: model.jobId,
+              error,
+            });
+
+            return {
+              ...model,
+              summary: "状态同步暂时失败，稍后会自动重试。",
+              updatedAt: new Date().toISOString(),
+            };
+          }
+        }),
+      );
+
+      return [
+        plantId,
+        {
+          ...timeline,
+          models: nextModels,
+        },
+      ] as const;
     }),
   );
 
   return {
-    ...state,
-    models: nextModels,
+    timelines: Object.fromEntries(nextTimelines),
   };
-}
-
-function createSeedState(): ThreeDGrowthModuleState {
-  return createEmptyThreeDGrowthState();
 }
 
 async function readCaptureBytes(imageUrl: string) {
@@ -255,7 +434,11 @@ async function readCaptureBytes(imageUrl: string) {
   }
 
   const normalized = imageUrl.startsWith("/") ? imageUrl.slice(1) : imageUrl;
-  const absolutePath = path.join(process.cwd(), "public", normalized.replace(/^runtime\//, "runtime/"));
+  const absolutePath = path.join(
+    process.cwd(),
+    "public",
+    normalized.replace(/^runtime\//, "runtime/"),
+  );
   return readFile(absolutePath);
 }
 
@@ -281,6 +464,13 @@ function mapCaptureAngleToHunyuanView(angle: CaptureRecord["angle"]) {
     return "top";
   }
   return undefined;
+}
+
+function defaultCareEventLabel(eventType: CareEventRecord["eventType"]) {
+  if (eventType === "watered") {
+    return "浇水";
+  }
+  return "养护";
 }
 
 function toPublicUrl(absolutePath: string) {

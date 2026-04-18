@@ -1,14 +1,80 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
+import { setActivePlantId, usePlantStore } from "@/src/shared/plant-store";
+import { createCareEvent } from "@/src/features/three-d-growth/api/client";
 import { DEFAULT_THEME, THEMES } from "../data/showcase-theme";
 import type { ThemeData } from "../types";
-
-const PLANT_TABS = [{ id: "monstera" }] as const;
+import { AddPlantModal } from "./add-plant-modal";
 
 export function HomeShowcasePage() {
-  const theme = THEMES[DEFAULT_THEME];
+  const baseTheme = THEMES[DEFAULT_THEME];
+  const { activePlant, plants } = usePlantStore();
+  const [addPlantOpen, setAddPlantOpen] = useState(false);
+  const [wateringBusy, setWateringBusy] = useState(false);
+  const [wateringFeedback, setWateringFeedback] = useState("");
+
+  const theme = useMemo<ThemeData>(() => {
+    if (!activePlant) {
+      return baseTheme;
+    }
+    return {
+      ...baseTheme,
+      heroSubtitle: activePlant.heroSubtitle,
+      growthStage: activePlant.growthStage,
+      healthStatus: activePlant.healthStatus,
+      healthTrend: activePlant.healthTrend,
+      companionshipDays: activePlant.companionshipDays,
+      waterHabit: activePlant.waterHabit,
+      sunlightHabit: activePlant.sunlightHabit,
+      waterAdvice: activePlant.waterAdvice,
+      sunlightAdvice: activePlant.sunlightAdvice,
+      soilMoisture: activePlant.soilMoisture,
+      videoTitle: activePlant.videoTitle,
+      videoMeta: activePlant.videoMeta,
+    };
+  }, [activePlant, baseTheme]);
+
+  const heroTitle = activePlant
+    ? `${activePlant.commonName} ${activePlant.scientificName}`.trim()
+    : "龟背竹 Monstera";
+  const heroImageUrl = activePlant?.pixelImageUrl ?? activePlant?.originalImageUrl;
+
+  useEffect(() => {
+    if (!wateringFeedback) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setWateringFeedback("");
+    }, 2200);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [wateringFeedback]);
+
+  async function handleWateringRecord() {
+    if (!activePlant?.id || wateringBusy) {
+      return;
+    }
+
+    try {
+      setWateringBusy(true);
+      setWateringFeedback("");
+      await createCareEvent({
+        plantId: activePlant.id,
+        eventType: "watered",
+      });
+      setWateringFeedback("已记录浇水");
+    } catch {
+      setWateringFeedback("记录失败");
+    } finally {
+      setWateringBusy(false);
+    }
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_24%),linear-gradient(180deg,#e9f1e3_0%,#dfe9d9_34%,#eef3e9_100%)] px-4 py-6 sm:px-6 lg:px-8">
@@ -64,6 +130,7 @@ export function HomeShowcasePage() {
                     <button
                       type="button"
                       aria-label="添加植物"
+                      onClick={() => setAddPlantOpen(true)}
                       className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/12 px-3.5 py-2 text-xs font-semibold tracking-[0.04em] text-white shadow-[0_12px_24px_rgba(5,14,10,0.16)] backdrop-blur-md transition hover:bg-white/18"
                     >
                       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/18 text-sm leading-none">
@@ -74,25 +141,37 @@ export function HomeShowcasePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center rounded-full border border-white/10 bg-white/8 px-4 py-3 shadow-[0_18px_40px_rgba(4,14,10,0.14)] backdrop-blur-md">
+                <div className="flex items-center justify-center rounded-full border border-white/14 bg-black/8 px-4 py-3 shadow-[0_18px_40px_rgba(4,14,10,0.18)] backdrop-blur-md">
                   <div className="flex items-center gap-3">
-                    {PLANT_TABS.map((plant, index) => {
-                      const isActive = index === 0;
+                    {plants.length > 0 ? (
+                      plants.map((plant, index) => {
+                        const isActive = activePlant ? plant.id === activePlant.id : index === 0;
 
-                      return (
-                        <button
-                          key={plant.id}
-                          type="button"
-                          aria-pressed={isActive}
-                          aria-label={`植物 ${index + 1}`}
-                          className={`h-3.5 w-3.5 rounded-full transition ${
-                            isActive
-                              ? "scale-110 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)]"
-                              : "bg-white/32 hover:bg-white/48"
-                          }`}
-                        />
-                      );
-                    })}
+                        return (
+                          <button
+                            key={plant.id}
+                            type="button"
+                            onClick={() => {
+                              void setActivePlantId(plant.id);
+                            }}
+                            aria-pressed={isActive}
+                            aria-label={`${plant.commonName} ${index + 1}`}
+                            className={`h-3.5 w-3.5 rounded-full transition ${
+                              isActive
+                                ? "scale-110 border border-white/90 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16),0_4px_14px_rgba(255,255,255,0.28)]"
+                                : "border border-white/55 bg-[#d8e7d7]/78 shadow-[0_2px_8px_rgba(4,14,10,0.18)] hover:bg-[#edf7ec]"
+                            }`}
+                          />
+                        );
+                      })
+                    ) : (
+                      <button
+                        type="button"
+                        aria-pressed="true"
+                        aria-label="默认植物"
+                        className="h-3.5 w-3.5 scale-110 rounded-full border border-white/90 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16),0_4px_14px_rgba(255,255,255,0.28)] transition"
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -100,20 +179,46 @@ export function HomeShowcasePage() {
               <section
                 className={`rounded-[30px] border border-white/8 p-5 shadow-[0_18px_48px_rgba(6,16,11,0.24)] ${theme.heroClassName}`}
               >
-                <p className="font-serif text-[30px] leading-none text-white">龟背竹 Monstera</p>
+                <p className="font-serif text-[30px] leading-none text-white">{heroTitle}</p>
                 <p className="mt-2 text-sm text-white/70">{theme.heroSubtitle}</p>
 
                 <div className="relative mt-5 flex min-h-[190px] items-center justify-center overflow-hidden rounded-[28px] bg-white/4">
                   <div className="absolute inset-x-10 bottom-6 h-8 rounded-full bg-[#163126]/30 blur-2xl" />
-                  <PixelPlant />
+                  {heroImageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={heroImageUrl}
+                      alt={activePlant?.commonName ?? "植物"}
+                      className="relative z-10 max-h-[230px] w-auto object-contain drop-shadow-[0_10px_24px_rgba(8,26,16,0.32)]"
+                    />
+                  ) : (
+                    <PixelPlant />
+                  )}
                 </div>
 
-                <Link
-                  href="/growth-3d"
-                  className="mt-4 inline-flex w-fit items-center rounded-full bg-[#ebf7df] px-5 py-3 text-sm font-semibold text-[#204735] shadow-[0_12px_24px_rgba(8,26,16,0.15)] transition hover:-translate-y-0.5"
-                >
-                  记录
-                </Link>
+                <div className="mt-4 flex items-center gap-3">
+                  <Link
+                    href="/growth-3d"
+                    className="inline-flex w-fit items-center rounded-full bg-[#ebf7df] px-5 py-3 text-sm font-semibold text-[#204735] shadow-[0_12px_24px_rgba(8,26,16,0.15)] transition hover:-translate-y-0.5"
+                  >
+                    记录
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleWateringRecord();
+                    }}
+                    disabled={!activePlant?.id || wateringBusy}
+                    className="inline-flex w-fit items-center rounded-full border border-[#f2d5b7]/55 bg-[#d0846e] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(106,44,32,0.22)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {wateringBusy ? "记录中..." : "浇水"}
+                  </button>
+                  {wateringFeedback ? (
+                    <span className="text-xs font-semibold text-[#eff7d8]">
+                      {wateringFeedback}
+                    </span>
+                  ) : null}
+                </div>
               </section>
 
               <section className="grid min-h-[340px] grid-cols-2 items-stretch gap-3">
@@ -165,7 +270,7 @@ export function HomeShowcasePage() {
                   Video Recommendation
                 </p>
                 <Link
-                  href="#"
+                  href={activePlant?.videoUrl ?? "#"}
                   className="mt-3 flex items-center gap-3 rounded-[20px] bg-white/45 p-3 transition hover:-translate-y-0.5"
                 >
                   <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#7aac59_0%,#3a5f43_100%)] text-2xl text-white">
@@ -188,6 +293,8 @@ export function HomeShowcasePage() {
           </section>
         </DeviceFrame>
       </div>
+
+      <AddPlantModal open={addPlantOpen} onClose={() => setAddPlantOpen(false)} />
     </main>
   );
 }

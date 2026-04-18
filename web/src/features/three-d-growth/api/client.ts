@@ -1,9 +1,17 @@
-import type { CaptureRecord, ThreeDGrowthModuleState } from "../types";
+import type { CaptureRecord, CareEventRecord, ThreeDGrowthModuleState } from "../types";
 
-export async function fetchThreeDGrowthSnapshot() {
-  const response = await fetch("/api/three-d-growth", {
-    cache: "no-store",
-  });
+export async function fetchThreeDGrowthSnapshot(plantId?: string) {
+  const searchParams = new URLSearchParams();
+  if (plantId) {
+    searchParams.set("plantId", plantId);
+  }
+
+  const response = await fetch(
+    `/api/three-d-growth${searchParams.size ? `?${searchParams.toString()}` : ""}`,
+    {
+      cache: "no-store",
+    },
+  );
   if (!response.ok) {
     throw new Error("读取 3D 模块数据失败");
   }
@@ -49,6 +57,27 @@ export async function createModelGeneration(input: {
     throw new Error("发起 3D 生成失败");
   }
   return (await response.json()) as { modelId: string };
+}
+
+export async function createCareEvent(input: {
+  plantId: string;
+  eventType?: "watered";
+  occurredAt?: string;
+}) {
+  const response = await fetch("/api/three-d-growth/care-events", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) {
+    throw new Error("记录浇水事件失败");
+  }
+  return (await response.json()) as {
+    event: CareEventRecord;
+    snapshot: ThreeDGrowthModuleState;
+  };
 }
 
 /**

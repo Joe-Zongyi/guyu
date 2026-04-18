@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:reset": "node ./scripts/reset-dev-cache.mjs",
+    "debug:recognize": "node ./scripts/debug-recognize-api.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
