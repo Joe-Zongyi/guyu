@@ -1,0 +1,46 @@
+{
+  "name": "@guyu/plant-agent",
+  "version": "0.1.0",
+  "description": "Guyu PlantAgent core: structured input -> structured output for analyze_profile / generate_daily_advice / assess_state.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "plant-agent": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "cli": "tsx src/cli.ts",
+    "verify": "npm run build && npm run test",
+    "run:analyze-profile": "node dist/cli.js analyze-profile --input examples/analyze-profile.json",
+    "run:daily-advice": "node dist/cli.js daily-advice --input examples/daily-advice.json",
+    "run:assess-state": "node dist/cli.js assess-state --input examples/assess-state.json",
+    "run:examples": "npm run run:analyze-profile && npm run run:daily-advice && npm run run:assess-state",
+    "run:through": "npm run build && npm run test && npm run run:examples"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3"
+  }
+}

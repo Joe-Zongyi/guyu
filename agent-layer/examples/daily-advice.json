@@ -1,0 +1,32 @@
+{
+  "plant_id": "plant_test_001",
+  "profile": {
+    "taxonomy_id": "monstera_deliciosa",
+    "common_name": "龟背竹",
+    "care_baseline": {
+      "watering_rule": "土表 2-3 厘米干后浇透",
+      "light_rule": "明亮散射光"
+    },
+    "risk_flags": ["overwatering_sensitive"],
+    "weather_link_fields": {
+      "heat_sensitivity": "medium",
+      "cold_sensitivity": "medium",
+      "humidity_sensitivity": "high",
+      "light_sensitivity": "medium"
+    }
+  },
+  "today_context": {
+    "date": "2026-04-18",
+    "season": "spring",
+    "weather_snapshot": {
+      "condition": "cloudy",
+      "temperature_c": 24,
+      "humidity": 68,
+      "light_level": "medium"
+    },
+    "recent_care_events": [
+      { "type": "watered", "occurred_at": "2026-04-17T10:30:00Z" }
+    ]
+  },
+  "request_id": "req_advice_001"
+}

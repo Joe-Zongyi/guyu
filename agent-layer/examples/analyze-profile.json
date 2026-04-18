@@ -1,0 +1,11 @@
+{
+  "user_id": "user_test",
+  "image": {
+    "file_id": "file_monstera_clear_001",
+    "url": "https://example.com/img.jpg",
+    "content_type": "image/jpeg",
+    "captured_at": "2026-04-18T09:00:00Z"
+  },
+  "region": "Shanghai",
+  "request_id": "req_test_001"
+}
