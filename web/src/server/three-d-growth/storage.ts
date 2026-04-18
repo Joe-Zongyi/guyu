@@ -15,6 +15,17 @@ const uploadsRoot = path.join(runtimeRoot, "uploads");
 const modelsRoot = path.join(runtimeRoot, "models");
 const statePath = path.join(runtimeRoot, "state.json");
 
+// 内存缓存：减少高频读取时的文件 IO 延迟
+let stateCache: ThreeDGrowthModuleState | null = null;
+let stateCacheTime = 0;
+const CACHE_TTL_MS = 500;
+
+/** 清除状态缓存（供测试使用） */
+export function clearStateCache() {
+  stateCache = null;
+  stateCacheTime = 0;
+}
+
 export async function ensureThreeDGrowthRuntime() {
   await mkdir(uploadsRoot, { recursive: true });
   await mkdir(modelsRoot, { recursive: true });
@@ -22,6 +33,12 @@ export async function ensureThreeDGrowthRuntime() {
 
 export async function readThreeDGrowthState() {
   await ensureThreeDGrowthRuntime();
+
+  const now = Date.now();
+  if (stateCache && now - stateCacheTime < CACHE_TTL_MS) {
+    return stateCache;
+  }
+
   try {
     const raw = await readFile(statePath, "utf8");
     const parsed = JSON.parse(raw) as ThreeDGrowthModuleState;
@@ -38,6 +55,8 @@ export async function readThreeDGrowthState() {
 export async function writeState(state: ThreeDGrowthModuleState) {
   await ensureThreeDGrowthRuntime();
   await writeFile(statePath, JSON.stringify(state, null, 2), "utf8");
+  stateCache = state;
+  stateCacheTime = Date.now();
 }
 
 export async function appendCaptureRecord(input: Omit<CaptureRecord, "id">) {

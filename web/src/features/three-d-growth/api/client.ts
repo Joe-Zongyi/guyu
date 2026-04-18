@@ -50,3 +50,27 @@ export async function createModelGeneration(input: {
   }
   return (await response.json()) as { modelId: string };
 }
+
+/**
+ * 预加载模型文件到浏览器缓存，用于时间线切换时减少延迟。
+ */
+export function preloadModel(modelUrl: string): Promise<void> {
+  return fetch(modelUrl, { method: "GET", cache: "force-cache" })
+    .then(() => undefined)
+    .catch(() => undefined);
+}
+
+/**
+ * 并行预加载相邻索引的模型。
+ */
+export function preloadAdjacentModels(
+  models: Array<{ modelUrl?: string }>,
+  currentIndex: number
+): void {
+  const prev = models[currentIndex - 1];
+  const next = models[currentIndex + 1];
+  void Promise.all([
+    prev?.modelUrl ? preloadModel(prev.modelUrl) : Promise.resolve(),
+    next?.modelUrl ? preloadModel(next.modelUrl) : Promise.resolve(),
+  ]);
+}

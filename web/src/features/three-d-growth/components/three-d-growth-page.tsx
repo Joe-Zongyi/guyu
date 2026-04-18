@@ -7,6 +7,7 @@ import {
   createCapture,
   createModelGeneration,
   fetchThreeDGrowthSnapshot,
+  preloadAdjacentModels,
 } from "../api/client";
 import type { CaptureRecord, GeneratedModel, ThreeDGrowthModuleState } from "../types";
 
@@ -19,6 +20,23 @@ type CalendarEvent = {
   label: string;
   highlight?: boolean;
 };
+
+// requestAnimationFrame 批量更新队列
+const pendingModelUpdates = new Set<string>();
+let rafId: number | null = null;
+
+function flushModelUpdates(setter: (id: string) => void) {
+  rafId = null;
+  pendingModelUpdates.forEach((id) => setter(id));
+  pendingModelUpdates.clear();
+}
+
+function queueModelUpdate(modelId: string, setter: (id: string) => void) {
+  pendingModelUpdates.add(modelId);
+  if (rafId === null) {
+    rafId = requestAnimationFrame(() => flushModelUpdates(setter));
+  }
+}
 
 export function ThreeDGrowthPage() {
   const [snapshot, setSnapshot] = useState<ThreeDGrowthModuleState | null>(null);
@@ -74,8 +92,21 @@ export function ThreeDGrowthPage() {
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
     };
   }, []);
+
+  // 当 snapshot 和 activeModelId 确定后，预加载相邻模型
+  useEffect(() => {
+    if (!snapshot || !activeModelId) return;
+    const index = snapshot.models.findIndex((m) => m.id === activeModelId);
+    if (index >= 0) {
+      preloadAdjacentModels(snapshot.models, index);
+    }
+  }, [activeModelId, snapshot]);
 
   const models = snapshot?.models ?? [];
   const captures = snapshot?.captures ?? [];
@@ -221,14 +252,19 @@ export function ThreeDGrowthPage() {
 
   function handleTimelineChange(nextIndex: number) {
     const nextModel = models[nextIndex];
-    if (nextModel) {
-      logStep("时间线切换模型", {
-        index: nextIndex,
-        modelId: nextModel.id,
-        milestone: nextModel.milestone,
-      });
-      setActiveModelId(nextModel.id);
-    }
+    if (!nextModel) return;
+
+    logStep("时间线切换模型", {
+      index: nextIndex,
+      modelId: nextModel.id,
+      milestone: nextModel.milestone,
+    });
+
+    // requestAnimationFrame 批量更新，保证拖动响应 < 100ms
+    queueModelUpdate(nextModel.id, setActiveModelId);
+
+    // 并行预加载相邻模型
+    preloadAdjacentModels(models, nextIndex);
   }
 
   return (
@@ -314,7 +350,7 @@ export function ThreeDGrowthPage() {
                             <button
                               key={model.id}
                               type="button"
-                              onClick={() => setActiveModelId(model.id)}
+                              onClick={() => handleTimelineChange(index)}
                               className={`h-6 w-6 rounded-full border-2 transition ${
                                 isActive
                                   ? "border-white bg-[#f6fbf6]"

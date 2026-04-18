@@ -6,6 +6,19 @@ export type CaptureRecord = {
   angle: "front" | "left" | "right" | "top" | "detail";
   title: string;
   note?: string;
+  agentAnalysis?: {
+    profile?: {
+      speciesId: string;
+      commonName: string;
+      scientificName: string;
+    };
+    state?: {
+      overallState: string;
+      signals: Array<{ signal: string; confidence: number }>;
+      confidence: number;
+    };
+    analyzedAt: string;
+  };
 };
 
 export type GeneratedModel = {

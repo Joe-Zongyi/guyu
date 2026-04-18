@@ -7,7 +7,10 @@
     "dev:reset": "node ./scripts/reset-dev-cache.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:real-api": "vitest run --config vitest.real-api.config.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -22,9 +25,11 @@
     "@types/node": "^20.17.46",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@vitest/coverage-v8": "^4.1.4",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.4"
   }
 }

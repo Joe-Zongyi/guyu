@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "concurrency-patterns": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "computedHash": "7ae94a81014d275a813f7fff6f36270b04b63d9ac14bb78586b63e30b2de9dbb"
+    },
     "nestjs-best-practices": {
       "source": "kadajett/agent-nestjs-skills",
       "sourceType": "github",
@@ -20,6 +25,21 @@
       "source": "wshobson/agents",
       "sourceType": "github",
       "computedHash": "c6a99966c2565acc388e574039127abc770bb9a3338be761e421e16f023f702b"
+    },
+    "playwright-best-practices": {
+      "source": "currents-dev/playwright-best-practices-skill",
+      "sourceType": "github",
+      "computedHash": "320eaf861e3a0a923bfaad0726cb311a3fe30093378f8d26c89b9c5ae5c42b35"
+    },
+    "playwright-generate-test": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "8f963da3e25f705ff39755b8b990f20da0c0320cb86ac83fcc4d2d4eca91f6e4"
+    },
+    "playwright-skill": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "computedHash": "465b1d346b9fabd4c8abe4fa1cecf285109f587cf8f159babc054d96dfb30a36"
     },
     "test-driven-development": {
       "source": "obra/superpowers",
@@ -60,6 +80,16 @@
       "source": "plyght/tonejs-skill",
       "sourceType": "github",
       "computedHash": "09bb83338422af4dcdf13cb2e0e204fd228bb6501a8b3e5af7c5f6d4924d8e7f"
+    },
+    "typescript-async-patterns": {
+      "source": "thebushidocollective/han",
+      "sourceType": "github",
+      "computedHash": "9e1c16df576a89d62cf3f974617e2c08d265b5a6119a4a1580e467a121ca6d9f"
+    },
+    "typescript-e2e-testing": {
+      "source": "bmad-labs/skills",
+      "sourceType": "github",
+      "computedHash": "7077a0a19bd5625dc3033db4cfa8260a13d882949ce04ca78b10610a6e4f3548"
     }
   }
 }
