@@ -1,5 +1,5 @@
 # CLAUDE.md
-
+# 重要：这个项目是一个hackathon展示项目，所以展示效果>技术，只要性能在可以容忍的范围，主打展示效果/前端展示优先！
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
