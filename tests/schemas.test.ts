@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   CareEventSchema,
   FileRefSchema,
+  GeneratedImageSchema,
+  PixelArtGenerationSchema,
   PlantProfileDraftSchema,
   PlantProfileSchema,
   PlantStateAssessmentSchema,
@@ -12,6 +14,28 @@ describe("shared schemas", () => {
   it("FileRef requires file_id", () => {
     expect(() => FileRefSchema.parse({})).toThrow();
     expect(FileRefSchema.parse({ file_id: "file_x" }).file_id).toBe("file_x");
+  });
+
+  it("GeneratedImage requires both file_id and url", () => {
+    expect(() => GeneratedImageSchema.parse({ file_id: "generated_x" })).toThrow();
+    expect(() => GeneratedImageSchema.parse({ url: "https://example.com/x.png" })).toThrow();
+    expect(
+      GeneratedImageSchema.parse({
+        file_id: "generated_x",
+        url: "https://example.com/x.png",
+      }),
+    ).toBeTruthy();
+  });
+
+  it("PixelArtGeneration requires at least one generated image", () => {
+    expect(() =>
+      PixelArtGenerationSchema.parse({
+        source_image_id: "file_x",
+        style: "pixel_art",
+        images: [],
+        provider_metadata: { model: "m", prompt_version: "p" },
+      }),
+    ).toThrow();
   });
 
   it("WeatherSnapshot enforces enum values", () => {

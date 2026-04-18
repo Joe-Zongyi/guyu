@@ -1,13 +1,22 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 import { PlantAgent } from "./agent.js";
+import {
+  createImageGenerationProviderFromEnv,
+  createVisionProviderFromEnv,
+} from "./providers/factory.js";
 
-type Capability = "analyze-profile" | "daily-advice" | "assess-state";
+type Capability =
+  | "analyze-profile"
+  | "daily-advice"
+  | "assess-state"
+  | "pixel-art";
 
 const CAPABILITIES: readonly Capability[] = [
   "analyze-profile",
   "daily-advice",
   "assess-state",
+  "pixel-art",
 ];
 
 interface ParsedArgs {
@@ -24,10 +33,12 @@ function printHelp(): void {
       "  analyze-profile   Run analyze_profile on a JSON input file",
       "  daily-advice      Run generate_daily_advice on a JSON input file",
       "  assess-state      Run assess_state on a JSON input file",
+      "  pixel-art         Run pixel-art image generation on a JSON input file",
       "",
       "Examples:",
       "  plant-agent analyze-profile --input ./request.json",
       "  cat request.json | plant-agent daily-advice --input -",
+      "  cat request.json | plant-agent pixel-art --input -",
       "",
     ].join("\n"),
   );
@@ -78,7 +89,16 @@ async function main(): Promise<void> {
   }
 
   const input = await readInput(args.inputPath);
-  const agent = new PlantAgent();
+  const agent = new PlantAgent({
+    visionProvider:
+      args.capability === "daily-advice" || args.capability === "pixel-art"
+        ? undefined
+        : createVisionProviderFromEnv(),
+    imageGenerationProvider:
+      args.capability === "pixel-art"
+        ? createImageGenerationProviderFromEnv(process.env)
+        : undefined,
+  });
 
   let response: unknown;
   switch (args.capability) {
@@ -90,6 +110,9 @@ async function main(): Promise<void> {
       break;
     case "assess-state":
       response = await agent.assessState(input);
+      break;
+    case "pixel-art":
+      response = await agent.generatePixelArt(input);
       break;
   }
 

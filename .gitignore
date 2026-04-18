@@ -3,4 +3,6 @@ dist
 .DS_Store
 coverage
 *.log
+.env
+.env.*
 .claude/worktrees/

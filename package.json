@@ -23,12 +23,16 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "cli": "tsx src/cli.ts"
+    "cli": "tsx src/cli.ts",
+    "manual-console": "tsx src/http/devServer.ts"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
+    "@google/genai": "^1.50.1",
+    "openai": "^6.34.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
