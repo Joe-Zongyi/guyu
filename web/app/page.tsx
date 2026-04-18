@@ -1,23 +1,40 @@
-const cards = [
+const statusBars = [
+  { label: "生长", value: "新叶萌发", width: "w-[82%]", tone: "bg-[#7ab560]" },
+  { label: "叶片", value: "稳定", width: "w-[68%]", tone: "bg-[#96c96e]" },
+  { label: "环境", value: "湿度正常", width: "w-[74%]", tone: "bg-[#b1d983]" },
+];
+
+const careRhythm = [
+  { label: "清晨", active: true },
+  { label: "上午", active: true },
+  { label: "午后", active: false },
+  { label: "傍晚", active: true },
+  { label: "夜间", active: false },
+];
+
+const videos = [
   {
-    title: "今日养护",
-    badge: "今天要做",
-    lines: ["浇水 1 次", "散射光 4 小时", "记得查看叶片状态"],
+    title: "龟背竹补水节奏怎么判断",
+    meta: "6 min · 新手友好",
+    reason: "适合你现在的补水阶段",
   },
   {
-    title: "天气",
-    badge: "环境建议",
-    lines: ["多云 24°C", "空气湿度 71%", "适合通风和补光"],
+    title: "窗边光照怎么放才不焦叶",
+    meta: "4 min · 阳台场景",
+    reason: "和今天的光照建议匹配",
+  },
+];
+
+const bloggers = [
+  {
+    name: "阳台慢生活",
+    tag: "室内绿植",
+    note: "擅长窗边植物布置和晨间养护",
   },
   {
-    title: "日历",
-    badge: "本周节奏",
-    lines: ["4 月 18 日 周六", "下次施肥还有 3 天", "本周已打卡 5 次"],
-  },
-  {
-    title: "打卡入口",
-    badge: "快速记录",
-    lines: ["上传今天的植物照片", "记录浇水和光照", "领取连续养护奖励"],
+    name: "一周一片新叶",
+    tag: "新手友好",
+    note: "内容偏轻松，适合碎片时间看",
   },
 ];
 
@@ -66,40 +83,161 @@ export default function Home() {
               <p className="mt-4 max-w-[220px] text-sm leading-6 text-[#627054]">
                 保持土壤微湿，下午通风 20 分钟，叶片会更精神。
               </p>
-              <div className="mt-5 flex w-full gap-3">
-                <button className="flex-1 rounded-2xl bg-[#6f8f58] px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-[#64824f]">
-                  立即打卡
-                </button>
-                <button className="flex-1 rounded-2xl bg-white/80 px-4 py-3 text-sm font-medium text-[#5f6a52] transition hover:bg-white">
-                  查看档案
-                </button>
-              </div>
+              <button className="mt-5 w-full rounded-2xl bg-[#6f8f58] px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-[#64824f]">
+                立即打卡
+              </button>
             </div>
           </div>
         </section>
 
         <section className="mt-4 grid grid-cols-2 gap-3">
-          {cards.map((card) => (
-            <article
-              key={card.title}
-              className="min-h-40 rounded-[24px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]"
-            >
-              <span className="rounded-full bg-[#eef1e5] px-2.5 py-1 text-[11px] font-medium text-[#6a745d]">
-                {card.badge}
-              </span>
-              <h2 className="mt-2 text-lg font-semibold">{card.title}</h2>
-              <div className="mt-4 space-y-2">
-                {card.lines.map((line) => (
-                  <div
-                    key={line}
-                    className="rounded-2xl bg-[#f4f6ef] px-3 py-2 text-xs leading-5 text-slate-600"
-                  >
-                    {line}
+          <article className="rounded-[24px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm text-[#68745a]">Plant Status</p>
+                <h3 className="mt-2 text-[28px] font-semibold leading-none text-[#4a5f3b]">
+                  今日状态
+                </h3>
+              </div>
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#edf4e4]">
+                <div className="relative h-10 w-10 rounded-full border-[6px] border-[#b9d990] border-t-[#6f8f58] border-r-[#88b466]" />
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-[20px] bg-[#f4f7ef] p-3">
+              <p className="text-xs text-[#718063]">主状态</p>
+              <p className="mt-1 text-lg font-semibold text-[#557043]">新叶萌发中</p>
+              <p className="mt-1 text-xs text-slate-500">整体稳定，适合继续室内养护</p>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {statusBars.map((item) => (
+                <div key={item.label}>
+                  <div className="mb-1 flex items-center justify-between text-xs">
+                    <span className="text-[#61704f]">{item.label}</span>
+                    <span className="font-medium text-[#516644]">{item.value}</span>
+                  </div>
+                  <div className="h-2.5 rounded-full bg-[#edf1e6]">
+                    <div className={`h-full rounded-full ${item.width} ${item.tone}`} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className="rounded-[24px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm text-[#68745a]">Today Care</p>
+                <h3 className="mt-2 text-[28px] font-semibold leading-none text-[#4a5f3b]">
+                  今日建议
+                </h3>
+              </div>
+              <div className="rounded-full bg-[#f2f6ea] px-3 py-1 text-[11px] font-medium text-[#6e855a]">
+                优先处理
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-[20px] bg-[linear-gradient(180deg,#eff6e7_0%,#e3efd8_100%)] p-3">
+              <p className="text-xs text-[#6f7d61]">补水时间</p>
+              <p className="mt-1 text-[30px] font-semibold leading-none text-[#557043]">
+                2 天后
+              </p>
+              <div className="mt-3 flex gap-1">
+                {careRhythm.map((item) => (
+                  <div key={item.label} className="flex-1">
+                    <div
+                      className={`h-2.5 rounded-full ${
+                        item.active ? "bg-[#82a765]" : "bg-[#dbe7ce]"
+                      }`}
+                    />
                   </div>
                 ))}
               </div>
-            </article>
-          ))}
+              <div className="mt-2 flex justify-between text-[10px] text-[#728064]">
+                {careRhythm.map((item) => (
+                  <span key={item.label}>{item.label}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <div className="rounded-[18px] bg-[#f7f8f3] px-3 py-2">
+                <p className="text-[11px] text-[#718063]">补光建议</p>
+                <p className="mt-1 text-base font-semibold text-[#4f6540]">上午窗边</p>
+              </div>
+              <div className="rounded-[18px] bg-[#fdf2e8] px-3 py-2">
+                <p className="text-[11px] text-[#96724d]">避坑提醒</p>
+                <p className="mt-1 text-base font-semibold text-[#8b5d2b]">避免暴晒</p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section className="mt-4 rounded-[24px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-[#68745a]">Video Recommendation</p>
+              <h3 className="mt-1 text-lg font-semibold">适合你今天状态的视频</h3>
+            </div>
+            <span className="rounded-full bg-[#eef1e5] px-3 py-1 text-[11px] font-medium text-[#6a745d]">
+              2 条精选
+            </span>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            {videos.map((video) => (
+              <div
+                key={video.title}
+                className="rounded-[20px] bg-[#f4f7ef] p-3"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 h-10 w-10 rounded-2xl bg-[#dbe8c9]" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-[#4f6540]">{video.title}</p>
+                    <p className="mt-1 text-xs text-slate-500">{video.meta}</p>
+                    <p className="mt-2 text-xs text-[#6c7a5f]">{video.reason}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-4 rounded-[24px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-[#68745a]">Similar Blogger</p>
+              <h3 className="mt-1 text-lg font-semibold">类似博主推荐</h3>
+            </div>
+            <span className="rounded-full bg-[#eef1e5] px-3 py-1 text-[11px] font-medium text-[#6a745d]">
+              更贴近生活
+            </span>
+          </div>
+
+          <div className="mt-4 grid gap-3">
+            {bloggers.map((blogger) => (
+              <div
+                key={blogger.name}
+                className="flex items-center gap-3 rounded-[20px] bg-[#f4f7ef] p-3"
+              >
+                <div className="h-12 w-12 rounded-full bg-[linear-gradient(180deg,#a7d27b_0%,#7fa564_100%)]" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate text-sm font-semibold text-[#4f6540]">
+                      {blogger.name}
+                    </p>
+                    <span className="rounded-full bg-white px-2 py-0.5 text-[10px] text-[#6a745d]">
+                      {blogger.tag}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs leading-5 text-[#6c7a5f]">
+                    {blogger.note}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="mt-4 rounded-[24px] bg-[#fffdf8] p-4 shadow-[0_10px_30px_rgba(107,112,92,0.08)]">
