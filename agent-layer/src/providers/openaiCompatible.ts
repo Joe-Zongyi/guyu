@@ -18,68 +18,6 @@ import {
 const IDENTIFY_PROMPT_VERSION = "openai-identify-v1";
 const ASSESS_PROMPT_VERSION = "openai-assess-v1";
 
-const IDENTIFY_SCHEMA = {
-  name: "identify_plant_result",
-  strict: true,
-  schema: {
-    type: "object",
-    additionalProperties: false,
-    required: ["kind"],
-    properties: {
-      kind: {
-        type: "string",
-        enum: ["identified", "no_plant", "blurry", "multiple_plants"],
-      },
-      image_quality: { type: "string", enum: ["ok", "blurry"] },
-      detected_plant_count: { type: "number" },
-      candidates: {
-        type: "array",
-        items: {
-          type: "object",
-          additionalProperties: false,
-          required: ["taxonomy_hint", "confidence"],
-          properties: {
-            taxonomy_hint: { type: "string" },
-            confidence: { type: "number" },
-          },
-        },
-      },
-    },
-  },
-} as const;
-
-const ASSESS_SCHEMA = {
-  name: "assess_plant_state_result",
-  strict: true,
-  schema: {
-    type: "object",
-    additionalProperties: false,
-    required: [
-      "signals",
-      "overall_confidence",
-      "image_quality",
-      "detected_plant",
-    ],
-    properties: {
-      signals: {
-        type: "array",
-        items: {
-          type: "object",
-          additionalProperties: false,
-          required: ["signal", "confidence"],
-          properties: {
-            signal: { type: "string" },
-            confidence: { type: "number" },
-          },
-        },
-      },
-      overall_confidence: { type: "number" },
-      image_quality: { type: "string", enum: ["ok", "blurry"] },
-      detected_plant: { type: "boolean" },
-      raw_notes: { type: "string" },
-    },
-  },
-} as const;
 
 export interface OpenAICompatibleVisionProviderOptions {
   apiKey: string;
@@ -116,7 +54,6 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
     req: VisionIdentifyRequest,
   ): Promise<VisionIdentifyOutcome> {
     const result = await this.runJson<IdentifyResult>({
-      schema: IDENTIFY_SCHEMA,
       instructions: buildIdentifyInstructions(req.region),
       request: req,
     });
@@ -137,7 +74,6 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
     req: VisionAssessRequest,
   ): Promise<VisionAssessOutcome> {
     const result = await this.runJson<AssessResult>({
-      schema: ASSESS_SCHEMA,
       instructions: buildAssessInstructions(req.taxonomy_hint),
       request: req,
     });
@@ -152,7 +88,6 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
   }
 
   private async runJson<T>(options: {
-    schema: { name: string; strict: boolean; schema: Record<string, unknown> };
     instructions: string;
     request: VisionIdentifyRequest | VisionAssessRequest;
   }): Promise<T> {
@@ -160,36 +95,35 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
       const image = await resolveImageSource(options.request.image, {
         resolveImage: this.resolveImage,
       });
-      const response = await this.client.responses.create({
+      const imageUrl =
+        image.kind === "url"
+          ? image.url
+          : `data:${image.mimeType};base64,${image.data}`;
+      const response = await this.client.chat.completions.create({
         model: this.meta.model,
-        instructions: options.instructions,
-        input: [
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: options.instructions,
+          },
           {
             role: "user",
             content: [
-              { type: "input_text", text: JSON.stringify(buildUserContext(options.request)) },
               {
-                type: "input_image",
-                image_url:
-                  image.kind === "url"
-                    ? image.url
-                    : `data:${image.mimeType};base64,${image.data}`,
-                detail: "auto",
+                type: "text",
+                text: JSON.stringify(buildUserContext(options.request)),
+              },
+              {
+                type: "image_url",
+                image_url: { url: imageUrl, detail: "auto" },
               },
             ],
           },
         ],
-        text: {
-          format: {
-            type: "json_schema",
-            name: options.schema.name,
-            strict: options.schema.strict,
-            schema: options.schema.schema,
-          },
-        },
       });
 
-      const outputText = response.output_text?.trim();
+      const outputText = response.choices[0]?.message?.content?.trim();
       if (!outputText) {
         throw new Error("empty response from openai provider");
       }
@@ -202,12 +136,12 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
 
 function buildIdentifyInstructions(region?: string): string {
   return [
-    "You are a plant vision classifier.",
-    "Return JSON only.",
-    "Use kind=blurry when the image is not usable.",
-    "Use kind=no_plant when no plant is visible.",
-    "Use kind=multiple_plants when multiple distinct plants are visible.",
-    "For identified, include up to 4 taxonomy hints with confidence 0 to 1.",
+    "You are a plant vision classifier. Return a JSON object only, no other text.",
+    'Required field: "kind" (one of: "identified", "no_plant", "blurry", "multiple_plants").',
+    'When kind is "identified", also include: "image_quality" ("ok" or "blurry"), "detected_plant_count" (integer >= 0), "candidates" (array of up to 4 objects each with "taxonomy_hint" string and "confidence" number 0-1).',
+    'Use kind="blurry" when the image is not usable.',
+    'Use kind="no_plant" when no plant is visible.',
+    'Use kind="multiple_plants" when multiple distinct plants are visible.',
     region ? `User region hint: ${region}.` : undefined,
   ]
     .filter(Boolean)
@@ -216,8 +150,10 @@ function buildIdentifyInstructions(region?: string): string {
 
 function buildAssessInstructions(taxonomyHint?: string): string {
   return [
-    "You are a plant health vision assessor.",
-    "Return JSON only.",
+    "You are a plant health vision assessor. Return a JSON object only, no other text.",
+    'Required fields: "signals" (array of objects with "signal" string and "confidence" number 0-1), "overall_confidence" (number 0-1), "image_quality" ("ok" or "blurry"), "detected_plant" (boolean).',
+    'Optional field: "raw_notes" (string).',
+    'Valid signal values: "slightly_wilted_leaves", "yellowing_tip", "leaf_droop", "new_growth_visible", "stable_appearance", "unknown".',
     "Use only visible evidence from the image.",
     "Be conservative on confidence.",
     taxonomyHint ? `Taxonomy hint: ${taxonomyHint}.` : undefined,
