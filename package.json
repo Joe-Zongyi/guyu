@@ -1,0 +1,11 @@
+{
+  "name": "guyu",
+  "private": true,
+  "description": "Guyu monorepo — use npm run dev to start be + web",
+  "scripts": {
+    "dev": "node scripts/dev-all.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
