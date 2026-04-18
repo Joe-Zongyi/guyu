@@ -41,7 +41,8 @@ export async function POST(request: Request) {
   const prompt = String(formData.get("prompt") ?? "").trim();
   const sourceImage = formData.get("sourceImage");
 
-  if (!(sourceImage instanceof File) || sourceImage.size === 0) {
+  // Node 18 has no global `File`; use duck-type instead of `instanceof File`.
+  if (!isUploadedFile(sourceImage)) {
     return NextResponse.json(
       { error: "Target image is required." },
       { status: 400 },
@@ -126,7 +127,24 @@ function buildPrompt(userPrompt: string): string {
   return `${basePrompt}${styleHint}${userHint}`;
 }
 
-async function fileToDataUrl(file: File): Promise<string> {
+type UploadedFile = {
+  size: number;
+  type?: string;
+  name?: string;
+  arrayBuffer: () => Promise<ArrayBuffer>;
+};
+
+function isUploadedFile(value: unknown): value is UploadedFile {
+  if (!value || typeof value === "string") return false;
+  const c = value as Partial<UploadedFile>;
+  return (
+    typeof c.size === "number" &&
+    c.size > 0 &&
+    typeof c.arrayBuffer === "function"
+  );
+}
+
+async function fileToDataUrl(file: UploadedFile): Promise<string> {
   const bytes = Buffer.from(await file.arrayBuffer());
   const mime = file.type || "image/png";
   return `data:${mime};base64,${bytes.toString("base64")}`;

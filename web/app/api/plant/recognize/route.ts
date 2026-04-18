@@ -64,47 +64,80 @@ const FALLBACK_PROFILE: RecognizedPlant = {
 };
 
 export async function POST(request: Request) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: "Missing OPENROUTER_API_KEY in web env." },
-      { status: 500 },
-    );
+  try {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { ok: false, error: "Missing OPENROUTER_API_KEY in web env." },
+        { status: 500 },
+      );
+    }
+
+    const formData = await request.formData();
+    const sourceImage = formData.get("image");
+
+    // Node 18 does not expose `File` as a global, so avoid `instanceof File`.
+    // Use a duck-type check that works on both Node 18 (Blob-like) and Node 20+.
+    if (!isUploadedFile(sourceImage)) {
+      return NextResponse.json(
+        { ok: false, error: "缺少植物图片" },
+        { status: 400 },
+      );
+    }
+
+    const dataUrl = await fileToDataUrl(sourceImage);
+
+    const [recognition, pixelArtUrl] = await Promise.allSettled([
+      recognizePlant({ apiKey, dataUrl }),
+      generatePixelArt({ apiKey, dataUrl }),
+    ]);
+
+    const profile =
+      recognition.status === "fulfilled"
+        ? recognition.value
+        : FALLBACK_PROFILE;
+    const pixelImageUrl =
+      pixelArtUrl.status === "fulfilled" ? pixelArtUrl.value : null;
+
+    return NextResponse.json({
+      ok: true,
+      profile,
+      pixelImageUrl,
+      originalImageUrl: dataUrl,
+      recognitionError:
+        recognition.status === "rejected"
+          ? String((recognition.reason as Error)?.message ?? recognition.reason)
+          : undefined,
+      pixelArtError:
+        pixelArtUrl.status === "rejected"
+          ? String((pixelArtUrl.reason as Error)?.message ?? pixelArtUrl.reason)
+          : undefined,
+    });
+  } catch (err) {
+    console.error("[/api/plant/recognize] handler crashed", err);
+    const message =
+      err instanceof Error ? err.message : "internal error in recognize route";
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
+}
 
-  const formData = await request.formData();
-  const sourceImage = formData.get("image");
+type UploadedFile = {
+  size: number;
+  type?: string;
+  name?: string;
+  arrayBuffer: () => Promise<ArrayBuffer>;
+};
 
-  if (!(sourceImage instanceof File) || sourceImage.size === 0) {
-    return NextResponse.json({ error: "缺少植物图片" }, { status: 400 });
+function isUploadedFile(value: unknown): value is UploadedFile {
+  if (!value || typeof value === "string") {
+    return false;
   }
-
-  const dataUrl = await fileToDataUrl(sourceImage);
-
-  const [recognition, pixelArtUrl] = await Promise.allSettled([
-    recognizePlant({ apiKey, dataUrl }),
-    generatePixelArt({ apiKey, dataUrl }),
-  ]);
-
-  const profile =
-    recognition.status === "fulfilled" ? recognition.value : FALLBACK_PROFILE;
-  const pixelImageUrl =
-    pixelArtUrl.status === "fulfilled" ? pixelArtUrl.value : null;
-
-  return NextResponse.json({
-    ok: true,
-    profile,
-    pixelImageUrl,
-    originalImageUrl: dataUrl,
-    recognitionError:
-      recognition.status === "rejected"
-        ? String((recognition.reason as Error)?.message ?? recognition.reason)
-        : undefined,
-    pixelArtError:
-      pixelArtUrl.status === "rejected"
-        ? String((pixelArtUrl.reason as Error)?.message ?? pixelArtUrl.reason)
-        : undefined,
-  });
+  const candidate = value as Partial<UploadedFile>;
+  return (
+    typeof candidate.size === "number" &&
+    candidate.size > 0 &&
+    typeof candidate.arrayBuffer === "function"
+  );
 }
 
 async function recognizePlant({
@@ -347,7 +380,7 @@ function stringOr(value: unknown, fallback: string): string {
   return trimmed.length > 0 ? trimmed : fallback;
 }
 
-async function fileToDataUrl(file: File): Promise<string> {
+async function fileToDataUrl(file: UploadedFile): Promise<string> {
   const bytes = Buffer.from(await file.arrayBuffer());
   const mime = file.type || "image/png";
   return `data:${mime};base64,${bytes.toString("base64")}`;

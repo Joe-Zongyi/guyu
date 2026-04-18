@@ -82,10 +82,25 @@ export function AddPlantModal({
         method: "POST",
         body: formData,
       });
-      const payload = (await response.json()) as RecognizeResponse;
+      const rawBody = await response.text();
+      let payload: RecognizeResponse | null = null;
+      if (rawBody) {
+        try {
+          payload = JSON.parse(rawBody) as RecognizeResponse;
+        } catch {
+          throw new Error(
+            `识别接口返回非 JSON（HTTP ${response.status}）：${rawBody.slice(0, 200)}`,
+          );
+        }
+      }
 
-      if (!response.ok || !payload.ok) {
-        throw new Error(payload.error ?? "植物识别失败");
+      if (!response.ok || !payload?.ok) {
+        const detail =
+          payload?.error ??
+          (rawBody
+            ? `HTTP ${response.status}`
+            : `HTTP ${response.status}（响应为空）`);
+        throw new Error(`植物识别失败：${detail}`);
       }
 
       const profile = payload.profile;
