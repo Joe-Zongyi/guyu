@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const PIXEL_MODEL =
   process.env.OPENROUTER_IMAGE_MODEL ?? "black-forest-labs/flux.2-pro";
 const VISION_MODEL =
-  process.env.OPENROUTER_VISION_MODEL ?? "google/gemini-2.5-flash";
+  process.env.OPENROUTER_VISION_MODEL ?? "moonshotai/kimi-k2.5";
 const OPENROUTER_URL =
   process.env.OPENROUTER_BASE_URL ??
   "https://openrouter.ai/api/v1/chat/completions";
