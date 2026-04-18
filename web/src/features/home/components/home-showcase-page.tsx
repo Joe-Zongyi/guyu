@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
-import { DEFAULT_THEME, RHYTHM_BARS, THEMES } from "../data/showcase-theme";
+import { DEFAULT_THEME, THEMES } from "../data/showcase-theme";
 import type { ThemeData } from "../types";
+
+const PLANT_TABS = [{ id: "monstera" }] as const;
 
 export function HomeShowcasePage() {
   const theme = THEMES[DEFAULT_THEME];
@@ -51,13 +53,55 @@ export function HomeShowcasePage() {
             <WeatherBackdrop theme={theme} />
 
             <div className="relative z-10 flex flex-col gap-4">
-              <div className="flex items-center justify-between text-[13px] font-semibold tracking-[0.04em] text-white/85">
-                <span>{theme.dateLabel}</span>
-                <span
-                  className={`rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-[#173828] ${theme.accentClassName}`}
-                >
-                  {theme.weather}
-                </span>
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-3 text-[13px] font-semibold tracking-[0.04em] text-white/85">
+                  <div>
+                    <span>{theme.dateLabel}</span>
+                    <p className="mt-1 text-xs font-medium tracking-[0.08em] text-white/58">
+                      Demo greenhouse
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-[#173828] ${theme.accentClassName}`}
+                    >
+                      {theme.weather}
+                    </span>
+                    <button
+                      type="button"
+                      aria-label="添加植物"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/12 px-3.5 py-2 text-xs font-semibold tracking-[0.04em] text-white shadow-[0_12px_24px_rgba(5,14,10,0.16)] backdrop-blur-md transition hover:bg-white/18"
+                    >
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/18 text-sm leading-none">
+                        +
+                      </span>
+                      添加植物
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center rounded-full border border-white/10 bg-white/8 px-4 py-3 shadow-[0_18px_40px_rgba(4,14,10,0.14)] backdrop-blur-md">
+                  <div className="flex items-center gap-3">
+                    {PLANT_TABS.map((plant, index) => {
+                      const isActive = index === 0;
+
+                      return (
+                        <button
+                          key={plant.id}
+                          type="button"
+                          aria-pressed={isActive}
+                          aria-label={`植物 ${index + 1}`}
+                          className={`h-3.5 w-3.5 rounded-full transition ${
+                            isActive
+                              ? "scale-110 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)]"
+                              : "bg-white/32 hover:bg-white/48"
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
               <section
@@ -86,10 +130,6 @@ export function HomeShowcasePage() {
                   <p className="text-[11px] uppercase tracking-[0.28em] text-white/65">
                     Plant Status
                   </p>
-                  <p className="mt-3 text-sm text-white/70">总体状态</p>
-                  <p className="mt-1 font-serif text-[38px] leading-none text-white">
-                    {theme.health}
-                  </p>
 
                   <div className="mt-4 space-y-3">
                     <StatusItem
@@ -98,19 +138,15 @@ export function HomeShowcasePage() {
                       barClassName={theme.softAccentClassName}
                     />
                     <StatusItem
-                      label="叶片状态"
-                      value={theme.leafState}
+                      label="健康状态"
+                      value={theme.healthStatus}
                       barClassName="bg-[#e7f1d4]"
                     />
-                    <div className="rounded-[18px] bg-black/10 p-3">
-                      <p className="text-xs text-white/60">环境感受</p>
-                      <div className="mt-2 h-1.5 w-full rounded-full bg-white/10">
-                        <div
-                          className={`h-full w-2/3 rounded-full ${theme.accentClassName}`}
-                        />
-                      </div>
-                      <p className="mt-2 text-sm font-medium text-white">{theme.environment}</p>
-                    </div>
+                    <StatusItem
+                      label="陪伴天数"
+                      value={theme.companionshipDays}
+                      barClassName="bg-white/70"
+                    />
                   </div>
                 </article>
 
@@ -118,78 +154,20 @@ export function HomeShowcasePage() {
                   className={`rounded-[24px] p-4 text-[#20321f] shadow-[0_16px_36px_rgba(6,17,11,0.18)] ${theme.careClassName}`}
                 >
                   <p className="text-[11px] uppercase tracking-[0.28em] text-[#516145]">
-                    Today Care
+                    Care Habit
                   </p>
-                  <div className="mt-3 rounded-[18px] bg-white/55 p-4">
-                    <p className="text-sm text-[#6e7d62]">补光</p>
-                    <p className="mt-1 font-serif text-[34px] leading-none text-[#243224]">
-                      {theme.primaryCare}
-                    </p>
-                  </div>
-                  <div className="mt-3 space-y-2">
-                    <Reminder label="补水" value="两天后" />
-                    <Reminder label="暴晒" value="避免" />
+                  <div className="mt-3 space-y-3">
+                    <HabitCard label="水分习性" value={theme.waterHabit} />
+                    <HabitCard label="阳光习性" value={theme.sunlightHabit} />
+                    <div className="rounded-[18px] bg-[#294d37] px-4 py-3 text-white">
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/64">
+                        上次浇水
+                      </p>
+                      <p className="mt-2 text-sm font-semibold">{theme.lastWatered}</p>
+                    </div>
                   </div>
                 </article>
               </section>
-
-              <article
-                className={`rounded-[28px] p-4 text-[#203225] shadow-[0_18px_44px_rgba(6,18,12,0.18)] ${theme.rhythmClassName}`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-[#5e715f]">
-                    Life Rhythm
-                  </p>
-                  <span className="rounded-full bg-white/55 px-3 py-1 text-xs font-semibold text-[#405141]">
-                    这周很稳
-                  </span>
-                </div>
-
-                <div className="mt-4 grid grid-cols-[124px_1fr] gap-3">
-                  <div className="flex min-h-[168px] flex-col items-center justify-center rounded-[24px] bg-white/38 p-3 text-center">
-                    <div className="relative flex h-24 w-24 items-center justify-center">
-                      <div className="absolute inset-0 rounded-full border-[10px] border-white/45" />
-                      <div className="absolute inset-[2px] rotate-45 rounded-full border-[10px] border-transparent border-r-[#3b6e50] border-t-[#3b6e50]" />
-                      <div className="text-center">
-                        <p className="font-serif text-2xl text-[#243626]">节律</p>
-                        <p className="mt-1 text-xs text-[#617060]">稳定</p>
-                      </div>
-                    </div>
-                    <p className="mt-3 text-xs leading-5 text-[#657363]">本周养护感受</p>
-                  </div>
-
-                  <div className="flex flex-col justify-between rounded-[24px] bg-white/38 p-4">
-                    <RhythmCurve />
-                    <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-[#38503e]">
-                      <span className="rounded-full bg-white/70 px-3 py-2">陪伴第 128 天</span>
-                      <span className="rounded-full bg-white/70 px-3 py-2">上次浇水 前天</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <p className="text-sm text-[#4d624e]">今天顺手通风更偏早晨</p>
-                  <div className="mt-3 flex items-end gap-2">
-                    {RHYTHM_BARS.map((bar) => (
-                      <div key={bar.label} className="flex flex-1 flex-col gap-2">
-                        <div className="h-24 rounded-[18px] bg-white/45 p-1">
-                          <div
-                            className="w-full rounded-[14px] bg-[#3f704f] transition-all duration-500"
-                            style={{ height: bar.value }}
-                          />
-                        </div>
-                        <p className="text-center text-[11px] uppercase tracking-[0.18em] text-[#607261]">
-                          {bar.label}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <p className="mt-4 text-sm leading-6 text-[#536652]">
-                  你最近更常在早晨照顾它，生活和养护节奏正在同步。
-                </p>
-              </article>
 
               <article
                 className={`rounded-[24px] p-4 text-[#203225] shadow-[0_16px_36px_rgba(6,18,12,0.16)] ${theme.secondaryCardClassName}`}
@@ -197,55 +175,23 @@ export function HomeShowcasePage() {
                 <p className="text-[11px] uppercase tracking-[0.28em] text-[#5b7060]">
                   Video Recommendation
                 </p>
-                <div className="mt-3 flex items-center gap-3 rounded-[20px] bg-white/45 p-3">
+                <Link
+                  href="#"
+                  className="mt-3 flex items-center gap-3 rounded-[20px] bg-white/45 p-3 transition hover:-translate-y-0.5"
+                >
                   <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#7aac59_0%,#3a5f43_100%)] text-2xl text-white">
                     ▶
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-serif text-xl text-[#243525]">龟背竹浇水节奏</p>
-                    <p className="mt-1 text-sm text-[#617060]">6 min · 新手友好</p>
+                    <p className="truncate font-serif text-xl text-[#243525]">
+                      {theme.videoTitle}
+                    </p>
+                    <p className="mt-1 text-sm text-[#617060]">{theme.videoMeta}</p>
                   </div>
-                  <button
-                    type="button"
-                    className="rounded-full bg-[#294d37] px-4 py-2 text-sm font-semibold text-white"
-                  >
+                  <span className="rounded-full bg-[#294d37] px-4 py-2 text-sm font-semibold text-white">
                     观看
-                  </button>
-                </div>
-              </article>
-
-              <article
-                className={`rounded-[24px] p-4 text-[#203225] shadow-[0_16px_36px_rgba(6,18,12,0.16)] ${theme.secondaryCardClassName}`}
-              >
-                <p className="text-[11px] uppercase tracking-[0.28em] text-[#5b7060]">
-                  Similar Creators
-                </p>
-                <div className="mt-3 space-y-3">
-                  {theme.creators.map((creator, index) => (
-                    <div
-                      key={creator.name}
-                      className="flex items-center gap-3 rounded-[20px] bg-white/45 p-3"
-                    >
-                      <div
-                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] text-sm font-semibold text-white ${
-                          index === 0 ? "bg-[#4f7a5f]" : "bg-[#65895b]"
-                        }`}
-                      >
-                        {creator.name.slice(0, 2)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate font-medium text-[#243525]">{creator.name}</p>
-                        <p className="truncate text-sm text-[#5e6f60]">{creator.meta}</p>
-                      </div>
-                      <button
-                        type="button"
-                        className="rounded-full border border-[#274334]/12 bg-white/70 px-4 py-2 text-sm font-semibold text-[#274334]"
-                      >
-                        查看
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                  </span>
+                </Link>
               </article>
             </div>
 
@@ -275,15 +221,11 @@ function StatusItem({
   );
 }
 
-function Reminder({ label, value }: { label: string; value: string }) {
+function HabitCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-[16px] bg-white/45 px-3 py-3">
-      <div className="h-10 w-1.5 rounded-full bg-[#6f9564]" />
-      <p className="text-sm text-[#31432f]">
-        <span className="font-semibold">{label}</span>
-        <span className="mx-2 text-[#7b8978]">·</span>
-        <span>{value}</span>
-      </p>
+    <div className="rounded-[18px] bg-white/55 p-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-[#6e7d62]">{label}</p>
+      <p className="mt-2 text-sm font-medium leading-6 text-[#243224]">{value}</p>
     </div>
   );
 }
@@ -308,29 +250,6 @@ function PixelPlant() {
       ))}
       <div className="absolute left-[118px] top-[132px] h-[10px] w-[52px] rounded-[3px] bg-[#a86e49]" />
       <div className="absolute left-[124px] top-[142px] h-6 w-10 rounded-[4px] bg-[#8b5a3b]" />
-    </div>
-  );
-}
-
-function RhythmCurve() {
-  return (
-    <div className="relative h-[92px] overflow-hidden rounded-[20px] bg-[#edf5e1]">
-      <svg
-        viewBox="0 0 220 92"
-        className="absolute inset-0 h-full w-full"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M10 68C42 48 58 24 92 30C129 37 137 66 169 54C188 47 198 29 210 24"
-          stroke="#406d4e"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
-        {[["42", "48"], ["92", "30"], ["169", "54"], ["210", "24"]].map(([cx, cy]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="5.5" fill="#406d4e" />
-        ))}
-      </svg>
     </div>
   );
 }
