@@ -23,6 +23,7 @@
     "test:cov": "NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs --coverage",
     "test:debug": "NODE_OPTIONS=--experimental-vm-modules node --inspect-brk node_modules/jest/bin/jest.js --runInBand --config jest.config.cjs",
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --config jest-e2e.config.cjs --passWithNoTests",
+    "test:real-api": "NODE_OPTIONS=--experimental-vm-modules jest --config jest.real-api.config.cjs --runInBand",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",

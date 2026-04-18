@@ -1,5 +1,28 @@
-dist/
+# Dependencies & build output
 node_modules/
+dist/
+coverage/
 *.tsbuildinfo
+tsconfig.tsbuildinfo
+tsconfig.build.tsbuildinfo
 
-.env.development
+# Environment secrets (keep .env.example tracked)
+.env
+.env.*
+!.env.example
+
+# Prisma local SQLite (dev)
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-wal
+prisma/*.db-shm
+
+# Runtime user uploads
+uploads/
+
+# Logs
+logs/
+*.log
+
+# OS / editor noise
+.DS_Store
