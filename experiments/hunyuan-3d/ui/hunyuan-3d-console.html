@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Hunyuan 3D Mobile Test</title>
+  <style>
+    :root {
+      --bg: #f6efe7;
+      --surface: #f2e7db;
+      --surface-3: #fff7ef;
+      --ink: #2a241d;
+      --muted: #7b6d60;
+      --accent: #7aa26c;
+      --accent-strong: #5f8b52;
+      --shadow-soft: 10px 10px 24px rgba(177, 152, 130, 0.26), -8px -8px 18px rgba(255, 251, 245, 0.82);
+      --shadow-inset: inset 4px 4px 10px rgba(196, 173, 153, 0.2), inset -5px -5px 10px rgba(255, 250, 244, 0.74);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --font-display: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+      --font-body: "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.55), transparent 28%),
+        linear-gradient(180deg, #f8f1e8 0%, #f2e7db 100%);
+    }
+
+    .app {
+      width: min(100%, 460px);
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 18px 16px 28px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .clay {
+      background: linear-gradient(145deg, var(--surface-3), var(--surface));
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero, .panel {
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 188px;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -30px;
+      top: -20px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 35%, rgba(122, 162, 108, 0.84), rgba(122, 162, 108, 0.06) 70%);
+      opacity: 0.95;
+    }
+
+    .eyebrow, .pill {
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow-inset);
+      color: var(--accent-strong);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+
+    .pill {
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 9ch;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      z-index: 1;
+    }
+
+    .hero p,
+    .hint,
+    .meta,
+    .empty,
+    .history-sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .dropzone {
+      position: relative;
+      border-radius: 24px;
+      padding: 18px;
+      min-height: 138px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      background: linear-gradient(145deg, #f8efe6, #ebdccd);
+      box-shadow: var(--shadow-inset);
+      border: 1px dashed rgba(122, 162, 108, 0.42);
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--accent-strong);
+      transform: translateY(-1px);
+    }
+
+    .dropzone h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .controls,
+    .stats,
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .chip,
+    .thumb,
+    .history-card {
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(145deg, #f6ede5, #e8d9cb);
+      box-shadow: var(--shadow-inset);
+    }
+
+    .chip strong {
+      font-size: 1rem;
+    }
+
+    .gallery,
+    .history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .thumb,
+    .history-card {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .thumb img,
+    .history-card img,
+    .history-placeholder {
+      width: 74px;
+      height: 74px;
+      object-fit: cover;
+      border-radius: 18px;
+      display: block;
+      background: rgba(255, 255, 255, 0.52);
+    }
+
+    .history-placeholder {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .thumb-meta,
+    .history-meta {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .thumb-name,
+    .history-name {
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    select,
+    button {
+      appearance: none;
+      border: 0;
+      font: inherit;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: var(--shadow-inset);
+      color: var(--ink);
+    }
+
+    button {
+      padding: 14px 16px;
+      border-radius: 18px;
+      cursor: pointer;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .primary {
+      color: #fffdf8;
+      background: linear-gradient(145deg, #7aa26c, #5f8b52);
+      box-shadow: 10px 12px 22px rgba(110, 142, 92, 0.32), inset 2px 2px 4px rgba(255, 255, 255, 0.16);
+    }
+
+    .secondary,
+    .mini-btn {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: var(--shadow-inset);
+    }
+
+    .mini-btn {
+      padding: 9px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+    }
+
+    .progress-shell {
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #f8f0e7, #eadccf);
+      box-shadow: var(--shadow-inset);
+      display: grid;
+      gap: 12px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(122, 162, 108, 0.12);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #7aa26c, #a1bf73, #e7bc9d);
+      transition: width 240ms ease;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(122, 162, 108, 0.16);
+      box-shadow: var(--shadow-inset);
+    }
+
+    .step.active,
+    .step.done {
+      color: var(--ink);
+    }
+
+    .step.active .dot,
+    .step.done .dot {
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(122, 162, 108, 0.12);
+    }
+
+    .viewer {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stage {
+      position: relative;
+      border-radius: 30px;
+      overflow: hidden;
+      min-height: 380px;
+      background: linear-gradient(180deg, #f6eee6, #e9dacd);
+      box-shadow: var(--shadow-inset);
+    }
+
+    #modelViewer {
+      width: 100%;
+      height: 380px;
+      display: block;
+      --progress-bar-color: var(--accent-strong);
+      --poster-color: transparent;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.78), transparent 30%),
+        linear-gradient(180deg, #f6eee6, #e9dacd);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+
+    .bubble {
+      max-width: 180px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255, 250, 244, 0.72);
+      box-shadow: var(--shadow-inset);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .log {
+      min-height: 96px;
+      max-height: 180px;
+      overflow: auto;
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #4d443c, #2f2822);
+      color: #f3eee8;
+      font: 12px/1.7 Consolas, "Courier New", monospace;
+      white-space: pre-wrap;
+    }
+
+    .error {
+      color: #aa4d4d;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .link-row a {
+      color: var(--accent-strong);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    @media (max-width: 360px) {
+      .controls,
+      .stats,
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body>
+  <main class="app">
+    <section class="hero clay">
+      <span class="eyebrow">Claymorphism Mobile</span>
+      <h1>Hunyuan 3D Test</h1>
+      <p>上传一张主图，附加多张辅助视角图，页面会自动轮询生成状态，并在完成后直接展示 3D 模型。</p>
+    </section>
+
+    <section class="panel clay">
+      <div class="section-head">
+        <h2>图片上传</h2>
+        <span class="pill" id="imageCountPill">0 张</span>
+      </div>
+      <input class="sr-only" id="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/jpg" multiple>
+      <label class="dropzone" id="dropzone" for="imageInput" role="button" tabindex="0" aria-controls="imageInput" aria-label="选择图片">
+        <h3>选择或拖入多张图片</h3>
+        <p>第一张作为主图，后续图片可标记为 left / right / back 等视角。</p>
+      </label>
+      <div class="controls">
+        <div class="chip">
+          <span class="meta">引擎</span>
+          <strong id="engineText">Rapid</strong>
+          <span class="hint">默认从本地 .env 读取腾讯云配置</span>
+        </div>
+        <div class="chip">
+          <span class="meta">地域</span>
+          <strong id="regionText">ap-guangzhou</strong>
+          <span class="hint">可在 .env 中修改 `TENCENT_REGION`</span>
+        </div>
+      </div>
+      <div class="gallery" id="gallery">
+        <p class="empty">还没有选择图片。</p>
+      </div>
+      <div class="actions">
+        <button class="primary" id="submitBtn" disabled>提交生成</button>
+        <button class="secondary" id="resetBtn">重置</button>
+      </div>
+    </section>
+
+    <section class="panel clay">
+      <div class="section-head">
+        <h2>进度查询</h2>
+        <span class="pill" id="jobPill">--</span>
+      </div>
+      <div class="progress-shell">
+        <div class="progress-head">
+          <strong id="statusLabel">等待上传</strong>
+          <span id="progressValue">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="steps">
+          <div class="step" data-step="0"><span class="dot"></span><span>整理多图上传</span></div>
+          <div class="step" data-step="1"><span class="dot"></span><span>提交混元 3D 任务</span></div>
+          <div class="step" data-step="2"><span class="dot"></span><span>轮询状态</span></div>
+          <div class="step" data-step="3"><span class="dot"></span><span>模型加载完成</span></div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="chip">
+          <span class="meta">当前状态</span>
+          <strong id="statMode">Idle</strong>
+        </div>
+        <div class="chip">
+          <span class="meta">结果格式</span>
+          <strong id="statResult">--</strong>
+        </div>
+      </div>
+      <div class="link-row" id="resultLinks"></div>
+      <div class="error" id="errorText"></div>
+      <div class="log" id="logBox">控制台已就绪。</div>
+    </section>
+
+    <section class="panel clay viewer">
+      <div class="section-head">
+        <h2>3D 模型展示</h2>
+        <span class="pill" id="viewerBadge">Idle</span>
+      </div>
+      <div class="stage">
+        <model-viewer
+          id="modelViewer"
+          camera-controls
+          shadow-intensity="1"
+          shadow-softness="0.8"
+          exposure="1.1"
+          environment-image="neutral"
+          tone-mapping="aces"
+          interaction-prompt="auto"
+          loading="eager"
+          reveal="auto"
+        ></model-viewer>
+        <div class="overlay">
+          <div class="bubble" id="viewerTag">等待任务完成</div>
+          <div class="bubble">支持拖动旋转、缩放；展示层改用 model-viewer。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel clay">
+      <div class="section-head">
+        <h2>历史记录</h2>
+        <span class="pill" id="historyCountPill">0 条</span>
+      </div>
+      <div class="history-list" id="historyList">
+        <p class="empty">还没有历史记录。</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const VIEW_OPTIONS = [
+      { value: "", label: "主图 / 不指定" },
+      { value: "left", label: "left" },
+      { value: "right", label: "right" },
+      { value: "back", label: "back" },
+      { value: "top", label: "top" },
+      { value: "bottom", label: "bottom" },
+      { value: "left_front", label: "left_front" },
+      { value: "right_front", label: "right_front" }
+    ];
+
+    const dom = {
+      imageInput: document.getElementById("imageInput"),
+      dropzone: document.getElementById("dropzone"),
+      gallery: document.getElementById("gallery"),
+      imageCountPill: document.getElementById("imageCountPill"),
+      submitBtn: document.getElementById("submitBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      statusLabel: document.getElementById("statusLabel"),
+      progressValue: document.getElementById("progressValue"),
+      progressFill: document.getElementById("progressFill"),
+      steps: [...document.querySelectorAll(".step")],
+      jobPill: document.getElementById("jobPill"),
+      statMode: document.getElementById("statMode"),
+      statResult: document.getElementById("statResult"),
+      resultLinks: document.getElementById("resultLinks"),
+      errorText: document.getElementById("errorText"),
+      logBox: document.getElementById("logBox"),
+      viewerBadge: document.getElementById("viewerBadge"),
+      viewerTag: document.getElementById("viewerTag"),
+      modelViewer: document.getElementById("modelViewer"),
+      engineText: document.getElementById("engineText"),
+      regionText: document.getElementById("regionText"),
+      historyList: document.getElementById("historyList"),
+      historyCountPill: document.getElementById("historyCountPill")
+    };
+
+    const state = {
+      items: [],
+      sessionId: "",
+      jobId: "",
+      busy: false,
+      pollTimer: null,
+      viewerReady: false,
+      historyItems: [],
+      pendingModelUrl: ""
+    };
+
+    function appendLog(message) {
+      const stamp = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+      dom.logBox.textContent += `\n[${stamp}] ${message}`;
+      dom.logBox.scrollTop = dom.logBox.scrollHeight;
+    }
+
+    function setError(message = "") {
+      dom.errorText.textContent = message;
+      if (message) appendLog(`错误：${message}`);
+    }
+
+    function setViewerHint(message) {
+      dom.viewerTag.textContent = message;
+    }
+
+    function setProgress(percent, label, stepIndex) {
+      const value = Math.max(0, Math.min(100, percent));
+      dom.progressFill.style.width = `${value}%`;
+      dom.progressValue.textContent = `${value}%`;
+      dom.statusLabel.textContent = label;
+      dom.statMode.textContent = label;
+      dom.viewerBadge.textContent = label;
+      dom.steps.forEach((step, index) => {
+        step.classList.toggle("done", index < stepIndex);
+        step.classList.toggle("active", index === stepIndex);
+      });
+    }
+
+    function updateButtons() {
+      dom.submitBtn.disabled = !state.items.length || state.busy;
+    }
+
+    function formatDate(value) {
+      if (!value) return "--";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("zh-CN", { hour12: false });
+    }
+
+    async function ensureViewerReady() {
+      if (state.viewerReady) return;
+      await customElements.whenDefined("model-viewer");
+      state.viewerReady = true;
+      appendLog("3D 预览器已就绪。");
+    }
+
+    async function previewModel(url) {
+      state.pendingModelUrl = url;
+      appendLog(`模型已准备：${url}`);
+      setViewerHint("模型文件已生成，正在准备展示。");
+      await ensureViewerReady();
+      await new Promise((resolve, reject) => {
+        const cleanup = () => {
+          dom.modelViewer.removeEventListener("load", handleLoad);
+          dom.modelViewer.removeEventListener("error", handleError);
+        };
+        const handleLoad = () => {
+          cleanup();
+          resolve();
+        };
+        const handleError = (event) => {
+          cleanup();
+          reject(event?.detail || new Error("model-viewer 加载失败"));
+        };
+        dom.modelViewer.addEventListener("load", handleLoad, { once: true });
+        dom.modelViewer.addEventListener("error", handleError, { once: true });
+        dom.modelViewer.src = url;
+        if (typeof dom.modelViewer.dismissPoster === "function") {
+          dom.modelViewer.dismissPoster();
+        }
+      });
+    }
+
+    async function loadHistory() {
+      try {
+        const response = await fetch("/api/history");
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "读取历史失败");
+        state.historyItems = payload.items || [];
+        renderHistory();
+      } catch (error) {
+        appendLog(`历史记录读取失败：${error.message || error}`);
+      }
+    }
+
+    function renderHistory() {
+      dom.historyCountPill.textContent = `${state.historyItems.length} 条`;
+      if (!state.historyItems.length) {
+        dom.historyList.innerHTML = '<p class="empty">还没有历史记录。</p>';
+        return;
+      }
+      dom.historyList.innerHTML = state.historyItems.map((item) => `
+        <article class="history-card">
+          ${
+            item.imageUrls?.[0]
+              ? `<img src="${item.imageUrls[0]}" alt="${item.imageName || "history"}">`
+              : `<div class="history-placeholder">No Image</div>`
+          }
+          <div class="history-meta">
+            <div class="history-name">${item.imageName || item.jobId || item.sessionId}</div>
+            <div class="history-sub">${item.status || "UNKNOWN"} · ${formatDate(item.submittedAt)}</div>
+            <div class="history-actions">
+              <button class="mini-btn" type="button" data-action="show" data-session-id="${item.sessionId}" ${item.localModelUrl ? "" : "disabled"}>直接展示</button>
+              <button class="mini-btn" type="button" data-action="reuse" data-session-id="${item.sessionId}" ${item.imageUrls?.length ? "" : "disabled"}>查看记录</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+      dom.historyList.querySelectorAll("button[data-action]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const item = state.historyItems.find((entry) => entry.sessionId === button.dataset.sessionId);
+          if (!item) return;
+          if (button.dataset.action === "show" && item.localModelUrl) {
+            showHistoricalModel(item);
+          }
+          if (button.dataset.action === "reuse") {
+            focusHistoricalRecord(item);
+          }
+        });
+      });
+    }
+
+    function focusHistoricalRecord(item) {
+      dom.jobPill.textContent = item.jobId || "--";
+      dom.statMode.textContent = item.status || "DONE";
+      dom.statResult.textContent = item.localModelUrl ? "GLB" : "--";
+      setViewerHint(item.localModelUrl ? "可以直接展示历史模型" : "该历史记录没有可预览模型");
+      dom.resultLinks.innerHTML = item.downloadedFile
+        ? `<a href="${item.downloadedFile}" target="_blank" rel="noreferrer">查看本地缓存</a>`
+        : "";
+      appendLog(`已定位历史记录：${item.jobId || item.sessionId}`);
+    }
+
+    async function showHistoricalModel(item) {
+      focusHistoricalRecord(item);
+      if (!item.localModelUrl) return;
+      try {
+        await previewModel(item.localModelUrl);
+        setProgress(100, "历史模型已展示", 3);
+        setViewerHint("历史模型已加载");
+        appendLog(`历史模型已加载：${item.localModelUrl}`);
+      } catch (error) {
+        setError(`历史模型加载失败：${error.message || error}`);
+      }
+    }
+
+    function renderGallery() {
+      dom.imageCountPill.textContent = `${state.items.length} 张`;
+      if (!state.items.length) {
+        dom.gallery.innerHTML = `<p class="empty">还没有选择图片。</p>`;
+        return;
+      }
+      dom.gallery.innerHTML = state.items.map((item, index) => `
+        <article class="thumb">
+          <img src="${item.previewUrl}" alt="${item.file.name}">
+          <div class="thumb-meta">
+            <div class="thumb-name">${index === 0 ? "主图" : "辅图"} · ${item.file.name}</div>
+            <select data-index="${index}">
+              ${VIEW_OPTIONS.map((option) => `<option value="${option.value}" ${item.view === option.value ? "selected" : ""}>${option.label}</option>`).join("")}
+            </select>
+          </div>
+        </article>
+      `).join("");
+      dom.gallery.querySelectorAll("select").forEach((select) => {
+        select.addEventListener("change", (event) => {
+          const index = Number(event.target.dataset.index);
+          state.items[index].view = event.target.value;
+        });
+      });
+    }
+
+    function replaceItems(files) {
+      state.items.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+      state.items = [...files].map((file) => ({
+        file,
+        view: "",
+        previewUrl: URL.createObjectURL(file)
+      }));
+      renderGallery();
+      updateButtons();
+      if (state.items.length) {
+        appendLog(`已选择 ${state.items.length} 张图片。`);
+        setProgress(10, "图片已准备，等待提交", 0);
+      } else {
+        setProgress(0, "等待上传", -1);
+      }
+    }
+
+    dom.dropzone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dom.dropzone.classList.add("dragover");
+    });
+
+    dom.dropzone.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        dom.imageInput.click();
+      }
+    });
+
+    ["dragleave", "dragend", "drop"].forEach((name) => {
+      dom.dropzone.addEventListener(name, () => dom.dropzone.classList.remove("dragover"));
+    });
+
+    dom.dropzone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      if (event.dataTransfer.files.length) replaceItems(event.dataTransfer.files);
+    });
+
+    dom.imageInput.addEventListener("change", () => {
+      replaceItems(dom.imageInput.files);
+    });
+
+    async function pollJob() {
+      try {
+        const response = await fetch(`/api/jobs/${state.sessionId}/poll`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({})
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "轮询失败");
+
+        dom.jobPill.textContent = payload.jobId;
+        setViewerHint(`状态：${payload.status}`);
+        dom.resultLinks.innerHTML = payload.downloadUrl
+          ? `<a href="${payload.downloadUrl}" target="_blank" rel="noreferrer">查看云端结果</a>${payload.downloadedFile ? ` · <a href="${payload.downloadedFile}" target="_blank" rel="noreferrer">查看本地缓存</a>` : ""}`
+          : "";
+
+        if (payload.status === "WAIT" || payload.status === "RUN") {
+          setProgress(66, "混元 3D 生成中", 2);
+          appendLog(`任务 ${payload.jobId} 状态：${payload.status}`);
+          state.pollTimer = setTimeout(pollJob, 5000);
+          return;
+        }
+
+        if (payload.status === "FAIL") {
+          state.busy = false;
+          updateButtons();
+          dom.statResult.textContent = "FAIL";
+          setProgress(100, "任务失败", 2);
+          setError(payload.errorMessage || payload.errorCode || "任务失败。");
+          return;
+        }
+
+        if (payload.status === "DONE") {
+          dom.statResult.textContent = payload.localModelUrl ? "GLB" : "DONE";
+          if (payload.localModelUrl) {
+            setProgress(92, "任务完成，正在加载模型", 3);
+            try {
+              await previewModel(payload.localModelUrl);
+              setProgress(100, "模型已展示", 3);
+              setViewerHint("模型已加载");
+              appendLog(`模型已加载：${payload.localModelUrl}`);
+            } catch (error) {
+              setError(`模型加载失败：${error.message || error}`);
+              setProgress(100, "任务完成，但模型加载失败", 3);
+            }
+          } else {
+            setProgress(100, "任务完成，但没有可预览模型", 3);
+            appendLog("结果已下载，但没有找到可直接展示的 GLB/GLTF。");
+          }
+          state.busy = false;
+          updateButtons();
+          loadHistory();
+          return;
+        }
+
+        throw new Error(`未知状态：${payload.status}`);
+      } catch (error) {
+        state.busy = false;
+        updateButtons();
+        setError(error.message || String(error));
+      }
+    }
+
+    async function submitJob() {
+      if (!state.items.length || state.busy) return;
+      state.busy = true;
+      updateButtons();
+      setError("");
+      setProgress(18, "正在整理多图上传", 0);
+      appendLog("开始提交混元 3D 任务。");
+
+      const formData = new FormData();
+      formData.set("engine", "rapid");
+      formData.set("enablePbr", "true");
+      formData.set("prompt", "");
+      formData.set("imageViews", JSON.stringify(state.items.map((item) => item.view)));
+      state.items.forEach((item) => {
+        formData.append("images", item.file, item.file.name);
+      });
+
+      try {
+        const response = await fetch("/api/submit", {
+          method: "POST",
+          body: formData
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "提交失败");
+
+        state.sessionId = payload.sessionId;
+        state.jobId = payload.jobId;
+        dom.jobPill.textContent = payload.jobId;
+        setViewerHint(`任务 ${payload.jobId} 已提交`);
+        setProgress(38, "任务已提交", 1);
+        appendLog(`提交成功，JobId=${payload.jobId}`);
+        state.pollTimer = setTimeout(pollJob, 1200);
+      } catch (error) {
+        state.busy = false;
+        updateButtons();
+        setError(error.message || String(error));
+      }
+    }
+
+    function resetAll() {
+      if (state.pollTimer) {
+        clearTimeout(state.pollTimer);
+        state.pollTimer = null;
+      }
+      state.items.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+      state.items = [];
+      state.sessionId = "";
+      state.jobId = "";
+      state.busy = false;
+      state.pendingModelUrl = "";
+      dom.imageInput.value = "";
+      dom.jobPill.textContent = "--";
+      dom.statMode.textContent = "Idle";
+      dom.statResult.textContent = "--";
+      dom.viewerBadge.textContent = "Idle";
+      setViewerHint("等待任务完成");
+      dom.resultLinks.innerHTML = "";
+      dom.errorText.textContent = "";
+      dom.logBox.textContent = "控制台已就绪。";
+      dom.modelViewer.removeAttribute("src");
+      renderGallery();
+      setProgress(0, "等待上传", -1);
+      updateButtons();
+    }
+
+    dom.submitBtn.addEventListener("click", submitJob);
+    dom.resetBtn.addEventListener("click", resetAll);
+
+    customElements.whenDefined("model-viewer")
+      .then(() => {
+        state.viewerReady = true;
+        appendLog("3D 预览器已就绪。");
+        if (state.pendingModelUrl) {
+          return previewModel(state.pendingModelUrl)
+            .then(() => {
+              setViewerHint("模型已加载");
+              appendLog(`待展示模型补加载成功：${state.pendingModelUrl}`);
+            });
+        }
+      })
+      .catch((error) => {
+        state.viewerReady = false;
+        setViewerHint("预览器加载失败，但上传和生成仍然可用。");
+        appendLog(`3D 预览器未能启动：${error.message || error}`);
+      });
+
+    resetAll();
+    loadHistory();
+  </script>
+</body>
+</html>

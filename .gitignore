@@ -1,3 +1,4 @@
+.DS_Store
 sucaiku/
 ui-ux-pro-max-skill-main/
 
@@ -5,4 +6,7 @@ ui-ux-pro-max-skill-main/
 .specstory/
 .kilocode/
 .vscode/
-.specstory/
+.env
+__pycache__/
+*.pyc
+experiments/hunyuan-3d/runtime/

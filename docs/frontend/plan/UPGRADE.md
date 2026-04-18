@@ -2,7 +2,7 @@
 
 > 本文是**前端工作稿**：在保持 PRD 与契约不变的前提下，说明现网实现、设计稿目标，以及把设计稿各区块**绑定到 Agent JSON 字段**的方式。可选的研究向增强集中在末尾，不作为主路径。
 
-- **文件位置：** `fe/docs/plan/UPGRADE.md`
+- **文件位置：** `docs/frontend/plan/UPGRADE.md`
 - **配套视觉稿：** [../assets/20260418-161123-design.png](../assets/20260418-161123-design.png)（单株详情向高保真）
 - **字段依据：** [agent-handoff.md](../../../agent-layer/docs/agent-handoff.md) + [agent-layer/docs/contracts/](../../../agent-layer/docs/contracts/)
 - **路径约定：** 以 `../../../` 开头的路径相对本文件，指向仓库根。
@@ -12,7 +12,7 @@
 ## 目录
 
 - [0. TL;DR](#0-tldr)
-- [1. fe/ 目录与当前实现](#1-fe-目录与当前实现)
+- [1. 前端目录与当前实现](#1-前端目录与当前实现)
 - [2. 高保真视觉稿解读](#2-高保真视觉稿解读)
 - [3. 区块 ↔ Agent 字段绑定](#3-区块--agent-字段绑定)
 - [4. 设计令牌（tokens）建议](#4-设计令牌tokens建议)
@@ -26,25 +26,25 @@
 
 ## 0. TL;DR
 
-- **现状**：`fe/web/` 只有 `/` 单路由、**静态 mock**「薄荷首页」，**未**接后端、**未**消费 `actions` / `warnings` 等字段。
+- **现状**：`web/` 只有 `/` 单路由、**静态 mock**「薄荷首页」，**未**接后端、**未**消费 `actions` / `warnings` 等字段。
 - **目标**：按 [设计稿](../assets/20260418-161123-design.png) 落地**单株详情向**首页（深绿单色、圆角大卡、英文区块标题 + 中文正文），并用 `DailyAdvice`、`PlantStateAssessment`、`PlantProfile` 真实驱动 UI。
 - **纪律**：结构化字段优先于自由文本；`actions` 驱动行动区，`today_summary` 仅作摘要，`warnings` 仅作轻提示；低置信度一律走降级态（详见 handoff §3 / §6）。
 
 ---
 
-## 1. `fe/` 目录与当前实现
+## 1. 前端目录与当前实现
 
 ### 1.1 目录
 
 | 路径 | 作用 |
 |------|------|
-| **`fe/web/`** | Next.js **15.3.x**（App Router）、React **19**、Tailwind **3**、TypeScript。脚本：`npm run dev` / `build` / `lint`。 |
-| **`fe/docs/plan/`** | 前端规划文档（含本文件）。 |
-| **`fe/docs/assets/`** | 设计资产（当前含高保真 PNG）。 |
+| **`web/`** | Next.js **15.3.x**（App Router）、React **19**、Tailwind **3**、TypeScript。脚本：`npm run dev` / `build` / `lint`。 |
+| **`docs/frontend/plan/`** | 前端规划文档（含本文件）。 |
+| **`docs/frontend/assets/`** | 设计资产（当前含高保真 PNG）。 |
 
-> `fe/` 内**不存在** `fe/docs/plans/` 的 PRD 副本，也**不存在** `agent-handoff.md` / `contracts/` 副本。PRD 在 `docs/plans/`、对接与契约在 `agent-layer/docs/`。
+> 前端文档已统一收敛到 `docs/frontend/`。PRD 在 `docs/plans/`、对接与契约在 `agent-layer/docs/`。
 
-### 1.2 当前实现快照（`fe/web/`）
+### 1.2 当前实现快照（`web/`）
 
 | 方面 | 状态 |
 |------|------|
@@ -164,7 +164,7 @@
 
 > 表情：✅ 完成 / ⏳ 进行中 / → 下一步。
 
-- ✅ **0. 脚手架**：`fe/web` Next.js + Tailwind（已有）。
+- ✅ **0. 脚手架**：`web/` Next.js + Tailwind（已有）。
 - → **1. 视觉 tokens**：把 §4 token 落到 Tailwind theme 或 CSS variables。  
   *为什么：避免后续每个组件重复硬编码颜色与圆角。*
 - → **2. 组件骨架**：按 §2.1 拆 `PlantHero` / `StatusCard` / `TodayCareCard` / `RhythmRing` / `RhythmSparkline` / `VideoCard` / `CreatorRow`；先用 mock props。  
@@ -210,4 +210,4 @@
 
 ## 9. 一句话总结
 
-**`fe/web/` 当前是单页薄荷低保真首页，未对齐任何字段**；下一步按设计稿的**单株详情 IA**拆组件并接三条 Agent 产品接口（`profile:analyze` / `daily-advice:generate` / `state:assess`），**用 `actions`、`warnings`、`overall_state` 等结构化字段驱动 UI**，研究向增强统一降级为可选分层。
+**`web/` 当前是单页薄荷低保真首页，未对齐任何字段**；下一步按设计稿的**单株详情 IA**拆组件并接三条 Agent 产品接口（`profile:analyze` / `daily-advice:generate` / `state:assess`），**用 `actions`、`warnings`、`overall_state` 等结构化字段驱动 UI**，研究向增强统一降级为可选分层。

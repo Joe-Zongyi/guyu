@@ -11,10 +11,10 @@ Guyu is an AI-powered plant care assistant with a full-stack architecture. The s
 The codebase follows a hexagonal architecture with clear separation of concerns:
 
 - **`agent-layer/`** - Core domain logic and AI agent implementation as a standalone TypeScript package. Contains schemas for all domain models (PlantProfile, DailyAdvice, PlantStateAssessment), capability implementations for the three core services, vision API providers, and the PlantAgent orchestrator.
-- **`fe/web/`** - Next.js 15 frontend application with App Router, TypeScript, and Tailwind CSS.
+- **`web/`** - Next.js 15 frontend application with App Router, TypeScript, and Tailwind CSS.
 - **`be/`** - Backend API and server code (currently minimal implementation).
-- **`docs/`** - Project documentation including PRDs and design blueprints.
-- **`plan/`** - Project planning and roadmap documents.
+- **`docs/`** - Project documentation including PRDs, frontend plans, and research notes.
+- **`experiments/hunyuan-3d/`** - Independent Hunyuan 3D research console, assets, and sample data.
 
 ### Core Domain Services
 
@@ -48,10 +48,10 @@ npm run test:watch     # Run tests in watch mode
 npm run cli            # Run the CLI tool
 ```
 
-### Frontend (fe/web/)
+### Frontend (`web/`)
 
 ```bash
-cd fe/web
+cd web
 npm run dev            # Start development server
 npm run build          # Build for production
 npm start              # Start production server
