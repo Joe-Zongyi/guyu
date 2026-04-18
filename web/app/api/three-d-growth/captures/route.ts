@@ -33,8 +33,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const state = await readThreeDGrowthState();
-    const plantId = String(form.get("plantId") || state.plantId);
+    const requestedPlantId = form.get("plantId");
+    const fallbackState = await readThreeDGrowthState();
+    const plantId =
+      typeof requestedPlantId === "string" && requestedPlantId
+        ? requestedPlantId
+        : fallbackState.plantId;
     const title = String(form.get("title") || "新的成长记录");
     const note = String(form.get("note") || "");
     const angle = String(form.get("angle") || "front") as CaptureRecord["angle"];

@@ -3,16 +3,14 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
-import { useActivePlant } from "@/src/shared/plant-store";
+import { setActivePlantId, usePlantStore } from "@/src/shared/plant-store";
 import { DEFAULT_THEME, THEMES } from "../data/showcase-theme";
 import type { ThemeData } from "../types";
 import { AddPlantModal } from "./add-plant-modal";
 
-const PLANT_TABS = [{ id: "monstera" }] as const;
-
 export function HomeShowcasePage() {
   const baseTheme = THEMES[DEFAULT_THEME];
-  const activePlant = useActivePlant();
+  const { activePlant, plants } = usePlantStore();
   const [addPlantOpen, setAddPlantOpen] = useState(false);
 
   const theme = useMemo<ThemeData>(() => {
@@ -39,6 +37,7 @@ export function HomeShowcasePage() {
   const heroTitle = activePlant
     ? `${activePlant.commonName} ${activePlant.scientificName}`.trim()
     : "龟背竹 Monstera";
+  const heroImageUrl = activePlant?.pixelImageUrl ?? activePlant?.originalImageUrl;
 
   return (
     <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_24%),linear-gradient(180deg,#e9f1e3_0%,#dfe9d9_34%,#eef3e9_100%)] px-4 py-6 sm:px-6 lg:px-8">
@@ -107,23 +106,35 @@ export function HomeShowcasePage() {
 
                 <div className="flex items-center justify-center rounded-full border border-white/10 bg-white/8 px-4 py-3 shadow-[0_18px_40px_rgba(4,14,10,0.14)] backdrop-blur-md">
                   <div className="flex items-center gap-3">
-                    {PLANT_TABS.map((plant, index) => {
-                      const isActive = index === 0;
+                    {plants.length > 0 ? (
+                      plants.map((plant, index) => {
+                        const isActive = activePlant ? plant.id === activePlant.id : index === 0;
 
-                      return (
-                        <button
-                          key={plant.id}
-                          type="button"
-                          aria-pressed={isActive}
-                          aria-label={`植物 ${index + 1}`}
-                          className={`h-3.5 w-3.5 rounded-full transition ${
-                            isActive
-                              ? "scale-110 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)]"
-                              : "bg-white/32 hover:bg-white/48"
-                          }`}
-                        />
-                      );
-                    })}
+                        return (
+                          <button
+                            key={plant.id}
+                            type="button"
+                            onClick={() => {
+                              void setActivePlantId(plant.id);
+                            }}
+                            aria-pressed={isActive}
+                            aria-label={`${plant.commonName} ${index + 1}`}
+                            className={`h-3.5 w-3.5 rounded-full transition ${
+                              isActive
+                                ? "scale-110 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)]"
+                                : "bg-white/32 hover:bg-white/48"
+                            }`}
+                          />
+                        );
+                      })
+                    ) : (
+                      <button
+                        type="button"
+                        aria-pressed="true"
+                        aria-label="默认植物"
+                        className="h-3.5 w-3.5 scale-110 rounded-full bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)] transition"
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -136,11 +147,11 @@ export function HomeShowcasePage() {
 
                 <div className="relative mt-5 flex min-h-[190px] items-center justify-center overflow-hidden rounded-[28px] bg-white/4">
                   <div className="absolute inset-x-10 bottom-6 h-8 rounded-full bg-[#163126]/30 blur-2xl" />
-                  {activePlant?.pixelImageUrl ? (
+                  {heroImageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={activePlant.pixelImageUrl}
-                      alt={activePlant.commonName}
+                      src={heroImageUrl}
+                      alt={activePlant?.commonName ?? "植物"}
                       className="relative z-10 max-h-[230px] w-auto object-contain drop-shadow-[0_10px_24px_rgba(8,26,16,0.32)]"
                     />
                   ) : (

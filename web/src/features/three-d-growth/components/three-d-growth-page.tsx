@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
+import { usePlantStore } from "@/src/shared/plant-store";
 import { ModelStageViewer } from "./model-stage-viewer";
 import {
   createCapture,
@@ -39,12 +40,14 @@ function queueModelUpdate(modelId: string, setter: (id: string) => void) {
 }
 
 export function ThreeDGrowthPage() {
+  const { activePlant } = usePlantStore();
   const [snapshot, setSnapshot] = useState<ThreeDGrowthModuleState | null>(null);
   const [activeModelId, setActiveModelId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const currentPlantId = activePlant?.id ?? snapshot?.plantId ?? undefined;
 
   function logStep(message: string, payload?: unknown) {
     if (payload === undefined) {
@@ -60,7 +63,7 @@ export function ThreeDGrowthPage() {
     async function load() {
       try {
         logStep("开始读取 3D 重建快照");
-        const next = await fetchThreeDGrowthSnapshot();
+        const next = await fetchThreeDGrowthSnapshot(currentPlantId);
         if (cancelled) {
           return;
         }
@@ -70,7 +73,11 @@ export function ThreeDGrowthPage() {
           activeModelId: next.activeModelId ?? null,
         });
         setSnapshot(next);
-        setActiveModelId((current) => current ?? next.activeModelId ?? next.models[0]?.id ?? null);
+        setActiveModelId((current) =>
+          current && next.models.some((item) => item.id === current)
+            ? current
+            : next.activeModelId ?? next.models[0]?.id ?? null,
+        );
         setError("");
       } catch (nextError) {
         if (!cancelled) {
@@ -97,7 +104,7 @@ export function ThreeDGrowthPage() {
         rafId = null;
       }
     };
-  }, []);
+  }, [currentPlantId]);
 
   // 当 snapshot 和 activeModelId 确定后，预加载相邻模型
   useEffect(() => {
@@ -110,6 +117,9 @@ export function ThreeDGrowthPage() {
 
   const models = snapshot?.models ?? [];
   const captures = snapshot?.captures ?? [];
+  const currentPlantName = activePlant
+    ? `${activePlant.commonName} ${activePlant.scientificName}`.trim()
+    : snapshot?.plantName ?? "加载中";
 
   const activeModel = useMemo(() => {
     if (!snapshot) {
@@ -179,19 +189,24 @@ export function ThreeDGrowthPage() {
 
   async function refreshSnapshot() {
     logStep("刷新建模快照");
-    const next = await fetchThreeDGrowthSnapshot();
+    const next = await fetchThreeDGrowthSnapshot(currentPlantId);
     logStep("刷新建模快照完成", {
       captures: next.captures.length,
       models: next.models.length,
       activeModelId: next.activeModelId ?? null,
     });
     setSnapshot(next);
-    setActiveModelId((current) => current ?? next.activeModelId ?? next.models[0]?.id ?? null);
+    setActiveModelId((current) =>
+      current && next.models.some((item) => item.id === current)
+        ? current
+        : next.activeModelId ?? next.models[0]?.id ?? null,
+    );
   }
 
   async function handleQuickCapture(nextFile: File | null) {
-    if (!snapshot || !nextFile) {
+    if (!currentPlantId || !snapshot || !nextFile) {
       logStep("拍照建模触发失败：缺少快照或图片文件", {
+        hasPlantId: Boolean(currentPlantId),
         hasSnapshot: Boolean(snapshot),
         hasFile: Boolean(nextFile),
       });
@@ -204,19 +219,19 @@ export function ThreeDGrowthPage() {
         fileName: nextFile.name,
         fileSize: nextFile.size,
         fileType: nextFile.type,
-        plantId: snapshot.plantId,
+        plantId: currentPlantId,
       });
       setBusy(true);
       setError("");
       const captureResult = await createCapture({
-        plantId: snapshot.plantId,
+        plantId: currentPlantId,
         title: "新的建模记录",
         angle: "front",
         note: "",
         file: nextFile,
       });
       logStep("图片上传成功，已创建补拍记录", captureResult.capture);
-      const latest = await fetchThreeDGrowthSnapshot();
+      const latest = await fetchThreeDGrowthSnapshot(currentPlantId);
       logStep("上传后重新读取快照", {
         captures: latest.captures.length,
         models: latest.models.length,
@@ -225,11 +240,11 @@ export function ThreeDGrowthPage() {
       const sourceCaptureIds = latest.captures.slice(0, 4).map((item) => item.id);
       if (sourceCaptureIds.length > 0) {
         logStep("开始发起建模任务", {
-          plantId: latest.plantId,
+          plantId: currentPlantId,
           sourceCaptureIds,
         });
         const result = await createModelGeneration({
-          plantId: latest.plantId,
+          plantId: currentPlantId,
           sourceCaptureIds,
         });
         logStep("建模任务已创建", result);
@@ -288,7 +303,7 @@ export function ThreeDGrowthPage() {
             <div className="mt-7 grid gap-3 sm:grid-cols-3">
               <SummaryCard label="记录张数" value={captures.length || "--"} />
               <SummaryCard label="建模批次" value={models.length || "--"} />
-              <SummaryCard label="当前植物" value={snapshot?.plantName ?? "加载中"} />
+              <SummaryCard label="当前植物" value={currentPlantName} />
             </div>
           </div>
         </section>

@@ -1,9 +1,17 @@
 import type { CaptureRecord, ThreeDGrowthModuleState } from "../types";
 
-export async function fetchThreeDGrowthSnapshot() {
-  const response = await fetch("/api/three-d-growth", {
-    cache: "no-store",
-  });
+export async function fetchThreeDGrowthSnapshot(plantId?: string) {
+  const searchParams = new URLSearchParams();
+  if (plantId) {
+    searchParams.set("plantId", plantId);
+  }
+
+  const response = await fetch(
+    `/api/three-d-growth${searchParams.size ? `?${searchParams.toString()}` : ""}`,
+    {
+      cache: "no-store",
+    },
+  );
   if (!response.ok) {
     throw new Error("读取 3D 模块数据失败");
   }

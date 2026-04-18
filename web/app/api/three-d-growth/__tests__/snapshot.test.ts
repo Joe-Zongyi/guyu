@@ -54,7 +54,7 @@ describe("GET /api/three-d-growth", () => {
     vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(seededState));
 
     // WHEN: Calling GET handler
-    const response = await GET();
+    const response = await GET(new Request("http://localhost/api/three-d-growth"));
 
     // THEN: Returns 200 with full state
     expect(response.status).toBe(200);
@@ -72,7 +72,7 @@ describe("GET /api/three-d-growth", () => {
     vi.mocked(readFile).mockRejectedValueOnce(new Error("ENOENT"));
 
     // WHEN: Calling GET handler
-    const response = await GET();
+    const response = await GET(new Request("http://localhost/api/three-d-growth"));
 
     // THEN: Returns 200 with initial empty state
     expect(response.status).toBe(200);

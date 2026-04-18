@@ -1,2 +1,11 @@
-export type { ActivePlant } from "./types";
-export { readActivePlant, writeActivePlant, useActivePlant } from "./store";
+export type { ActivePlant, PlantStoreState } from "./types";
+export {
+  readActivePlant,
+  readPlantStore,
+  saveActivePlant,
+  savePlantStore,
+  setActivePlantId,
+  useActivePlant,
+  usePlantStore,
+  writeActivePlant,
+} from "./store";

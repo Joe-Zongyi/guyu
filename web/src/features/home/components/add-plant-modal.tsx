@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { writeActivePlant, type ActivePlant } from "@/src/shared/plant-store";
+import { saveActivePlant, type ActivePlant } from "@/src/shared/plant-store";
 import {
   createCapture,
   createModelGeneration,
-  fetchThreeDGrowthSnapshot,
 } from "@/src/features/three-d-growth/api/client";
 
 type Stage = "idle" | "uploading" | "success" | "error";
@@ -126,12 +125,19 @@ export function AddPlantModal({
         heroSubtitle: profile.heroSubtitle,
         createdAt: new Date().toISOString(),
       };
-      writeActivePlant(plant);
+      const savedState = await saveActivePlant(plant);
 
       setStatusMessage("识别完成，正在同步成长重建建模…");
 
       try {
-        await pushToThreeDGrowth(file);
+        const capture = await pushToThreeDGrowth(file, plant.id);
+        const savedPlant = savedState.plants.find((item) => item.id === plant.id);
+        if (savedPlant && capture.imageUrl) {
+          await saveActivePlant({
+            ...savedPlant,
+            originalImageUrl: capture.imageUrl,
+          });
+        }
         setStatusMessage("已同步到成长重建页，建模任务已发起");
       } catch (modelError) {
         console.error("[AddPlantModal] 3D 建模同步失败", modelError);
@@ -253,10 +259,7 @@ export function AddPlantModal({
   );
 }
 
-async function pushToThreeDGrowth(file: File) {
-  const snapshot = await fetchThreeDGrowthSnapshot();
-  const plantId = snapshot.plantId;
-
+async function pushToThreeDGrowth(file: File, plantId: string) {
   const captureResult = await createCapture({
     plantId,
     title: "首次识别建模",
@@ -269,4 +272,6 @@ async function pushToThreeDGrowth(file: File) {
     plantId,
     sourceCaptureIds: [captureResult.capture.id],
   });
+
+  return captureResult.capture;
 }

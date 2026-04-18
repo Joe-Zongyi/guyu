@@ -1,9 +1,12 @@
 import type { CaptureRecord, GeneratedModel, ThreeDGrowthModuleState } from "./types";
 
-export function createEmptyThreeDGrowthState(): ThreeDGrowthModuleState {
+export function createEmptyThreeDGrowthState(
+  plantId = "monstera-001",
+  plantName = "龟背竹 Monstera",
+): ThreeDGrowthModuleState {
   return {
-    plantId: "monstera-001",
-    plantName: "龟背竹 Monstera",
+    plantId,
+    plantName,
     captures: [],
     models: [],
     activeModelId: undefined,

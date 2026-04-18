@@ -2,7 +2,7 @@ export type ActivePlant = {
   id: string;
   commonName: string;
   scientificName: string;
-  pixelImageUrl: string;
+  pixelImageUrl?: string;
   originalImageUrl?: string;
 
   growthStage: string;
@@ -23,4 +23,9 @@ export type ActivePlant = {
   heroSubtitle: string;
 
   createdAt: string;
+};
+
+export type PlantStoreState = {
+  plants: ActivePlant[];
+  activePlantId: string | null;
 };
