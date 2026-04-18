@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
 import { setActivePlantId, usePlantStore } from "@/src/shared/plant-store";
+import { createCareEvent } from "@/src/features/three-d-growth/api/client";
 import { DEFAULT_THEME, THEMES } from "../data/showcase-theme";
 import type { ThemeData } from "../types";
 import { AddPlantModal } from "./add-plant-modal";
@@ -12,6 +13,8 @@ export function HomeShowcasePage() {
   const baseTheme = THEMES[DEFAULT_THEME];
   const { activePlant, plants } = usePlantStore();
   const [addPlantOpen, setAddPlantOpen] = useState(false);
+  const [wateringBusy, setWateringBusy] = useState(false);
+  const [wateringFeedback, setWateringFeedback] = useState("");
 
   const theme = useMemo<ThemeData>(() => {
     if (!activePlant) {
@@ -38,6 +41,40 @@ export function HomeShowcasePage() {
     ? `${activePlant.commonName} ${activePlant.scientificName}`.trim()
     : "龟背竹 Monstera";
   const heroImageUrl = activePlant?.pixelImageUrl ?? activePlant?.originalImageUrl;
+
+  useEffect(() => {
+    if (!wateringFeedback) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setWateringFeedback("");
+    }, 2200);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [wateringFeedback]);
+
+  async function handleWateringRecord() {
+    if (!activePlant?.id || wateringBusy) {
+      return;
+    }
+
+    try {
+      setWateringBusy(true);
+      setWateringFeedback("");
+      await createCareEvent({
+        plantId: activePlant.id,
+        eventType: "watered",
+      });
+      setWateringFeedback("已记录浇水");
+    } catch {
+      setWateringFeedback("记录失败");
+    } finally {
+      setWateringBusy(false);
+    }
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_24%),linear-gradient(180deg,#e9f1e3_0%,#dfe9d9_34%,#eef3e9_100%)] px-4 py-6 sm:px-6 lg:px-8">
@@ -159,12 +196,29 @@ export function HomeShowcasePage() {
                   )}
                 </div>
 
-                <Link
-                  href="/growth-3d"
-                  className="mt-4 inline-flex w-fit items-center rounded-full bg-[#ebf7df] px-5 py-3 text-sm font-semibold text-[#204735] shadow-[0_12px_24px_rgba(8,26,16,0.15)] transition hover:-translate-y-0.5"
-                >
-                  记录
-                </Link>
+                <div className="mt-4 flex items-center gap-3">
+                  <Link
+                    href="/growth-3d"
+                    className="inline-flex w-fit items-center rounded-full bg-[#ebf7df] px-5 py-3 text-sm font-semibold text-[#204735] shadow-[0_12px_24px_rgba(8,26,16,0.15)] transition hover:-translate-y-0.5"
+                  >
+                    记录
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleWateringRecord();
+                    }}
+                    disabled={!activePlant?.id || wateringBusy}
+                    className="inline-flex w-fit items-center rounded-full border border-[#f2d5b7]/55 bg-[#d0846e] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(106,44,32,0.22)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {wateringBusy ? "记录中..." : "浇水"}
+                  </button>
+                  {wateringFeedback ? (
+                    <span className="text-xs font-semibold text-[#eff7d8]">
+                      {wateringFeedback}
+                    </span>
+                  ) : null}
+                </div>
               </section>
 
               <section className="grid min-h-[340px] grid-cols-2 items-stretch gap-3">

@@ -1,4 +1,9 @@
-import type { CaptureRecord, GeneratedModel, ThreeDGrowthModuleState } from "./types";
+import type {
+  CaptureRecord,
+  CareEventRecord,
+  GeneratedModel,
+  ThreeDGrowthModuleState,
+} from "./types";
 
 export function createEmptyThreeDGrowthState(
   plantId = "monstera-001",
@@ -9,6 +14,7 @@ export function createEmptyThreeDGrowthState(
     plantName,
     captures: [],
     models: [],
+    careEvents: [],
     activeModelId: undefined,
   };
 }
@@ -56,4 +62,14 @@ export function findActiveModel(state: ThreeDGrowthModuleState) {
     state.models[0] ??
     null
   );
+}
+
+export function appendCareEvent(
+  state: ThreeDGrowthModuleState,
+  event: CareEventRecord,
+) {
+  return {
+    ...state,
+    careEvents: [event, ...state.careEvents],
+  };
 }

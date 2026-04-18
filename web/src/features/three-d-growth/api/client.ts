@@ -1,4 +1,4 @@
-import type { CaptureRecord, ThreeDGrowthModuleState } from "../types";
+import type { CaptureRecord, CareEventRecord, ThreeDGrowthModuleState } from "../types";
 
 export async function fetchThreeDGrowthSnapshot(plantId?: string) {
   const searchParams = new URLSearchParams();
@@ -57,6 +57,27 @@ export async function createModelGeneration(input: {
     throw new Error("发起 3D 生成失败");
   }
   return (await response.json()) as { modelId: string };
+}
+
+export async function createCareEvent(input: {
+  plantId: string;
+  eventType?: "watered";
+  occurredAt?: string;
+}) {
+  const response = await fetch("/api/three-d-growth/care-events", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) {
+    throw new Error("记录浇水事件失败");
+  }
+  return (await response.json()) as {
+    event: CareEventRecord;
+    snapshot: ThreeDGrowthModuleState;
+  };
 }
 
 /**

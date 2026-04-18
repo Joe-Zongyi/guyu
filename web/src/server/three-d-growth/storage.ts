@@ -3,6 +3,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import type {
   CaptureRecord,
+  CareEventRecord,
   GeneratedModel,
   ThreeDGrowthModuleState,
 } from "@/src/features/three-d-growth/types";
@@ -70,6 +71,37 @@ export async function appendCaptureRecord(input: Omit<CaptureRecord, "id">) {
 
   await writeStore(nextStore);
   return nextCapture;
+}
+
+export async function appendCareEventRecord(
+  input: Omit<CareEventRecord, "id" | "label"> & { label?: string },
+) {
+  const store = await readThreeDGrowthStore();
+  const timeline = getTimeline(store, input.plantId);
+  const nextEvent: CareEventRecord = {
+    id: `care-${randomUUID()}`,
+    plantId: input.plantId,
+    eventType: input.eventType,
+    occurredAt: input.occurredAt,
+    label: input.label ?? defaultCareEventLabel(input.eventType),
+  };
+
+  const nextStore: ThreeDGrowthStore = {
+    ...store,
+    timelines: {
+      ...store.timelines,
+      [input.plantId]: {
+        ...timeline,
+        careEvents: [nextEvent, ...timeline.careEvents],
+      },
+    },
+  };
+
+  await writeStore(nextStore);
+  return {
+    event: nextEvent,
+    snapshot: nextStore.timelines[input.plantId]!,
+  };
 }
 
 export async function enqueueModelGeneration(input: {
@@ -236,6 +268,12 @@ function normalizeTimeline(
   const models = Array.isArray(timeline?.models)
     ? timeline.models.filter((model): model is GeneratedModel => Boolean(model?.id))
     : [];
+  const careEvents = Array.isArray((timeline as { careEvents?: CareEventRecord[] })?.careEvents)
+    ? (timeline as { careEvents?: CareEventRecord[] }).careEvents!.filter(
+        (event): event is CareEventRecord =>
+          Boolean(event?.id && event?.plantId && event?.occurredAt && event?.eventType),
+      )
+    : [];
   const activeModelId =
     typeof timeline?.activeModelId === "string" &&
     models.some((model) => model.id === timeline.activeModelId)
@@ -250,6 +288,7 @@ function normalizeTimeline(
         : fallback.plantName,
     captures,
     models,
+    careEvents,
     activeModelId,
   };
 }
@@ -425,6 +464,13 @@ function mapCaptureAngleToHunyuanView(angle: CaptureRecord["angle"]) {
     return "top";
   }
   return undefined;
+}
+
+function defaultCareEventLabel(eventType: CareEventRecord["eventType"]) {
+  if (eventType === "watered") {
+    return "浇水";
+  }
+  return "养护";
 }
 
 function toPublicUrl(absolutePath: string) {

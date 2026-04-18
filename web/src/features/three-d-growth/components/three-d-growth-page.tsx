@@ -117,6 +117,7 @@ export function ThreeDGrowthPage() {
 
   const models = snapshot?.models ?? [];
   const captures = snapshot?.captures ?? [];
+  const careEvents = snapshot?.careEvents ?? [];
   const currentPlantName = activePlant
     ? `${activePlant.commonName} ${activePlant.scientificName}`.trim()
     : snapshot?.plantName ?? "加载中";
@@ -155,8 +156,11 @@ export function ThreeDGrowthPage() {
     if (captures[0]?.capturedAt) {
       return new Date(captures[0].capturedAt);
     }
+    if (careEvents[0]?.occurredAt) {
+      return new Date(careEvents[0].occurredAt);
+    }
     return new Date();
-  }, [activeModel?.createdAt, captures]);
+  }, [activeModel?.createdAt, captures, careEvents]);
 
   const calendarEvents = useMemo(() => {
     const nextEvents: CalendarEvent[] = [];
@@ -179,8 +183,17 @@ export function ThreeDGrowthPage() {
         highlight: model.id === activeModel?.id,
       });
     }
+    for (const event of careEvents.slice(0, 12)) {
+      const date = new Date(event.occurredAt);
+      nextEvents.push({
+        dateKey: toDateKey(date),
+        day: date.getDate(),
+        type: "care",
+        label: event.label,
+      });
+    }
     return nextEvents;
-  }, [activeModel?.id, captures, models]);
+  }, [activeModel?.id, captures, models, careEvents]);
 
   const calendarDays = useMemo(
     () => buildCalendarDays(calendarMonth, calendarEvents),
@@ -435,7 +448,8 @@ export function ThreeDGrowthPage() {
               </div>
 
               <div className="mt-4 flex flex-wrap gap-4 text-[11px] font-semibold text-[#607061]">
-                <LegendDot color="bg-[#3A7DC9]" label="浇水 / 补拍" />
+                <LegendDot color="bg-[#d0846e]" label="浇水" />
+                <LegendDot color="bg-[#3A7DC9]" label="补拍" />
                 <LegendDot color="bg-[#2D7B4A]" label="3D 建模" />
               </div>
 
@@ -492,10 +506,12 @@ function CalendarDay({
     : "";
 
   const showHalves = day.hasModel || day.hasCapture;
+  const baseClass =
+    day.hasCare && !showHalves ? "bg-[#f2ddd5]" : "bg-[#eef2ea]";
 
   return (
     <div
-      className={`relative flex h-12 items-center justify-center overflow-hidden rounded-[14px] bg-[#eef2ea] ${ringClass}`}
+      className={`relative flex h-12 items-center justify-center overflow-hidden rounded-[14px] ${baseClass} ${ringClass}`}
     >
       {day.hasModel ? (
         <span
@@ -509,6 +525,12 @@ function CalendarDay({
           aria-hidden
           className="absolute inset-0 bg-[#3A7DC9]"
           style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }}
+        />
+      ) : null}
+      {day.hasCare ? (
+        <span
+          aria-hidden
+          className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#d0846e] shadow-[0_1px_4px_rgba(106,44,32,0.28)]"
         />
       ) : null}
       <span
@@ -664,6 +686,7 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
     dayLabel: string;
     hasModel: boolean;
     hasCapture: boolean;
+    hasCare: boolean;
     isActiveModel: boolean;
   }> = [];
 
@@ -674,6 +697,7 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
       dayLabel: "",
       hasModel: false,
       hasCapture: false,
+      hasCare: false,
       isActiveModel: false,
     });
   }
@@ -684,6 +708,7 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
     const dayEvents = eventMap.get(dateKey) ?? [];
     const hasModel = dayEvents.some((event) => event.type === "model");
     const hasCapture = dayEvents.some((event) => event.type === "capture");
+    const hasCare = dayEvents.some((event) => event.type === "care");
     const isActiveModel = dayEvents.some(
       (event) => event.type === "model" && event.highlight,
     );
@@ -693,6 +718,7 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
       dayLabel: String(day),
       hasModel,
       hasCapture,
+      hasCare,
       isActiveModel,
     });
   }
@@ -704,6 +730,7 @@ function buildCalendarDays(monthDate: Date, events: CalendarEvent[]) {
       dayLabel: "",
       hasModel: false,
       hasCapture: false,
+      hasCare: false,
       isActiveModel: false,
     });
   }

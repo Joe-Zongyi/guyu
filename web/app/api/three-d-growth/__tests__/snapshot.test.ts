@@ -49,6 +49,15 @@ describe("GET /api/three-d-growth", () => {
           updatedAt: new Date().toISOString(),
         },
       ],
+      careEvents: [
+        {
+          id: "care-001",
+          plantId: "monstera-001",
+          eventType: "watered",
+          occurredAt: "2026-04-19T09:00:00.000Z",
+          label: "浇水",
+        },
+      ],
       activeModelId: "model-001",
     };
     vi.mocked(readFile).mockResolvedValueOnce(JSON.stringify(seededState));
@@ -64,6 +73,9 @@ describe("GET /api/three-d-growth", () => {
     expect(body.captures.length).toBe(1);
     expect(body.models).toBeInstanceOf(Array);
     expect(body.models.length).toBe(1);
+    expect(body.careEvents).toBeInstanceOf(Array);
+    expect(body.careEvents.length).toBe(1);
+    expect(body.careEvents[0].eventType).toBe("watered");
     expect(body.activeModelId).toBe("model-001");
   });
 
@@ -80,6 +92,7 @@ describe("GET /api/three-d-growth", () => {
     expect(body.plantId).toBe("monstera-001");
     expect(body.captures).toEqual([]);
     expect(body.models).toEqual([]);
+    expect(body.careEvents).toEqual([]);
     expect(body.activeModelId).toBeUndefined();
   });
 });

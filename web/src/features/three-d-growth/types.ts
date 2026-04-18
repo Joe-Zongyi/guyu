@@ -40,10 +40,19 @@ export type GeneratedModel = {
   updatedAt: string;
 };
 
+export type CareEventRecord = {
+  id: string;
+  plantId: string;
+  eventType: "watered";
+  occurredAt: string;
+  label: string;
+};
+
 export type ThreeDGrowthModuleState = {
   plantId: string;
   plantName: string;
   captures: CaptureRecord[];
   models: GeneratedModel[];
+  careEvents: CareEventRecord[];
   activeModelId?: string;
 };
