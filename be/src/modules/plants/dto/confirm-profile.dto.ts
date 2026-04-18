@@ -33,9 +33,9 @@ export class ConfirmProfileDto {
   profile: {
     species_id: string;
     common_name: string;
-    scientific_name: string;
-    variety: string;
-    confidence: number;
+    scientific_name?: string;
+    variety?: string;
+    confidence?: number;
     [key: string]: any;
   };
 

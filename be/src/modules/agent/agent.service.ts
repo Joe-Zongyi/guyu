@@ -1,29 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PlantAgent } from '@guyu/plant-agent';
+import { PlantAgent, FakeVisionProvider } from '@guyu/plant-agent';
 import type {
   ProfileResponse,
   DailyAdviceResponse,
   StateAssessmentResponse,
   PixelArtGenerationResponse,
 } from '@guyu/plant-agent';
-import { VisionProviderService } from './vision-provider.service.js';
-import { ImageGenerationProviderService } from './image-generation-provider.service.js';
+import { FakeImageGenerationProvider } from '@guyu/plant-agent';
 
 // Facade over the agent-layer PlantAgent orchestrator.
-// Controllers depend on this service, never on PlantAgent directly, so we can later
-// wrap it with retries/tracing/persistence without leaking changes outward.
+// Uses direct instantiation to avoid ESM DI issues.
 @Injectable()
 export class AgentService {
   private readonly logger = new Logger(AgentService.name);
   private readonly agent: PlantAgent;
 
-  constructor(
-    visionProviderService: VisionProviderService,
-    imageGenerationProviderService: ImageGenerationProviderService,
-  ) {
+  constructor() {
     this.agent = new PlantAgent({
-      visionProvider: visionProviderService.getProvider(),
-      imageGenerationProvider: imageGenerationProviderService.getProvider(),
+      visionProvider: new FakeVisionProvider(),
+      imageGenerationProvider: new FakeImageGenerationProvider(),
     });
     this.logger.log('AgentService ready');
   }
