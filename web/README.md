@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guyu Web（Next.js）
 
-## Getting Started
+谷雨（Guyu）前端的 Next.js 应用，使用 **App Router**、TypeScript、Tailwind CSS。
 
-First, run the development server:
+> **目录说明：** 本仓库前端代码位于仓库根目录下的 **`web/`**。若文档或习惯中仍写作 `fe/web/`，请以当前 **`web/`** 为准。
+
+## 环境要求
+
+- **Node.js**：建议使用 **20 LTS** 或与团队一致的版本（Next.js 15 官方通常要求 Node 18.18+）。
+- **包管理器**：下文以 **npm** 为例；也可使用 `pnpm`、`yarn`、`bun`。
+
+## 安装依赖
+
+在仓库根目录进入前端目录：
+
+```bash
+cd web
+npm install
+```
+
+## 本地开发
+
+启动开发服务器（默认热更新）：
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+浏览器访问：<http://localhost:3000>。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+常用入口文件：`app/page.tsx`、`app/layout.tsx`。修改后保存即可在浏览器中看到更新。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+如需指定端口（例如 3001）：
 
-## Learn More
+```bash
+npx next dev -p 3001
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 生产构建与启动
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`npm run start` 会运行 `next start`，默认仍监听 **3000** 端口（可通过环境变量 `PORT` 修改）。
 
-## Deploy on Vercel
+## 代码检查
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+使用 Next.js 自带的 ESLint 集成（`next lint`）。
+
+## 技术栈摘要
+
+| 项目 | 版本（见 `package.json`） |
+|------|---------------------------|
+| Next.js | 15.x |
+| React | 19.x |
+| Tailwind CSS | 3.x |
+
+## 延伸阅读
+
+- [Next.js 文档](https://nextjs.org/docs)
+- 仓库内协作约定见同目录 [`AGENTS.md`](./AGENTS.md)

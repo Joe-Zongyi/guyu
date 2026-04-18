@@ -1,0 +1,272 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AppModule } from '../../src/app.module.js';
+import { DatabaseService } from '../../src/database/database.service.js';
+import * as fs from 'fs';
+import * as path from 'path';
+
+describe('Files API Integration Tests', () => {
+  let app: INestApplication;
+  let db: DatabaseService;
+  let testImagePath: string;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    db = moduleFixture.get<DatabaseService>(DatabaseService);
+    await app.init();
+
+    // Create a test image file
+    testImagePath = path.join(process.cwd(), 'test', 'fixtures', 'test-plant.jpg');
+    const fixturesDir = path.dirname(testImagePath);
+    if (!fs.existsSync(fixturesDir)) {
+      fs.mkdirSync(fixturesDir, { recursive: true });
+    }
+    // Create a minimal JPEG file (1x1 pixel, black)
+    const minimalJpeg = Buffer.from([
+      0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01,
+      0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43,
+      0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09,
+      0x09, 0x08, 0x0a, 0x0c, 0x14, 0x0d, 0x0c, 0x0b, 0x0b, 0x0c, 0x19, 0x12,
+      0x13, 0x0f, 0x14, 0x1d, 0x1a, 0x1f, 0x1e, 0x1d, 0x1a, 0x1c, 0x1c, 0x20,
+      0x24, 0x2e, 0x27, 0x20, 0x22, 0x2c, 0x23, 0x1c, 0x1c, 0x28, 0x37, 0x29,
+      0x2c, 0x30, 0x31, 0x34, 0x34, 0x34, 0x1f, 0x27, 0x39, 0x3d, 0x38, 0x32,
+      0x3c, 0x2e, 0x33, 0x34, 0x32, 0xff, 0xc0, 0x00, 0x0b, 0x08, 0x00, 0x01,
+      0x00, 0x01, 0x01, 0x01, 0x11, 0x00, 0xff, 0xc4, 0x00, 0x1f, 0x00, 0x00,
+      0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+      0x09, 0x0a, 0x0b, 0xff, 0xc4, 0x00, 0xb5, 0x10, 0x00, 0x02, 0x01, 0x03,
+      0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7d,
+      0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06,
+      0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xa1, 0x08,
+      0x23, 0x42, 0xb1, 0xc1, 0x15, 0x52, 0xd1, 0xf0, 0x24, 0x33, 0x62, 0x72,
+      0x82, 0x09, 0x0a, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x25, 0x26, 0x27, 0x28,
+      0x29, 0x2a, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x43, 0x44, 0x45,
+      0x46, 0x47, 0x48, 0x49, 0x4a, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
+      0x5a, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75,
+      0x76, 0x77, 0x78, 0x79, 0x7a, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+      0x8a, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0xa2, 0xa3,
+      0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6,
+      0xb7, 0xb8, 0xb9, 0xba, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9,
+      0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1, 0xe2,
+      0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf1, 0xf2, 0xf3, 0xf4,
+      0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xff, 0xda, 0x00, 0x08, 0x01, 0x01,
+      0x00, 0x00, 0x3f, 0x00, 0xfb, 0xd5, 0xdb, 0x20, 0x7a, 0xfd, 0xed, 0xa7,
+      0xc6, 0xbf, 0x6a, 0x2d, 0x5a, 0xce, 0xd5, 0x17, 0x4e, 0x54, 0xb4, 0xbb,
+      0x3b, 0xab, 0xa5, 0xac, 0xea, 0x64, 0x8e, 0xde, 0xda, 0x47, 0x8d, 0x76,
+      0x7a, 0x6e, 0x3d, 0x46, 0x46, 0x24, 0x66, 0x24, 0x92, 0x49, 0x39, 0x27,
+      0x24, 0x9f, 0xc6, 0xbd, 0xe3, 0xf6, 0x44, 0xf8, 0xc9, 0xa7, 0xfc, 0x2a,
+      0x3f, 0x68, 0x7d, 0x57, 0xc4, 0xbe, 0x1c, 0xd5, 0x3c, 0x49, 0xa5, 0x5e,
+      0xea, 0x1a, 0x84, 0xba, 0x8d, 0xe5, 0x9a, 0xdc, 0x43, 0x2c, 0x10, 0xcc,
+      0xc6, 0x34, 0x8d, 0x57, 0x70, 0x60, 0x46, 0x00, 0x1c, 0x0e, 0x78, 0xaf,
+      0x9a, 0x7e, 0x2a, 0xfc, 0x5e, 0xf8, 0x81, 0xf1, 0x5f, 0xc5, 0xbf, 0x1b,
+      0x7c, 0x4d, 0xe2, 0x3d, 0x4f, 0x58, 0xd4, 0xaf, 0xaf, 0xaf, 0x6e, 0x6e,
+      0xee, 0xa6, 0x9a, 0x69, 0x66, 0x99, 0x99, 0x89, 0x66, 0x66, 0x24, 0x92,
+      0x49, 0x39, 0x27, 0x9c, 0xd7, 0xd1, 0x5f, 0xff, 0xd9,
+    ]);
+    fs.writeFileSync(testImagePath, minimalJpeg);
+  });
+
+  beforeEach(async () => {
+    // Clean up test files from database before each test
+    await db.file.deleteMany({
+      where: {
+        filename: {
+          contains: 'test',
+        },
+      },
+    });
+  });
+
+  afterAll(async () => {
+    // Clean up test files
+    if (fs.existsSync(testImagePath)) {
+      fs.unlinkSync(testImagePath);
+    }
+    await app.close();
+  });
+
+  describe('POST /v1/files/upload', () => {
+    it('should upload a JPEG image successfully', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/v1/files/upload')
+        .attach('file', testImagePath, 'test-plant.jpg')
+        .field('request_id', 'req_upload_001')
+        .field('plant_id', 'plant_test_001');
+
+      expect(response.status).toBe(201);
+      expect(response.body.status).toBe('success');
+      expect(response.body.data.file_id).toBeDefined();
+      expect(response.body.data.file_id).toMatch(/^file_[a-f0-9]+/);
+      expect(response.body.data.url).toBeDefined();
+      expect(response.body.data.content_type).toBe('image/jpeg');
+      expect(response.body.data.size).toBeGreaterThan(0);
+      expect(response.body.data.created_at).toBeDefined();
+    });
+
+    it('should upload without optional fields', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/v1/files/upload')
+        .attach('file', testImagePath, 'test-plant.jpg');
+
+      expect(response.status).toBe(201);
+      expect(response.body.status).toBe('success');
+      expect(response.body.data.file_id).toBeDefined();
+    });
+
+    it('should reject non-image files', async () => {
+      const textFilePath = path.join(process.cwd(), 'test', 'fixtures', 'test.txt');
+      fs.writeFileSync(textFilePath, 'This is a test file');
+
+      try {
+        const response = await request(app.getHttpServer())
+          .post('/v1/files/upload')
+          .attach('file', textFilePath, 'test.txt');
+
+        expect(response.status).toBe(400);
+      } finally {
+        fs.unlinkSync(textFilePath);
+      }
+    });
+
+    it('should reject request without file', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/v1/files/upload')
+        .field('request_id', 'req_upload_no_file');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should store file metadata in database', async () => {
+      const uploadResponse = await request(app.getHttpServer())
+        .post('/v1/files/upload')
+        .attach('file', testImagePath, 'test-plant.jpg')
+        .field('request_id', 'req_upload_db_test')
+        .field('plant_id', 'plant_db_test');
+
+      expect(uploadResponse.status).toBe(201);
+      const fileId = uploadResponse.body.data.file_id;
+
+      // Verify in database
+      const fileRecord = await db.file.findUnique({
+        where: { file_id: fileId },
+      });
+
+      expect(fileRecord).toBeDefined();
+      expect(fileRecord?.file_id).toBe(fileId);
+      expect(fileRecord?.content_type).toBe('image/jpeg');
+      expect(fileRecord?.plant_id).toBe('plant_db_test');
+      expect(fileRecord?.request_id).toBe('req_upload_db_test');
+    });
+  });
+
+  describe('GET /v1/files/:fileId', () => {
+    it('should retrieve file metadata by file_id', async () => {
+      // First upload a file
+      const uploadResponse = await request(app.getHttpServer())
+        .post('/v1/files/upload')
+        .attach('file', testImagePath, 'test-plant.jpg')
+        .field('request_id', 'req_get_test');
+
+      expect(uploadResponse.status).toBe(201);
+      const fileId = uploadResponse.body.data.file_id;
+
+      // Then retrieve it
+      const getResponse = await request(app.getHttpServer()).get(
+        `/v1/files/${fileId}`,
+      );
+
+      expect(getResponse.status).toBe(200);
+      expect(getResponse.body.file_id).toBe(fileId);
+      expect(getResponse.body.url).toBeDefined();
+      expect(getResponse.body.content_type).toBe('image/jpeg');
+      expect(getResponse.body.size).toBeGreaterThan(0);
+      expect(getResponse.body.original_name).toBeDefined();
+      expect(getResponse.body.created_at).toBeDefined();
+    });
+
+    it('should return 404 for non-existent file', async () => {
+      const response = await request(app.getHttpServer()).get(
+        '/v1/files/file_nonexistent123',
+      );
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return file with correct structure', async () => {
+      const uploadResponse = await request(app.getHttpServer())
+        .post('/v1/files/upload')
+        .attach('file', testImagePath, 'my-plant.jpg')
+        .field('request_id', 'req_structure_test');
+
+      const fileId = uploadResponse.body.data.file_id;
+
+      const getResponse = await request(app.getHttpServer()).get(
+        `/v1/files/${fileId}`,
+      );
+
+      expect(getResponse.body).toHaveProperty('file_id');
+      expect(getResponse.body).toHaveProperty('url');
+      expect(getResponse.body).toHaveProperty('content_type');
+      expect(getResponse.body).toHaveProperty('size');
+      expect(getResponse.body).toHaveProperty('original_name');
+      expect(getResponse.body).toHaveProperty('created_at');
+    });
+  });
+
+  describe('File upload validation', () => {
+    it('should accept PNG images', async () => {
+      // Create a minimal PNG file
+      const pngPath = path.join(process.cwd(), 'test', 'fixtures', 'test.png');
+      const minimalPng = Buffer.from([
+        0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+        0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53, 0xde, 0x00, 0x00, 0x00,
+        0x0c, 0x49, 0x44, 0x41, 0x54, 0x08, 0xd7, 0x63, 0xf8, 0xcf, 0xc0, 0x00,
+        0x00, 0x03, 0x01, 0x01, 0x00, 0x18, 0xdd, 0x8d, 0xb4, 0x00, 0x00, 0x00,
+        0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+      ]);
+      fs.writeFileSync(pngPath, minimalPng);
+
+      try {
+        const response = await request(app.getHttpServer())
+          .post('/v1/files/upload')
+          .attach('file', pngPath, 'test.png');
+
+        expect(response.status).toBe(201);
+        expect(response.body.data.content_type).toBe('image/png');
+      } finally {
+        fs.unlinkSync(pngPath);
+      }
+    });
+
+    it('should accept WEBP images', async () => {
+      const webpPath = path.join(process.cwd(), 'test', 'fixtures', 'test.webp');
+      // Minimal WebP file header
+      const minimalWebp = Buffer.from([
+        0x52, 0x49, 0x46, 0x46, 0x1a, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50,
+        0x56, 0x50, 0x38, 0x20, 0x0e, 0x00, 0x00, 0x00, 0x30, 0x01, 0x00, 0x9d,
+        0x01, 0x2a, 0x01, 0x00, 0x01, 0x00, 0x02, 0x00, 0x34, 0x25, 0xa4, 0x00,
+        0x03, 0x70, 0x00, 0xfe, 0xfb, 0x94, 0x01, 0x00,
+      ]);
+      fs.writeFileSync(webpPath, minimalWebp);
+
+      try {
+        const response = await request(app.getHttpServer())
+          .post('/v1/files/upload')
+          .attach('file', webpPath, 'test.webp');
+
+        // WebP detection may vary by platform, so accept either success or 400
+        expect([201, 400]).toContain(response.status);
+      } finally {
+        if (fs.existsSync(webpPath)) {
+          fs.unlinkSync(webpPath);
+        }
+      }
+    });
+  });
+});

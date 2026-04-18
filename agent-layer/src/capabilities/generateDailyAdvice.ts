@@ -1,9 +1,7 @@
-import type { ZodIssue } from "zod";
 import {
   GenerateDailyAdviceInputSchema,
   type GenerateDailyAdviceInput,
 } from "../schemas/inputs.js";
-import type { CareEvent } from "../schemas/primitives.js";
 import type { DailyAdviceResponse } from "../schemas/envelopes.js";
 import type {
   Action,
@@ -353,7 +351,7 @@ function getLastEventTime(
   events: GenerateDailyAdviceInput["today_context"]["recent_care_events"],
   type: "watered" | "fertilized",
 ): string | undefined {
-  const filtered = events.filter((e: CareEvent) => e.type === type);
+  const filtered = events.filter((e) => e.type === type);
   if (filtered.length === 0) return undefined;
   const sorted = [...filtered].sort((a, b) =>
     a.occurred_at < b.occurred_at ? 1 : -1,
@@ -371,7 +369,7 @@ export async function generateDailyAdvice(
       status: "failed",
       error_code: "PROVIDER_UNAVAILABLE",
       message: `invalid input: ${parsed.error.issues
-        .map((i: ZodIssue) => `${i.path.join(".")}: ${i.message}`)
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
         .join("; ")}`,
       request_id:
         (rawInput as { request_id?: string })?.request_id ?? "unknown",
