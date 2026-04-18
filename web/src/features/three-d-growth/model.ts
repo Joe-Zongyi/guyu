@@ -2,8 +2,11 @@ import type { CaptureRecord, GeneratedModel, ThreeDGrowthModuleState } from "./t
 
 export function createEmptyThreeDGrowthState(): ThreeDGrowthModuleState {
   return {
+    plantId: "monstera-001",
+    plantName: "龟背竹 Monstera",
     captures: [],
     models: [],
+    activeModelId: undefined,
   };
 }
 
@@ -20,6 +23,9 @@ export function queueModelGeneration(
     plantId: input.plantId,
     status: "draft",
     sourceCaptureIds: input.sourceCaptureIds,
+    milestone: "新的建模批次",
+    summary: "等待生成本轮植物 3D 模型。",
+    progress: 0,
     createdAt: input.now,
     updatedAt: input.now,
   };
@@ -27,6 +33,7 @@ export function queueModelGeneration(
   return {
     ...state,
     models: [...state.models, nextModel],
+    activeModelId: nextModel.id,
   };
 }
 
@@ -38,4 +45,12 @@ export function appendCapture(
     ...state,
     captures: [...state.captures, capture],
   };
+}
+
+export function findActiveModel(state: ThreeDGrowthModuleState) {
+  return (
+    state.models.find((model) => model.id === state.activeModelId) ??
+    state.models[0] ??
+    null
+  );
 }

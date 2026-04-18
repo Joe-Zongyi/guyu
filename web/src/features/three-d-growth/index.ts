@@ -1,7 +1,8 @@
-export { ThreeDGrowthPlaceholder } from "./components/three-d-growth-placeholder";
+export { ThreeDGrowthPage } from "./components/three-d-growth-page";
 export {
   appendCapture,
   createEmptyThreeDGrowthState,
+  findActiveModel,
   queueModelGeneration,
 } from "./model";
 export type {
