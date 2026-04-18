@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
 import { DEFAULT_THEME, RHYTHM_BARS, THEMES } from "../data/showcase-theme";
 import type { ThemeData } from "../types";
@@ -70,12 +71,12 @@ export function HomeShowcasePage() {
                   <PixelPlant />
                 </div>
 
-                <button
-                  type="button"
+                <Link
+                  href="/growth-3d"
                   className="mt-4 inline-flex w-fit items-center rounded-full bg-[#ebf7df] px-5 py-3 text-sm font-semibold text-[#204735] shadow-[0_12px_24px_rgba(8,26,16,0.15)] transition hover:-translate-y-0.5"
                 >
-                  立即打卡
-                </button>
+                  记录
+                </Link>
               </section>
 
               <section className="grid grid-cols-[1.02fr_0.92fr] gap-3">
