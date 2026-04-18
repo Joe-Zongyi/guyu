@@ -1,14 +1,44 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import { DeviceFrame } from "@/src/shared/ui/device-frame";
+import { useActivePlant } from "@/src/shared/plant-store";
 import { DEFAULT_THEME, THEMES } from "../data/showcase-theme";
 import type { ThemeData } from "../types";
+import { AddPlantModal } from "./add-plant-modal";
 
 const PLANT_TABS = [{ id: "monstera" }] as const;
 
 export function HomeShowcasePage() {
-  const theme = THEMES[DEFAULT_THEME];
+  const baseTheme = THEMES[DEFAULT_THEME];
+  const activePlant = useActivePlant();
+  const [addPlantOpen, setAddPlantOpen] = useState(false);
+
+  const theme = useMemo<ThemeData>(() => {
+    if (!activePlant) {
+      return baseTheme;
+    }
+    return {
+      ...baseTheme,
+      heroSubtitle: activePlant.heroSubtitle,
+      growthStage: activePlant.growthStage,
+      healthStatus: activePlant.healthStatus,
+      healthTrend: activePlant.healthTrend,
+      companionshipDays: activePlant.companionshipDays,
+      waterHabit: activePlant.waterHabit,
+      sunlightHabit: activePlant.sunlightHabit,
+      waterAdvice: activePlant.waterAdvice,
+      sunlightAdvice: activePlant.sunlightAdvice,
+      soilMoisture: activePlant.soilMoisture,
+      videoTitle: activePlant.videoTitle,
+      videoMeta: activePlant.videoMeta,
+    };
+  }, [activePlant, baseTheme]);
+
+  const heroTitle = activePlant
+    ? `${activePlant.commonName} ${activePlant.scientificName}`.trim()
+    : "龟背竹 Monstera";
 
   return (
     <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_24%),linear-gradient(180deg,#e9f1e3_0%,#dfe9d9_34%,#eef3e9_100%)] px-4 py-6 sm:px-6 lg:px-8">
@@ -64,6 +94,7 @@ export function HomeShowcasePage() {
                     <button
                       type="button"
                       aria-label="添加植物"
+                      onClick={() => setAddPlantOpen(true)}
                       className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/12 px-3.5 py-2 text-xs font-semibold tracking-[0.04em] text-white shadow-[0_12px_24px_rgba(5,14,10,0.16)] backdrop-blur-md transition hover:bg-white/18"
                     >
                       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/18 text-sm leading-none">
@@ -100,12 +131,21 @@ export function HomeShowcasePage() {
               <section
                 className={`rounded-[30px] border border-white/8 p-5 shadow-[0_18px_48px_rgba(6,16,11,0.24)] ${theme.heroClassName}`}
               >
-                <p className="font-serif text-[30px] leading-none text-white">龟背竹 Monstera</p>
+                <p className="font-serif text-[30px] leading-none text-white">{heroTitle}</p>
                 <p className="mt-2 text-sm text-white/70">{theme.heroSubtitle}</p>
 
                 <div className="relative mt-5 flex min-h-[190px] items-center justify-center overflow-hidden rounded-[28px] bg-white/4">
                   <div className="absolute inset-x-10 bottom-6 h-8 rounded-full bg-[#163126]/30 blur-2xl" />
-                  <PixelPlant />
+                  {activePlant?.pixelImageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={activePlant.pixelImageUrl}
+                      alt={activePlant.commonName}
+                      className="relative z-10 max-h-[230px] w-auto object-contain drop-shadow-[0_10px_24px_rgba(8,26,16,0.32)]"
+                    />
+                  ) : (
+                    <PixelPlant />
+                  )}
                 </div>
 
                 <Link
@@ -165,7 +205,7 @@ export function HomeShowcasePage() {
                   Video Recommendation
                 </p>
                 <Link
-                  href="#"
+                  href={activePlant?.videoUrl ?? "#"}
                   className="mt-3 flex items-center gap-3 rounded-[20px] bg-white/45 p-3 transition hover:-translate-y-0.5"
                 >
                   <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#7aac59_0%,#3a5f43_100%)] text-2xl text-white">
@@ -188,6 +228,8 @@ export function HomeShowcasePage() {
           </section>
         </DeviceFrame>
       </div>
+
+      <AddPlantModal open={addPlantOpen} onClose={() => setAddPlantOpen(false)} />
     </main>
   );
 }
