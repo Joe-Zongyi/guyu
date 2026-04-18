@@ -104,7 +104,7 @@ export function HomeShowcasePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center rounded-full border border-white/10 bg-white/8 px-4 py-3 shadow-[0_18px_40px_rgba(4,14,10,0.14)] backdrop-blur-md">
+                <div className="flex items-center justify-center rounded-full border border-white/14 bg-black/8 px-4 py-3 shadow-[0_18px_40px_rgba(4,14,10,0.18)] backdrop-blur-md">
                   <div className="flex items-center gap-3">
                     {plants.length > 0 ? (
                       plants.map((plant, index) => {
@@ -121,8 +121,8 @@ export function HomeShowcasePage() {
                             aria-label={`${plant.commonName} ${index + 1}`}
                             className={`h-3.5 w-3.5 rounded-full transition ${
                               isActive
-                                ? "scale-110 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)]"
-                                : "bg-white/32 hover:bg-white/48"
+                                ? "scale-110 border border-white/90 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16),0_4px_14px_rgba(255,255,255,0.28)]"
+                                : "border border-white/55 bg-[#d8e7d7]/78 shadow-[0_2px_8px_rgba(4,14,10,0.18)] hover:bg-[#edf7ec]"
                             }`}
                           />
                         );
@@ -132,7 +132,7 @@ export function HomeShowcasePage() {
                         type="button"
                         aria-pressed="true"
                         aria-label="默认植物"
-                        className="h-3.5 w-3.5 scale-110 rounded-full bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16)] transition"
+                        className="h-3.5 w-3.5 scale-110 rounded-full border border-white/90 bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.16),0_4px_14px_rgba(255,255,255,0.28)] transition"
                       />
                     )}
                   </div>
