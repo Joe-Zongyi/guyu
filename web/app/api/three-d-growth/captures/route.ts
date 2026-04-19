@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { appendCaptureRecord, readThreeDGrowthState } from "@/src/server/three-d-growth/storage";
 import { saveUploadedImage } from "@/src/server/three-d-growth/upload";
-import { analyzePlantProfile, assessPlantState } from "@/src/server/agent-bridge";
+import {
+  analyzePlantProfile,
+  assessPlantState,
+  generatePlantPixelArt,
+} from "@/src/server/agent-bridge";
 import type { CaptureRecord } from "@/src/features/three-d-growth/types";
 
 type UploadedFile = {
@@ -44,38 +48,64 @@ export async function POST(request: Request) {
     const angle = String(form.get("angle") || "front") as CaptureRecord["angle"];
     const imageUrl = await saveUploadedImage(image);
 
-  // 并行调用 Agent 分析（植物识别 + 状态评估）
-  let agentAnalysis: CaptureRecord["agentAnalysis"];
-  try {
-    const [profileResult, stateResult] = await Promise.all([
+    let agentAnalysis: CaptureRecord["agentAnalysis"];
+    const [profileResult, stateResult, pixelArtResult] = await Promise.allSettled([
       analyzePlantProfile(imageUrl),
       assessPlantState(imageUrl, plantId, {
         taxonomy_id: "unknown",
         common_name: "未知植物",
       }),
+      generatePlantPixelArt(imageUrl),
     ]);
 
-    agentAnalysis = {
-      profile: profileResult.data?.profile_draft
-        ? {
-            speciesId: profileResult.data.profile_draft.species_id,
-            commonName: profileResult.data.profile_draft.common_name,
-            scientificName: profileResult.data.profile_draft.scientific_name,
-          }
-        : undefined,
-      state: stateResult.data?.assessment
-        ? {
-            overallState: stateResult.data.assessment.overall_state,
-            signals: stateResult.data.assessment.signals,
-            confidence: stateResult.data.assessment.confidence,
-          }
-        : undefined,
-      analyzedAt: new Date().toISOString(),
-    };
-  } catch (error) {
-    console.error("[Agent Bridge] 分析失败", error);
-    // 分析失败不影响主流程，继续保存 capture
-  }
+    if (profileResult.status === "rejected") {
+      console.error("[Agent Bridge] 植物识别失败", profileResult.reason);
+    }
+
+    if (stateResult.status === "rejected") {
+      console.error("[Agent Bridge] 状态评估失败", stateResult.reason);
+    }
+
+    if (pixelArtResult.status === "rejected") {
+      console.error("[Agent Bridge] 像素图生成失败", pixelArtResult.reason);
+    }
+
+    if (
+      profileResult.status === "fulfilled" ||
+      stateResult.status === "fulfilled" ||
+      pixelArtResult.status === "fulfilled"
+    ) {
+      const generatedPixelImage =
+        pixelArtResult.status === "fulfilled"
+          ? pixelArtResult.value.data?.images?.[0]
+          : undefined;
+
+      agentAnalysis = {
+        profile:
+          profileResult.status === "fulfilled" && profileResult.value.data?.profile_draft
+            ? {
+                speciesId: profileResult.value.data.profile_draft.species_id,
+                commonName: profileResult.value.data.profile_draft.common_name,
+                scientificName: profileResult.value.data.profile_draft.scientific_name,
+              }
+            : undefined,
+        state:
+          stateResult.status === "fulfilled" && stateResult.value.data?.assessment
+            ? {
+                overallState: stateResult.value.data.assessment.overall_state,
+                signals: stateResult.value.data.assessment.signals,
+                confidence: stateResult.value.data.assessment.confidence,
+              }
+            : undefined,
+        pixelArt: generatedPixelImage?.url
+          ? {
+              imageUrl: generatedPixelImage.url,
+              fileId: generatedPixelImage.file_id,
+            }
+          : undefined,
+        analyzedAt: new Date().toISOString(),
+      };
+    }
 
     const capture = await appendCaptureRecord({
       plantId,

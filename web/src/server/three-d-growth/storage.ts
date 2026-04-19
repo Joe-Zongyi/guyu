@@ -132,10 +132,15 @@ export async function enqueueModelGeneration(input: {
     captureIds: sourceCaptures.map((item) => item.id),
   });
 
+  const configuredEngine =
+    process.env.TENCENT_HUNYUAN_3D_ENGINE === "rapid" ? "rapid" : "pro";
+  const configuredProModel =
+    process.env.TENCENT_HUNYUAN_3D_PRO_MODEL === "3.0" ? "3.0" : "3.1";
+
   const submission = await submitHunyuanJob({
     images,
-    engine: "pro",
-    model: "3.1",
+    engine: configuredEngine,
+    model: configuredProModel,
     enablePbr: true,
   });
 

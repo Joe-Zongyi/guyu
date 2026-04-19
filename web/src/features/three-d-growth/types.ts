@@ -17,6 +17,10 @@ export type CaptureRecord = {
       signals: Array<{ signal: string; confidence: number }>;
       confidence: number;
     };
+    pixelArt?: {
+      imageUrl: string;
+      fileId?: string;
+    };
     analyzedAt: string;
   };
 };

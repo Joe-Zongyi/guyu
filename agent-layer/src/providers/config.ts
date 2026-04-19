@@ -180,7 +180,7 @@ export function parseImageGenerationProviderConfigFromEnv(
           env.PLANT_AGENT_OPENROUTER_MODEL ??
           "google/gemini-3.1-flash-image-preview",
         timeoutMs,
-        baseUrl: env.OPENROUTER_BASE_URL,
+        baseUrl: env.PLANT_AGENT_OPENROUTER_BASE_URL ?? env.OPENROUTER_BASE_URL,
       };
     case "fake":
     default:
