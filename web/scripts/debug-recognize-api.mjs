@@ -165,7 +165,6 @@ async function main() {
   const rootDir = path.resolve(webDir, "..");
   const env = {
     ...loadEnvFile(path.join(rootDir, ".env")),
-    ...loadEnvFile(path.join(webDir, ".env.local")),
     ...process.env,
   };
 

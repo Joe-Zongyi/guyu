@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import "dotenv/config";
+import "./loadRootEnv.js";
 import { readFile } from "node:fs/promises";
 import { PlantAgent } from "./agent.js";
 import {

@@ -1,5 +1,6 @@
+import "@/src/server/env/load-root-env";
 import { createHash, createHmac } from "node:crypto";
-import { access, readFile, writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
 const API_HOST = "ai3d.tencentcloudapi.com";
@@ -59,27 +60,9 @@ function hmacSha256(key: Buffer | string, msg: string) {
 }
 
 async function loadTencentEnv(): Promise<TencentEnv> {
-  const repoEnvPath = path.resolve(process.cwd(), "..", ".env");
-  const envFromFile: Record<string, string> = {};
-
-  try {
-    await access(repoEnvPath);
-    const raw = await readFile(repoEnvPath, "utf8");
-    for (const line of raw.split(/\r?\n/)) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) {
-        continue;
-      }
-      const [key, ...rest] = trimmed.split("=");
-      envFromFile[key.trim()] = rest.join("=").trim().replace(/^['"]|['"]$/g, "");
-    }
-  } catch {
-    // ignore missing repo-level .env
-  }
-
-  const secretId = process.env.TENCENT_SECRET_ID || envFromFile.TENCENT_SECRET_ID || "";
-  const secretKey = process.env.TENCENT_SECRET_KEY || envFromFile.TENCENT_SECRET_KEY || "";
-  const region = process.env.TENCENT_REGION || envFromFile.TENCENT_REGION || "ap-guangzhou";
+  const secretId = process.env.TENCENT_SECRET_ID || "";
+  const secretKey = process.env.TENCENT_SECRET_KEY || "";
+  const region = process.env.TENCENT_REGION || "ap-guangzhou";
 
   if (!secretId || !secretKey) {
     throw new Error("缺少腾讯云凭证，请在仓库根目录 .env 中配置 TENCENT_SECRET_ID / TENCENT_SECRET_KEY");

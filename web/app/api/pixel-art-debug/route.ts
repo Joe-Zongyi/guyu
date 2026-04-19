@@ -1,3 +1,4 @@
+import "@/src/server/env/load-root-env";
 import { NextResponse } from "next/server";
 
 const DEFAULT_MODEL =

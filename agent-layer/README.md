@@ -30,7 +30,7 @@ npm install
 npm run build
 ```
 
-在 `agent-layer/` 下可复制 **`.env.example` → `.env`**，把各服务商 Key 填进 **`.env`**（已加入 `.gitignore`，勿提交）。`npm run cli` 与 `npm run manual-console` 会通过 **`dotenv`** 自动加载当前目录的 `.env`。
+把各服务商 Key 填进仓库根目录 **`.env`**（已加入 `.gitignore`，勿提交）。`npm run cli` 与 `npm run manual-console` 会自动加载仓库根 `.env`。
 
 ### `package.json` 脚本
 

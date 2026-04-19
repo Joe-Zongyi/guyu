@@ -3,10 +3,10 @@
  * - openai: POST /v1/chat/completions (OpenAI-compatible, Bearer auth)
  * - gemini: POST /v1beta/models/...:generateContent (x-goog-api-key)
  *
- * Loads keys from agent-layer/.env (same vars as PLANT_AGENT_OPENAI_COMPATIBLE_*).
+ * Loads keys from repo-root .env (same vars as PLANT_AGENT_OPENAI_COMPATIBLE_*).
  * Do not hardcode secrets in this file.
  */
-import "dotenv/config";
+import "../src/loadRootEnv.js";
 
 // Minimal valid 1x1 JPEG (white pixel) — gateways reject truncated/invalid base64.
 const TINY_JPEG_B64 =
