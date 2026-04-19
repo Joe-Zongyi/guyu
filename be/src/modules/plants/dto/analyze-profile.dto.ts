@@ -11,7 +11,8 @@ class FileRefDto {
 
   @ApiPropertyOptional({ example: 'https://example.com/plant.jpg' })
   @IsOptional()
-  @IsUrl()
+  // require_tld=false so localhost URLs (used in local dev) are accepted.
+  @IsUrl({ require_tld: false })
   url?: string;
 
   @ApiPropertyOptional({ example: 'image/jpeg' })
